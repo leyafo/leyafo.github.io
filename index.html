@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" prefix="og: http://ogp.me/ns#" xmlns:og="http://ogp.me/ns#"><!--<![endif]-->
+
+    <head>
+                <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="author" content="">
+        <meta name="keywords" content="awesome, definitely">
+	
+        <meta property="og:site_name" content="Do Right Things">
+        <meta property="og:title" content="Do Right Things">
+        <meta property="og:url" content="http://www.leyafo.com/">
+        <meta property="og:description" content="">
+    
+        <meta property="og:type" content="website" />
+    
+        <meta name="generator" content="Hugo 0.16" />
+        
+        <title>Do Right Things</title>
+        <meta property='og:title' content="Do Right Things">
+        <meta property="og:type" content="website">
+        
+
+        <link rel="canonical" href="http://www.leyafo.com" />
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="http://www.leyafo.com/index.xml">
+        <link rel="stylesheet" type='text/css' href="http://www.leyafo.comcss/main.css"/>
+        <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300|Montserrat:700' rel='stylesheet' type='text/css'>
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+        <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+    </head>
+
+<body>
+<!--[if lt IE 7]><p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chrome/‎">install Google Chrome</a> to experience this site.</p><![endif]-->
+
+    <header id="site-header">
+        <div class="container">
+            <a href="http://www.leyafo.com" alt="Do Right Things"><h1 class="blog-title heading">Do Right Things</h1></a>
+            <p class="blog-description"></p>
+        </div>
+    </header>
+
+<main class="content" role="main">
+	<div class="container">
+	
+		<article class="li post">
+    <header class="post-header">
+        <h3 class="post-title"><a href="http://www.leyafo.com/post/2016-07-13-development-notes-1-count-problems/">开发笔记(1) － Count 问题 </a></h3>
+        <p class="post-time"><time datetime="2016-07-13T02:51:00&#43;08:00">July 13, 2016</time></p>
+    </header>
+    
+    <section class="post-excerpt">
+        <p>我们现在的生产环境里面最大的表数据量大概是 1kw 左右。我们这里有一个页面是将这张表里面的数据以列表的方式呈现出来。这个列表的功能有：上一页/下一页、跳页、总数页、数据的总条目数。这是一个很常见的 web 列表拥有的功能，这一系列的功能在数据量 10w 以下工作得很好。超过 10w 后页面 load 就会变得很慢。慢的主要原因是每次刷新操作和跳页操作都会去 Count 整个表，而且是精确的 Count，算法的复杂度为 O(n)。这种方式对于经常需要使用列表页查看数据的用户是完全不可接受的。 我们开始着手优化这个问题。羊毛出在羊身上，我们用的是 Postgresql 的数据库，当然会想到使用 Postgres 的一些功能去做这个事情。很快我们在 Google 搜索到了 Postgresql 的 Count estimate 机制。它通过获取 pg_class 这张元表纪录的信息来得到一个表里面大致的数据量。这种方法非常快，速度可达到毫秒级。但它有以下缺点：1.无法精确统计（从 estimate 这个词的意思就能看出来） 2.只能获取整张表的大致数量，无法做 where 条件过滤。问题到这里似乎还是没有解决。 从程序开发的角度来看，这个问题最好的解决方式是使用一个变量用来保存表的 Count，每次插入删除时需要对这个 Count 变量进行 +1/-1 操作。这样每次需要获取的 Count 时算法复杂度就会降到 O(1)，但从整体上看这个问题其实根本没有得到解决。数据库里面一张大表在做 Insert/Remove 时本身已经很慢了，维护这个 Count 变量需要保证原子操作。这么做不仅非常麻烦，还会增加 Insert/Remove 的开销。这里是具体的做法。事情到这里已经很明显了，对于数据库精确的 Count，我们是没有办法开发出一种低于 O(n) 复杂度的算法。但这个问题真的无解了吗？ 现在的问题焦点全部都集中在 Count 上面，这个问题看起来是只要 Count 的性能快了，就能解决这个问题。但上面已经说，我们是无法开发出低于 O(n) 复杂度的 Count 算法。1kw 的数据量 O(n) 是无论如何也快不到哪里去的。跳出这个点来看，我们最终要解决的问题是什么？这个 count 的精确数字对用户来说真的能重要到牺牲等待时间来获取吗？其实在这个功能里面我们只所以需要 Count 这个数字仅仅是在做分页时精确需要计算出有多少页，尾页的数字是多少。所以影响这个问题的关键根本不是用户的需求，而是我们在程序开发时所追求的精确。只需要把这个 count 数字去掉就可以了，这将会让列表的操作速度大大的提升。实际上搜索引擎就是这么干的。以</p>
+    </section>
+
+    <footer class="post-footer">
+        <span>
+            
+            <a href="http://www.leyafo.com/post/2016-07-13-development-notes-1-count-problems/#comments"><i class="fa fa-comment"></i> Comments</a>
+            
+            
+        </span>
+    </footer>
+</article>
+
+	
+		<article class="li post">
+    <header class="post-header">
+        <h3 class="post-title"><a href="http://www.leyafo.com/post/2016-05-16-about-test/">关于测试</a></h3>
+        <p class="post-time"><time datetime="2016-05-16T00:25:00&#43;08:00">May 16, 2016</time></p>
+    </header>
+    
+    <section class="post-excerpt">
+        <p>在我做 C/C++ 开发时测试这个概念在这个圈子里不那么流行，这也有可能是 C/C++ 这类静态语言写 test 不是那么好写。 C/C++ 这类静态语言写 test code 光想一想也挺烦的。但这并不是因此就不写测试一个借口。我现在做的 Rails 项目一开始也认为写测试会拖慢项目进度的，后来实践下来发现测试能很好的维护项目的稳定，这实际上节约了不少时间。只要克服下一开始认为测试代码会增加的心智负担就好了。 我们也不必太需要去理会什么 TDD，BDD，DDD 等一类名词。这一类名词对写测试的帮助并不大，而且有害。把原来本来很简单的事情弄得很复杂。写测试关键是要简单，只有简单的测试代码才能测试简单的测试代码。恩，这个有点绕。意思就是代码必须要容易测试，不容易测试的代码要把它改成容易测试的代码。TDD 奉行的测试驱动开发在我看来是挺难做到的。因为有时候我自己都不知道这个代码写好后会变成什么样子。单纯的一个输入输出是很难决定代码中间所经历的一些过程。还有一个重要的点就是被测试代码粒度越小越好，越小意味着模块化程度越高，接口的定义也越干净，这是非常值得的。所以别管什么 BDD, TDD, DDD 这一类名词，尽管写测试代码好了，尽可能把测试覆盖面辐射到更广才是最重要的。 Rspec 的问题 Rspec 定义了测试的领域语言，他的目的是让非开发人员也能写测试。这个目的挺美好的，想想也挺美好的。实际上我们在项目中很难找到一个会去写测试的测试工程师。写 Rspec 这个东西没有一点开发能力还真搞不定。所以 Rspec 的让非开发人员写 test code 还是想想就好了，test code 还是得你自己来写，因为你对你自己写得模块是最清楚的。另外相对于 Rails 自带的测试框架 Rspec 解决的还是相同的问题。Rails 自带的测试框架已经挺好的了，模块化分析测试也很好的控制了测试的粒度。关键是它非常快，跑完所有的测试要同样数量的 Rspec 快很多。这很重要，Rspec 的性能很为人诟病，因为会增加对写 test code 的厌恶。一个简单的测试用例要跑 10 秒是很影响写代码的体验的。 测试的作用 改代码比写新的代码要烦，需要小心的应对以前的历史包袱，还要了解以前的工作机制是怎样的。所以，如果有一些现成的测试用例代码就能很好的应对这些问题。它能保证你不回对以前的代码产生副作用，并且在些测试代码阶段可以让你自己在代码层面对接口的合理性做更详细的检查。能让代码质量变得更高。在项目部署前跑一遍所有的测试用例可安心不少，尽管部署时出现的问题大多数集中在恶劣的服务器环境上。</p>
+    </section>
+
+    <footer class="post-footer">
+        <span>
+            
+            <a href="http://www.leyafo.com/post/2016-05-16-about-test/#comments"><i class="fa fa-comment"></i> Comments</a>
+            
+            
+        </span>
+    </footer>
+</article>
+
+	
+		<article class="li post">
+    <header class="post-header">
+        <h3 class="post-title"><a href="http://www.leyafo.com/post/2014-11-14-a-thorough-understanding-of-kmp/">彻底理解 KMP算法</a></h3>
+        <p class="post-time"><time datetime="2014-11-14T07:02:00&#43;08:00">November 14, 2014</time></p>
+    </header>
+    
+    <section class="post-excerpt">
+        <p>KMP 算法是一种子串匹配算法。其特点在于匹配子串时利用已经匹配成功的部分子串来跳转到下一次能再次匹配的串。书上列举的一大堆公式看着很犯晕，网上各类码农博客里面用代码写的文章，让本来逻辑有点绕的 kmp 更加绕。就我最近看到的文章来说最清晰的就是阮一峰 和 详解KMP算法。这两辆篇文章解释的通俗易懂，也有一些不太明晰的地方。本文的目的是在于解释笔者本人在理解 kmp，及阅读这些资料时不明白的地方。 首先还是来看 kmp 匹配子串所使用的方法，下文中字符串“TEST ABCABCABCDEF” 表示要匹配的主串，字符串 &ldquo;ABCABCDEF&rdquo; 表示待匹配的子串。(用肉眼我们可以看到要匹配的子串的位置在最后的位置)。首先像暴力匹配一样我们把不匹配的字符串全部进行匹配并跳过。 TEST ABCABCABCDEF ABCABCDEF | |-------- 进入下一个位置进行匹配 ------&gt; TEST ABCABCABCDEF ABCABCDEF | &lt;----- 还是不匹配,继续往前走 ------| | | ......前面三个还是不匹配..... 这个时候我们待匹配的子串走到了‘TEST ’后面一个位置 TEST ABCABCABCDEF ABCABCDEF | |------ D 和 A 不匹配。 这个时候主串和子串出现了部分匹配的情况，这个时候我们的子串该如何前进继续匹配？目前能想到的方法就是按照暴力匹配的方式继续向前进一步。但本文的目的不在于讨论暴力匹配，所以这种方法被 Pass 掉。如果直接将子串移动到现在不匹配 D 的位置，这种方式会错过可能会匹配的子串。比如下面这种情况会错过可能会匹配的子串。 ABCABCDEFGHIJK -----&gt; ABCABCDEFG ABCDEFG ABCDEFG 因此上面的移动是不合法的，算法会出现错误。从这里我们可以观察到合法的移动是将子串移动到 ABC 。这样我们就能再次匹配到 ABC，这也就是本文前面说的那句话，利用已经匹配成功的部分子串来跳转到下一次能再次匹配的串。现在问题是我们该如何在程序中得到这个正确的移动位置？首先我们先来观察已经匹配的部分匹配子串。 TEST ABCABCABCDEF ABCABCDEF | |---------&gt;部分匹配子串 ABCABC 从这里我们可以看到 ABC 出现了两次，因此 ABC 是我们需要的再次匹配的串。但这个 ABC 是如何得到的？因此我们现在我们需要解决的问题有2个。 1. 找到再次匹配串。 2.</p>
+    </section>
+
+    <footer class="post-footer">
+        <span>
+            
+            <a href="http://www.leyafo.com/post/2014-11-14-a-thorough-understanding-of-kmp/#comments"><i class="fa fa-comment"></i> Comments</a>
+            
+            
+        </span>
+    </footer>
+</article>
+
+	
+		<article class="li post">
+    <header class="post-header">
+        <h3 class="post-title"><a href="http://www.leyafo.com/post/2014-10-27-a-red-black-tree-implementation/">理解红黑树</a></h3>
+        <p class="post-time"><time datetime="2014-10-27T11:27:00&#43;08:00">October 27, 2014</time></p>
+    </header>
+    
+    <section class="post-excerpt">
+        <p>红黑树是有序平衡 BST(binary search tree) 的一种，它于1978年由 Guibas 和 Sedgewick 发明。红黑树是2-3-4 树 的一种抽象表示。有趣的是现在大多数算法书关于红黑树都没有提到过 2-3-4 树。算法书上关于红黑树的讲解都是基于定理来实现红黑树。至于这些定理怎么来的，算法书却没有描述过。这就是为啥算法书上的红黑树难以理解，这是算法书的坑。所以要理解红黑树，理解 2-3-4树 是必不可少的一个过程。 2-3-4树 2-3-4树的基本性质 2-3-4树也是一种有序的平衡树，所有从 leaf 到 root 的 path 的高度都是相等的。每个节点可以容纳1到3个节点，可以有2到4个子节点。下面就是 2-3-4 树的3种类型。 B D F H K O / \ / | \ / \ / \ / \ A C B E G A I L Y 2树 3树 4树 类似于 BST，2-3-4对元素的排序是左小右大。不同的3树和4树的子节点会有中间大小的子节点。比如上图的3树中的 E 就比 D 大 比 F 小。4树中的 I 比 H 大，比 K 小。L 比 K 大，比 O 小。 2-3-4树的插入 前面说了 2-3-4树是一种平横树，所有从 leaf 到 root 的 path 的高度都是相等的。这也就意味着每当插入一个新节点不能单纯的像 BST 那样将新的节点插入到树的底部，否则会破坏树的平衡。2-3-4树使用的平衡方法是合并。就是将2树变为3树，3树变4树。如下图： B B / \ 插入 D =&gt; / \ A C A C D B B / \ 插入 H=&gt; / \ A C D A C D H 上面的插入方法解决了往 2-3-4树 插入新节点而不破坏树的平衡的问题。但是如果要插入的节点已经是一个4树了，这种方法就不管用了，因为4树是没法变为5树的。可以将4树往上挪一个节点，并分裂出俩个2树的子节点。如果上面的父节点已经是4树了，则继续往上挪动。直到 root 节点，再需要分裂的话，这个时候可以将 root 节点也进行分裂。root 节点分裂后整颗树的高度会增加一层。如下图所示： A A S A E S / \ 插入 S=&gt; / | \ =&gt;插入 E / \ / \ / \ =&gt; 插入 R ----&gt; 先将 A E S 往上分裂 =&gt; E E / \ 插入 R=&gt; / \ A S A R S 2-3-4树的删除 树结构的删除都很麻烦，2-3-4树 也不例外。2-3-4树 插入的时候需要保持树的平衡，删除的时候也需要保持树的平衡。如果需要降低树的高度从 root 合并来降低树的高度。2-3-4树 和 BST 一样会选择从 leaf 节点将 node 删除。如果找到的节点不是 leaf 节点会从当前节点的右边出发，找到最左边的 leaf 节点来替换，然后删除被替换后的 leaf 节点。如果 leaf 节点是3树或者或者4树，直接删除即可。如果是2树的话就不能直接删除，需要对其进行旋转操作，从临近的同一层节点挪个节点过来补上。如果临近元素也是2树则从父节点挪一个节点下来。 下图是删除3树和4树的情况： C C D D / 删除 B=&gt; / / 删除 B =&gt; / AB A ABC AC 下图是一个比较复杂的删除操作，删除一个非叶子节点，会碰到2树的删除并需要旋转的情况。(节点比较多所以用数字来表示节点) 40 / \ 20 50 删除根节点40 / \ / \ 找到右树最左边的42节点 -----------&gt; 14 32 43 62 70 79 并替换掉,再删除替换后的叶子节点 /\ /\ /\ / | | \ 10 18 25 33 42 47 57 65 74 81 42 / \ 左树不变 50 / \ 相邻节点也是2树，将43挪下来并合并 ------&gt; 43 62 70 79 / \ / | | \ x 47 57 65 74 81 42 / \ 左树不变 50 / \ 43 47 62 70 79 上一步中43也是2树 / | | \ 需要从临近的节点通过旋转来拿到一个节点 -----&gt; 57 65 74 81 42 / \ 左树不变 62 &lt;----- 62旋转上来 / \ 50 70 79 / \ / | \ 43 47 57 65 74 81 &lt;----------- 57变为50的子节点 红黑树 红黑树是2-3-4树的一种抽象表示，在1978年 Guibas 和 Sedgewick 发明最初的红黑树。2008年 Sedgewick 对其进行了改进，并将此命名为 LLRBT(Left-leaning red–black tree 左倾红黑树)。LLRBT 相比1978年的红黑树要简单很多，实现的代码量也少很多。Sedgewick的一篇 PPT 对此有非常详细的介绍。 现在大部分工程中的红黑树都是基于1978发明的算法，本文介绍的是 LLRBT。 红黑树的抽象表示 在红黑树中表示2-3-4树的3树和4树会用红链接来表示。如下图所示(markdown 没有文本色彩支持，本文用//或\\来表示红色链接)： A B B A A B C B / | \ &lt;=红黑树表示=&gt; // 或者 =&gt; \\ / | | \ &lt;=红黑树表示=&gt; // \\ A B A C 红黑树的插入 红黑树在插入时也通过旋转来降低或者升高树的高度(关于旋转请看我的另一篇文章)。不同的是红黑树插入节点的方式是按照2-3-4树插入节点的方式来进行的。2-3-4树每插入一个节点会对树自底向上进行调整(合并或分裂)，红黑树也是对应于2-3-4树进行同样的操作。2-3-4树通过将3树合并为4树，4树分裂为俩个2树。红黑树通过旋转来做这些操作。 在2树中插入一个节点： D 插入C=&gt; D // C &lt;===等同于3树===&gt; C D C D / | \ C 插入D=&gt; \\ 左旋=&gt; // D C 在3树中插入一个节点: C H H H / | \ 红黑树表示=&gt; // // C A C H C 插入 A=&gt; C 右旋=&gt; // \\ 2-3-4树表示=&gt; / | | \ // A H A H H H A H 红黑树表示=&gt; // // // C A C H / | \ A 插入 C=&gt; A 左旋=&gt; A 右旋=&gt; // \\ 2-3-4树表示=&gt; / | | \ \\ // A H C C A C C C / | \ 红黑树表示=&gt; // // \\ A C H A 插入 H=&gt; A H 2-3-4树表示=&gt; / | | \ 从上图可以看出，LLRBT 之所以使用左倾(left-leaning)是为了将3树限制为一种，以便更容易的将3树转为4树，来减少实现上复杂度。下图是4节点的分裂。 / // A C H 4树分裂为俩个2树=&gt; C C C / | | \ / \ 红黑树表示=&gt; // \\ 分裂=&gt; / \ &lt;---将红链提上去 A H A H A H 红黑树在最初插入时使用的方式和普通的二叉树一样，递归查找到树的底部，然后将新节点插入到树的底部。在递归往回弹的时候对整颗树进行旋转调整，和2-3-4树使用相同的方式（3树变4树，4树分裂成俩个2树）来调整整颗树的高度。 红黑树的删除 红黑树的删除方法非常复杂。删除任意一个节点，红黑树会像 BST 一样会从右树的最左边找到一个节点进行替换并删除。所以实现红黑树的关键一点就是要实现 DeleteMin 方法。LLRBT 结构是没有 parent 节点的，在删除一个节点是并不能像 AVL 树那样在删除后再旋转。 LLRBT 在查找要删除的节点时就会对树进行调整，它会将要删除节点的那个方向的树通过旋转将树的高度升高一层。 下图是在 DeleteMin 方法中将树的左边升高一层 // &lt;----因为树是向左边递归的， / H 所以到 H 的链都是红的 H / \ // \\ C S 颜色反转，将红色向下传=&gt; C S / / B B 这时如果 S 节点的left为红色，需要对其再做两次旋转 / / / H H P // \\ // \\ // \\ C S 右旋S=&gt; C P 左旋 H=&gt; H S / // / \\ // B P B S C / B // 再将颜色反转回来=&gt; P / \ H S // C / B 上面做的这些操作的最终目的就是将树的最底部要删除的节点变为红色，这样是为了在删除的时候避免要删除的节点为2树。因为删除3树中的一个节点是不需要做其他转换可以直接删除的。在删除后需要重新自底向上修复整颗树的平衡。这样的删除方式看起来非常慢，实际上确实非常慢。即使在没有找到要删除的节点也会递归进行旋转-修复这一过程。另外这里的删除使用的抽象方式并不是2-3-4树的删除方式，实际上使用的是2-3树的抽象方式。在红树向下传递的过程中最终的叶子会是颗3树，而不会是4树。Sedgewick 的 PPT 里面并没有说到这个问题。他的另一篇论文才说到了这个问题。 PS： 本人实现的 Red Black Tree。 Sedgewick 的 PPT 里面有两个错误.</p>
+    </section>
+
+    <footer class="post-footer">
+        <span>
+            
+            <a href="http://www.leyafo.com/post/2014-10-27-a-red-black-tree-implementation/#comments"><i class="fa fa-comment"></i> Comments</a>
+            
+            
+        </span>
+    </footer>
+</article>
+
+	
+		<article class="li post">
+    <header class="post-header">
+        <h3 class="post-title"><a href="http://www.leyafo.com/post/2014-07-24-rails-log/">rails 注册登录</a></h3>
+        <p class="post-time"><time datetime="2014-07-24T08:53:00&#43;08:00">July 24, 2014</time></p>
+    </header>
+    
+    <section class="post-excerpt">
+        <p>这几天在做一个小型的论坛，做到了注册登录这一块。之前没有完整做过注册登录这个东西，这次我打算从头写到尾去详细的了解里面的一些基本原理。所以这次并没有使用devise这样的 *gem*。 密码存储 用户密码安全存储是作为一个 web 开发者的基本节操。好在现有的一些解决方案已经能比较好的解决这个问题了，做起来也比较容易。只需要了解一些基本的安全常识就可以保证90%的情况下是安全的。 在数据库里面存储加密后的密文是为了防止被拖库，如果黑客拖下了整个用户表，加密后的密码他们拿着也是没有用的。即使是网站的管理员也是没法知道这个密码的真实原文。因为现在一般的密码 hash 算法是不可逆的。所以现在的一些比较常用的密码明文获取方式是进行字典暴力破解。如果在密码原文 hash 前给密码添加一些比较长的唯一的随机字符串，这会使攻击者的字典基本上失效(因为很长，枚举次数要上升很大一个数量级)。这就是密码加盐(salt)的基本作用。当然加盐的另外一个作用是让两个相同的密码产生不同的 hash 值。这样即使知道加密算法和加密后的密文也无法通过比较密文来得到原文。 在用户登录时我们会拿到用户的原始密码，这个原始密码相当于一把钥匙。拿着这个密码通过加密算法和数据库里面的 salt 得到加密后的密文。再用这串密文与数据库的密文进行比对，比对成功后则验证通过。在这样一个过程中，密码看起来就像打开箱子的钥匙一样，由用户携带，网站不进行存储。 session 和 cookie cookie 是存储在用户浏览器中的一段唯一标识，http request 会将它传送到服务端。现在一般的 web framework 会去检测用户的 http request 是否带有 cookie, 如果没有发现请求中没有 *cookie*，它会建立一个*session*。并且以 cookie 作为 key 来保存 *session*。这样如果用户下次同样 cookie 的 http request 进来了，就可以找到相同的 *session*。 session 和 cookie 是实现记住用户的基石。http 协议是无状态的协议。在用户登录某一个网站后，我们是需要记住登录状态的。这时候就要通过 cookie 和 session 来干这件事情。 rails 默认是已经将 session 建立好了。在 controller 中可以很方便的拿到 session 变量去存储一些信息。另外比较有意思的是 rails 默认是将 session 经过加密后存储在用户 cookie 中的。当用户的 cookie 传送到后端时会将 cookie 进行解密得到相应的</p>
+    </section>
+
+    <footer class="post-footer">
+        <span>
+            
+            <a href="http://www.leyafo.com/post/2014-07-24-rails-log/#comments"><i class="fa fa-comment"></i> Comments</a>
+            
+            
+        </span>
+    </footer>
+</article>
+
+	
+		<article class="li post">
+    <header class="post-header">
+        <h3 class="post-title"><a href="http://www.leyafo.com/post/2014-06-19-capistrano-deployment/">Capistrano 部署</a></h3>
+        <p class="post-time"><time datetime="2014-06-19T03:07:00&#43;08:00">June 19, 2014</time></p>
+    </header>
+    
+    <section class="post-excerpt">
+        <p>这几天要部署自己做的一个小板凳，是用 sinatra 写的一个简单的 blog 程序。这个程序很简单，代码非常少，可以像 php 那样直接使用 async 将代码。但我想熟悉下 Ruby 关于部署方面的技术，因此找到了 Capistrano 这个东西。Rails 的 web 后台对环境非常挑剔，Capistrano 是 Ruby 写的， 虽然它可以部署各种语言的代码，但可以部署 Rails 的程序不会太简单。 配置项含义 Capistrano 这个东西产生的一大堆配置文件有点让人迷糊。Capfile 相当于一个 makefile 文件，里面设置了一些任务是如何运行的。config目录下有三个配置文件，其中 deploy 子目录是用于配置部署不同的环境。默认的是 production 和 staging 环境配置项分别对应两个同名的文件。deploy.rb 这个文件相当于一个总配置文件，里面的是一些公共的配置项。 Capistrano 非常依赖版本控制，在 deploy.rb 文件中 repo_url 是用于设置代码仓库的地址的，配置好这个参数后需要确认服务器有访问代码仓库的权限。 scm 是设置具体的版本控制软件的。Capistrano 支持最好的是 git 和 svn。 deploy_to 是一个非常重要的参数，它指示了代码上传到服务器的具体位置,另外需要确保这个目录与配置好的用户名有足够的访问权限。这几个参数设置好后，其他的参数可以使用默认的了。然后再配置对应环境的具体配置项。 在环境配置项中，role 参数指示的三项分别是 app，web 和 db。这个三项分开的好处是可以让他们部署到不同的服务器上做负载均衡。单台服务器不用太关心，三项指向同一个地址即可。然后配置服务器的访问权限，配置非常简单，设置好用户名和 ssh public key就可以了。到这里基本的配置已经完成了，运行cap deploy:check 可以检测配置是否成功。这个时候如果 check 成功的话使用 cap deploy 命令就可以成功上传代码了。 让代码运行 代码上传后部署的任务已经完成了一小部分了，接下来就是具体的程序的启动与 http request的转发了。我使用的是 nginx +</p>
+    </section>
+
+    <footer class="post-footer">
+        <span>
+            
+            <a href="http://www.leyafo.com/post/2014-06-19-capistrano-deployment/#comments"><i class="fa fa-comment"></i> Comments</a>
+            
+            
+        </span>
+    </footer>
+</article>
+
+	
+		<article class="li post">
+    <header class="post-header">
+        <h3 class="post-title"><a href="http://www.leyafo.com/post/2014-05-22-i-think-php-is-terrible/">我认为PHP不好的地方</a></h3>
+        <p class="post-time"><time datetime="2014-05-22T00:29:00&#43;08:00">May 22, 2014</time></p>
+    </header>
+    
+    <section class="post-excerpt">
+        <p>最近在用PHP做项目，让我个人感觉PHP是门非常不顺手的编程语言。PHP太多东西给人的感觉就像是一个半成品。 namespace PHP 的 namespace 是我见过的所有语言最难用的 namespace，没有之一。它使用反斜杠\**来进行层级切分，在使用上非常容易跟 include 使用的文件路径斜杠搞混淆。namespace** 的 use 语句使用也是让人赶到非常奇怪，它不能在代码中的任意作用域使用，只能在一个文件的最顶级作用域中使用 use。namespace 这个东西是控制访问冲突使用的，在文件顶级作用域中使用 namespace 是一个产生冲突的隐患。这就是一个半成品，PHP 中的内部库函数是没有使用 namespace 的，也不知道他们自己为啥不用这玩意。 变量 在每一个变量前加一个$符号，让我对这个语言的第一印象非常不好，给我的感觉是丑陋。变量名加$可以很方便的嵌入到字符串中，但是 PHP 在字符串内嵌中增加了 {} 语法，这让变量前面 $ 符号失去了它唯一的作用。$ 符号除了让代码变得更丑陋以外，没有任何的实际用处。另外在 PHP 中 if 和 for 还有 while 一系列控制语句中，变量是没有作用域的。可以很随意的去拿 if 和 else 中的变量，解释器不会报错。但是你不知道什么时候解释器会给你报一个 undefine 的错误。 函数与闭包 函数本身没啥好说的，每个语言最基本的单元。如果这玩意也实现不好那真的太糟了。但我要说的是 PHP 从5.3以后引入的匿名函数。PHP 的匿名函数看起来好像是可以在任意的地方定义它，这很符合匿名函数的特性。但问题是你如果要用到上下文变量需要显示的使用 use 将变量引入。这看起来好像是没有什么问题，但是如果函数嵌套的层级一多，这完全是个枷锁。另外如果要判断一个变量是不是一个函数 PHP 有一个 is_callable 的方法,这个方法的奇怪之处在于你可以传入变量名或者以字符串形式传入函数名。但如果直接传入一个函数它返回的值是 false。经过使用 is_callable 函数的一些失败尝试后，我彻底放弃了 PHP 的匿名函数与闭包。</p>
+    </section>
+
+    <footer class="post-footer">
+        <span>
+            
+            <a href="http://www.leyafo.com/post/2014-05-22-i-think-php-is-terrible/#comments"><i class="fa fa-comment"></i> Comments</a>
+            
+            
+        </span>
+    </footer>
+</article>
+
+	
+		<article class="li post">
+    <header class="post-header">
+        <h3 class="post-title"><a href="http://www.leyafo.com/post/2014-02-09-avl-tree-implementation/">avl 树的实现</a></h3>
+        <p class="post-time"><time datetime="2014-02-09T07:01:00&#43;08:00">February 9, 2014</time></p>
+    </header>
+    
+    <section class="post-excerpt">
+        <p>过年在家没事，找出了几年前把我折磨得死去活来的&lt;数据结构与算法分析&gt;这本书。确切的说，这段时间这本书也在折磨我。上面的avl树的旋转说得不清不楚的，而且还是使用递归实现了avl树的插入与删除操作。让这本书上本身就已经不太清晰的描述变得更加的扑朔迷离，让我有一种想烧掉这本书的冲动。到最后我实在没法看懂书上描述的avl树的操作方式只好自己从网上找一些资料实现了avl树(代码在此)。另外维基百科上有关于avl树基本性质的描述，我在这里也不过多介绍。但是请勿对照这篇文章去实现avl树，这篇描述的删除操作是有问题的。关于树的旋转，这篇文章也没有把最根本的问题说清楚。avl树最难的部分就是关于树的旋转，本文主要讨旋转的问题。 首先，旋转的作用是降低子树的高度。旋转的方式有两种，一种是用来降低左子树高度一般被称作右旋。一种是用来降低右子树高度一般被称为左旋。这两种旋转在物理上是对称的，在编码上也是无脑对称的。因此，在编码方面我们只需要实现出一种旋转后另一种旋转也可以依葫芦画瓢的实现出来。另外在每个节点中保存一个父节点可以让编码的复杂度大大降低。 下面是左旋的具体变化过程: A B \ / \ B 左旋 ==&gt; A C \ C 下面是右旋的具体变化过程: A B / / \ B 右旋 ==&gt; C A / C 上面的这两种情况是比较理想的情况，在实际的使用情况下是没有这么理想的。不能处理下面这些情况。 A A \ / B B / \ C C 上面的这两种情况就是书上所说的关于双旋转的问题。解决这两种情况的方法就是先旋转B节点,先将C点与B点旋转到A点与B点相同的指向方向。然后在根据A点做对应方向的旋转。 A A C A A C \ \ / \ / \ / \ B =&gt; C =&gt; A B B =&gt; C =&gt; A B / \ \ \</p>
+    </section>
+
+    <footer class="post-footer">
+        <span>
+            
+            <a href="http://www.leyafo.com/post/2014-02-09-avl-tree-implementation/#comments"><i class="fa fa-comment"></i> Comments</a>
+            
+            
+        </span>
+    </footer>
+</article>
+
+	
+		<article class="li post">
+    <header class="post-header">
+        <h3 class="post-title"><a href="http://www.leyafo.com/post/2014-01-07-i-think-12306-areas-for-improvement/">我认为12306 可以改进的地方</a></h3>
+        <p class="post-time"><time datetime="2014-01-07T10:10:00&#43;08:00">January 7, 2014</time></p>
+    </header>
+    
+    <section class="post-excerpt">
+        <p>几条社会数据： 2013年春运期间卖出2.4亿张火车票，折半的话单趟就是1.2亿。 这1.2亿张火车票 网络售票数量不到4成 流动人口总数是2.2亿(不包括市辖区内人户分离)。 12306日每天2000万人访问点击量 高达14亿 最高日售票460万张 以上数据可以得出以下结论： 1.火车的运载量是不太够的。 2.实际网络买票人数员远大于12306售票数的总数。 3.12306卖出的票还是少了点。 下面是我认为12306可以改进的地方。 ##网页前端可以改进的地方： 我这几天也经历过几次买票，在高峰期进入网站后基本上是一个卡住不动的状态了。经过仔细观察12306的前端我发现改进的余地还是非常大的。 尽量静态化： 这么高访问量的网站必须要尽可能的减少客户端请求，网页前端能静态就静态。少设置一点图片，js与css可以参考rails的AssetsPipline 把所有的资源打包成一个文件，去掉不必要图片。这里可以参考奥巴马的选举网站。 页面功能单一化 访问量这么高，完全可以把网站所有不同功能的页面分开。订票与查询完全可以分开成两个页面，订票页面就不要再有其他的资源链接或者其它功能。 订票过程尽量简单 现在用户订票需要选择日期后再查询，然后服务器再返回好几趟车的数据。我认为这一步实在是很多余，买票的人这么多，大家都会事先查好需要买哪趟车，不会等到出票时间去查询再买。面对这种情况，最好是让用户直接再事前输入准确的车次，起终点站就可以了。这样就能减少服务器与客户端之间的数据传输次数与数据量。 可增加的功能（没错，我认为应该增加一些功能。） 现在的订票助手已经做到了离线化订票，既然这样12306为什么不直接把这件事给干了呢？12306拿到用户的订票信息，可根据偏远程度与火车的运载量在后台进行订票的优先级排序。甚至可以在某辆车运载量不够的情况下为用户自动安排最优化的换乘方案与对应的车票。 增加电话订票的可用度 不得不说电话订票实在太难用了，中间经历的过程非常烦琐。能用电话订到票的基本上需要一部带有机械键盘的座机与职业游戏玩家的反应与手速才能做到。简化电话订票中间的流程，多开通几个订票号码，这样能分流一部分订票压力。 ##后台改进 从春运的卖出的2.4亿张火车票的数量上来看，这真的是实实在在的大数据处理。甚至被称为世界级难题我认为都是可以的。因为后台跟12306前端所面对的问题完全是不再一个层面上的。因为后台需要将电话，售票点，代售点，网络售票，退票这几个点的火车票全部进行管理。也就是需要为这2.4亿张火车票做一个中心数据库系统。而且这个系统需要满足： 高并发：几百万人在一个时间点同时买票。 高可用性：不能done机 高响应：读写的时间不能太长 恐怖的一致性：是的，这个一致性很恐怖。因为所有的订票请求，都需要在一个地方去拿，不能出现两个人订到了同一张票的情况。虽然电话，售票点，代售点，退票这几个点可以提前分配好资源。网络售票在一个时间点保持几百万个资源的一致性是非常恐怖的操作。 ###改进方案： 陈皓在去年提出了几点解决方案：数据镜像 ，数据分区 ，后端系统负载均衡 他的大致思路是一个数据负载均衡的思路。就是尽量不让用户去大量的访问一个点。实际上铁道部已经在去年开始就使用了分时间段买票的方法。这一方法就是一个负载均衡的思路。效果是有了，但是实际上只是消化了一部分数据，但还是有海量的数据存在。我倒是比较赞同他的另外一个思路，就是收集用户的订单，然后到了一定的时间与数量再提交到中数据库中。 我的思路： 既然要批量提交，为什么不把剩余票源提前从数据库里面挖出来做一个缓存，然后读写这块缓存，到最后在提交这块缓存到中心数据库。每个节点服务一批用户，缓存的节点不能太少，缓存应该在从中心数据里挖出来的那时候起就要保证将来数据库里一致性的问题。但难度在于如何将用户分配到适合的票源缓存点去？这就要按车次与席别还有乘车日期类型的不同来分配车票的类型。这个计算过程是独立，完全可以很轻松的做到并行计算。 ##小结 春运火车票这个问题基本上无解，因为 需要买票的人数 〉 票的总数。火车的载量也只有那么大，技术能解决的问题只能是让尽可能多人的人更顺利的买的票，不能产生更多的票。所以我想无论是叫阿里还是其他市场化的公司来做这个系统，没有买到票的人该骂的还是照样会骂。当然，上面的提出的一些方式也是比较理想化的。并没有过多的去考虑太多的细节问题。</p>
+    </section>
+
+    <footer class="post-footer">
+        <span>
+            
+            <a href="http://www.leyafo.com/post/2014-01-07-i-think-12306-areas-for-improvement/#comments"><i class="fa fa-comment"></i> Comments</a>
+            
+            
+        </span>
+    </footer>
+</article>
+
+	
+		<article class="li post">
+    <header class="post-header">
+        <h3 class="post-title"><a href="http://www.leyafo.com/post/2014-01-06-rails-ajax/">Rails 的 AJAX</a></h3>
+        <p class="post-time"><time datetime="2014-01-06T14:00:00&#43;08:00">January 6, 2014</time></p>
+    </header>
+    
+    <section class="post-excerpt">
+        <p>在 Rails 中只需要指定在 erb 模板中指定 remote=true 选项就可以将请求变为异步的了。request-handle-response-callback 这是一个 AJAX 请求的过程。rails 将这些步骤直接简化成了 request 和 handle 两步，让它看起来的像魔法一样而简洁神秘。在我初次接触 Rails 的 AJAX 时，我也随手去翻了下 wikipedia 关于 AJAX 的条目。AJAX 很好理解，但这并未让我更好的去完全理解 Rails 魔法般的 *AJAX*。主要被困惑的在 controller 的 handle 函数里面的 response 实现。 def handle @model = new some_model #do something if @model.save respond_to do |format| format.js end end 上面是一个典型的 Rails 应用场景，完全没有了那些简单粗暴原生的 html 与 javascript 的代码，更加别想看到 XMLHttpRequest 这种对象了。respond_to 是一个接收代码块的方法。而 format 表示 response 时使用的数据格式，format.js 会找到对应的 handle.js 并将里面的 js 代码 repond 到客户端。这仅仅只是客户端需要</p>
+    </section>
+
+    <footer class="post-footer">
+        <span>
+            
+            <a href="http://www.leyafo.com/post/2014-01-06-rails-ajax/#comments"><i class="fa fa-comment"></i> Comments</a>
+            
+            
+        </span>
+    </footer>
+</article>
+
+	
+	
+<nav role="pagination" class="pagination">
+  
+	<span class="post-list-pagination-item post-list-pagination-item-current">Page 1 of 2</span>
+
+  <a href="/page/2/" class="older-posts">
+    &nbsp;Older&nbsp;<i class="fa fa-angle-double-right"></i>
+  </a>
+
+</nav>
+
+	</div>
+</main>
+    <footer id="site-footer">
+        <div class="container">
+            <a href="http://www.leyafo.comindex.xml" title="Get the RSS feed"><span class="tooltip"><i class="fa fa-rss"></i></span></a>
+            <section>&copy; <a href="http://www.leyafo.com"></a> 2015 | All rights reserved</section>
+            <section>Theme by <a href="http://www.jrdnbwmn.com">Jordan Bowman</a>. Generated with <a href="http://gohugo.io/">Hugo</a>.</section>
+        </div>
+    </footer>
+
+    <script type="text/javascript" src="http://www.leyafo.comjs/fittext.js"></script>
+    <script type="text/javascript">
+      $(".heading").fitText();
+    </script>
+
+</body>
+</html>

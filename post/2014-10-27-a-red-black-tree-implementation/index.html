@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" prefix="og: http://ogp.me/ns#" xmlns:og="http://ogp.me/ns#"><!--<![endif]-->
+
+    <head>
+                <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="author" content="">
+        <meta name="keywords" content="awesome, definitely">
+	
+        <meta property="og:site_name" content="Do Right Things">
+        <meta property="og:title" content="Do Right Things">
+        <meta property="og:url" content="http://www.leyafo.com/post/2014-10-27-a-red-black-tree-implementation/">
+        <meta property="og:description" content="">
+    
+        <meta property="og:type" content="article" />
+        <meta property="og:article:author" content="" />
+        <meta property="og:article:published_time" content="2014-10-27T11:27:00&#43;08:00" />
+    
+        <meta name="generator" content="Hugo 0.16" />
+        
+        <title>理解红黑树 - leyafo</title>
+        <meta property='og:title' content="理解红黑树 - Do Right Things">
+        <meta property="og:type" content="article">
+        
+
+        <link rel="canonical" href="http://www.leyafo.com" />
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="">
+        <link rel="stylesheet" type='text/css' href="http://www.leyafo.comcss/main.css"/>
+        <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300|Montserrat:700' rel='stylesheet' type='text/css'>
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+        <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+    </head>
+
+<body>
+<!--[if lt IE 7]><p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chrome/‎">install Google Chrome</a> to experience this site.</p><![endif]-->
+
+    <header id="site-header">
+        <div class="container">
+            <a href="http://www.leyafo.com" alt="Do Right Things"><h1 class="blog-title heading">Do Right Things</h1></a>
+            <p class="blog-description"></p>
+        </div>
+    </header>
+
+<main class="content" role="main">
+	<div class="container">
+		<article class="post">
+	<header class="post-header">
+        <h3 class="p-post-title">理解红黑树</h3>
+    </header>
+
+    <section class="post-content">
+        
+
+<p>红黑树是有序平衡 BST(binary search tree) 的一种，它于1978年由 Guibas 和 Sedgewick 发明。红黑树是<a href="http://en.wikipedia.org/wiki/2%E2%80%933%E2%80%934_tree">2-3-4 树</a> 的一种抽象表示。有趣的是现在大多数算法书关于红黑树都没有提到过 2-3-4 树。算法书上关于红黑树的讲解都是基于定理来实现红黑树。至于这些定理怎么来的，算法书却没有描述过。这就是为啥算法书上的红黑树难以理解，这是算法书的坑。所以要理解红黑树，理解 2-3-4树 是必不可少的一个过程。</p>
+
+<h2 id="2-3-4树">2-3-4树</h2>
+
+<h3 id="2-3-4树的基本性质">2-3-4树的基本性质</h3>
+
+<p>2-3-4树也是一种有序的平衡树，所有从 leaf 到 root 的 path 的高度都是相等的。每个节点可以容纳1到3个节点，可以有2到4个子节点。下面就是 2-3-4 树的3种类型。</p>
+
+<pre><code class="language-C">         B               D   F                H   K   O  
+        / \             /  |  \              / \ / \ / \  
+       A   C           B   E   G            A   I   L   Y  
+        2树                3树                    4树
+</code></pre>
+
+<p>类似于 BST，2-3-4对元素的排序是左小右大。不同的3树和4树的子节点会有中间大小的子节点。比如上图的3树中的 E 就比 D 大 比 F 小。4树中的 I 比 H 大，比 K 小。L 比 K 大，比 O 小。</p>
+
+<h3 id="2-3-4树的插入">2-3-4树的插入</h3>
+
+<p>前面说了 2-3-4树是一种平横树，所有从 leaf 到 root 的 path 的高度都是相等的。这也就意味着每当插入一个新节点不能单纯的像 BST 那样将新的节点插入到树的底部，否则会破坏树的平衡。2-3-4树使用的平衡方法是合并。就是将2树变为3树，3树变4树。如下图：</p>
+
+<pre><code class="language-C">          B                         B
+         / \        插入 D =&gt;       / \
+        A   C                     A  C D  
+                                      
+         B                            B
+        / \          插入 H=&gt;        /   \
+       A  C D                      A   C D H
+       
+</code></pre>
+
+<p>上面的插入方法解决了往 2-3-4树 插入新节点而不破坏树的平衡的问题。但是如果要插入的节点已经是一个4树了，这种方法就不管用了，因为4树是没法变为5树的。可以将4树往上挪一个节点，并分裂出俩个2树的子节点。如果上面的父节点已经是4树了，则继续往上挪动。直到 root 节点，再需要分裂的话，这个时候可以将 root 节点也进行分裂。root 节点分裂后整颗树的高度会增加一层。如下图所示：</p>
+
+<pre><code class="language-C">        A                  A S                      A   E   S          
+       / \     插入 S=&gt;    / | \         =&gt;插入 E   / \ / \ / \    =&gt; 插入 R ----&gt;
+       
+      先将 A E S 往上分裂  =&gt;      E                                E
+                                /  \          插入 R=&gt;           /  \
+                               A    S                          A   R S
+</code></pre>
+
+<h3 id="2-3-4树的删除">2-3-4树的删除</h3>
+
+<p>树结构的删除都很麻烦，2-3-4树 也不例外。2-3-4树 插入的时候需要保持树的平衡，删除的时候也需要保持树的平衡。如果需要降低树的高度从 root 合并来降低树的高度。2-3-4树 和 BST 一样会选择从 leaf 节点将 node 删除。如果找到的节点不是 leaf 节点会从当前节点的右边出发，找到最左边的 leaf 节点来替换，然后删除被替换后的 leaf 节点。如果 leaf 节点是3树或者或者4树，直接删除即可。如果是2树的话就不能直接删除，需要对其进行旋转操作，从临近的同一层节点挪个节点过来补上。如果临近元素也是2树则从父节点挪一个节点下来。
+下图是删除3树和4树的情况：</p>
+
+<pre><code class="language-C">            C                   C                    D                  D
+           /     删除 B=&gt;       /                    /       删除 B =&gt;   /
+          AB                  A                    ABC                 AC
+</code></pre>
+
+<p>下图是一个比较复杂的删除操作，删除一个非叶子节点，会碰到2树的删除并需要旋转的情况。(节点比较多所以用数字来表示节点)</p>
+
+<pre><code class="language-C">                  40
+             /         \
+           20           50                     删除根节点40
+          /  \       /     \                   找到右树最左边的42节点 -----------&gt;
+        14   32     43     62 70 79            并替换掉,再删除替换后的叶子节点
+        /\   /\     /\     / |  | \
+      10 18 25 33  42 47  57 65 74 81
+      
+                    42
+               /         \                       
+            左树不变        50                    
+                         /    \                  相邻节点也是2树，将43挪下来并合并 ------&gt;
+                      43     62 70 79            
+                     / \     / |  | \             
+                    x  47   57 65 74 81
+                    
+                    
+                    42
+                 /      \
+             左树不变      50
+                        /    \ 
+                     43 47  62 70 79           上一步中43也是2树
+                            / |  | \           需要从临近的节点通过旋转来拿到一个节点  -----&gt;
+                          57 65  74 81
+                          
+        
+                        42
+                     /      \
+                 左树不变      62             &lt;----- 62旋转上来
+                            /    \ 
+                          50     70 79
+                        /   \    / |  \
+                     43 47  57  65 74 81      &lt;----------- 57变为50的子节点
+</code></pre>
+
+<h2 id="红黑树">红黑树</h2>
+
+<p>红黑树是2-3-4树的一种抽象表示，在1978年 Guibas 和 Sedgewick 发明最初的红黑树。2008年 Sedgewick 对其进行了改进，并将此命名为 LLRBT(Left-leaning red–black tree 左倾红黑树)。LLRBT 相比1978年的红黑树要简单很多，实现的代码量也少很多。Sedgewick的一篇 <a href="http://www.cs.princeton.edu/~rs/talks/LLRB/RedBlack.pdf">PPT</a> 对此有非常详细的介绍。 现在大部分工程中的红黑树都是基于1978发明的算法，本文介绍的是 LLRBT。</p>
+
+<h3 id="红黑树的抽象表示">红黑树的抽象表示</h3>
+
+<p>在红黑树中表示2-3-4树的3树和4树会用红链接来表示。如下图所示(markdown 没有文本色彩支持，本文用//或\\来表示红色链接)：</p>
+
+<pre><code class="language-C">      A B                   B             A             A B C                     B
+     / | \  &lt;=红黑树表示=&gt;  //    或者 =&gt;    \\          / | | \    &lt;=红黑树表示=&gt;  //  \\
+                         A                  B                                  A      C
+</code></pre>
+
+<h3 id="红黑树的插入">红黑树的插入</h3>
+
+<p>红黑树在插入时也通过旋转来降低或者升高树的高度(关于旋转请看我的<a href="http://leyafo.logdown.com/posts/178297-avl-tree-implementation">另一篇文章</a>)。不同的是红黑树插入节点的方式是按照2-3-4树插入节点的方式来进行的。2-3-4树每插入一个节点会对树自底向上进行调整(合并或分裂)，红黑树也是对应于2-3-4树进行同样的操作。2-3-4树通过将3树合并为4树，4树分裂为俩个2树。红黑树通过旋转来做这些操作。</p>
+
+<pre><code class="language-C">   在2树中插入一个节点：
+     D  插入C=&gt;    D
+                 //
+                C                                                         
+                                                   &lt;===等同于3树===&gt;    C D
+                   C                       D                          / | \
+     C 插入D=&gt;       \\          左旋=&gt;   //
+                      D                C
+                     
+    
+    在3树中插入一个节点:  
+    
+     C H                    H             H 
+    / | \      红黑树表示=&gt; //            //             C                         A C H
+                         C   插入 A=&gt;   C      右旋=&gt;  // \\       2-3-4树表示=&gt;   / | | \
+                                      //             A    H
+                                     A
+
+                         H              H              H           
+    A H     红黑树表示=&gt; //             //             //             C                  A C H
+   / | \              A    插入 C=&gt;    A    左旋=&gt;    A     右旋=&gt;  // \\  2-3-4树表示=&gt; / | | \
+                                       \\          //            A    H              
+                                         C        C          
+
+
+    A C                    C             C
+   / | \      红黑树表示=&gt; //            // \\                                A C H
+                        A   插入 H=&gt;   A     H               2-3-4树表示=&gt;   / | | \
+</code></pre>
+
+<p>从上图可以看出，LLRBT 之所以使用左倾(left-leaning)是为了将3树限制为一种，以便更容易的将3树转为4树，来减少实现上复杂度。下图是4节点的分裂。</p>
+
+<pre><code class="language-C">
+                                                         /                  //
+      A C H     4树分裂为俩个2树=&gt;  C                      C                 C
+     / | | \                     / \      红黑树表示=&gt;  // \\      分裂=&gt;   / \     &lt;---将红链提上去
+                                A   H                 A    H             A  H  
+</code></pre>
+
+<p>红黑树在最初插入时使用的方式和普通的二叉树一样，递归查找到树的底部，然后将新节点插入到树的底部。在递归往回弹的时候对整颗树进行旋转调整，和2-3-4树使用相同的方式（3树变4树，4树分裂成俩个2树）来调整整颗树的高度。</p>
+
+<h3 id="红黑树的删除">红黑树的删除</h3>
+
+<p>红黑树的删除方法非常复杂。删除任意一个节点，红黑树会像 BST 一样会从右树的最左边找到一个节点进行替换并删除。所以实现红黑树的关键一点就是要实现 DeleteMin 方法。LLRBT  结构是没有 parent 节点的，在删除一个节点是并不能像 AVL 树那样在删除后再旋转。 LLRBT 在查找要删除的节点时就会对树进行调整，它会将要删除节点的那个方向的树通过旋转将树的高度升高一层。<br />
+下图是在 DeleteMin 方法中将树的左边升高一层</p>
+
+<pre><code class="language-C">          //       &lt;----因为树是向左边递归的，           /
+         H              所以到 H 的链都是红的           H
+        / \                                        // \\
+       C   S          颜色反转，将红色向下传=&gt;        C    S     
+      /                                          /
+     B                                          B
+
+    这时如果 S 节点的left为红色，需要对其再做两次旋转
+           /                          /                        /
+          H                          H                        P
+        // \\                      // \\                    // \\
+       C    S       右旋S=&gt;        C    P         左旋 H=&gt;   H    S      
+      /    //                    /      \\                //  
+     B    P                     B         S              C
+                                                        /
+                                                       B
+     
+                                                      //
+            再将颜色反转回来=&gt;                          P
+                                                    / \
+                                                   H   S
+                                                 //
+                                                C
+                                               /
+                                              B                                               
+</code></pre>
+
+<p>上面做的这些操作的最终目的就是将树的最底部要删除的节点变为红色，这样是为了在删除的时候避免要删除的节点为2树。因为删除3树中的一个节点是不需要做其他转换可以直接删除的。在删除后需要重新自底向上修复整颗树的平衡。这样的删除方式看起来非常慢，实际上确实<a href="http://www.read.seas.harvard.edu/~kohler/notes/llrb.html">非常慢</a>。即使在没有找到要删除的节点也会递归进行旋转-修复这一过程。另外这里的删除使用的抽象方式并不是2-3-4树的删除方式，实际上使用的是2-3树的抽象方式。在红树向下传递的过程中最终的叶子会是颗3树，而不会是4树。Sedgewick 的 PPT 里面并没有说到这个问题。他的<a href="http://www.cs.princeton.edu/~rs/talks/LLRB/LLRB.pdf">另一篇论文</a>才说到了这个问题。</p>
+
+<p>PS：
+本人实现的 <a href="https://github.com/leyafo/practice-algorithm/blob/master/DataStruct/rb_tree.c">Red Black Tree</a>。
+Sedgewick 的 <a href="http://www.cs.princeton.edu/~rs/talks/LLRB/RedBlack.pdf">PPT</a> 里面有两个错误.
+    1. 在 deleteMax方法中向下递归是 deleteMax(h.left) 应该是 deleteMax(h.right)。
+    2. 在 delete 方法中需要添加当前节点是否为空的判断，否则递归到空节点时程序会挂掉。</p>
+
+    </section>
+
+    <hr>
+
+    <footer class="post-footer">
+        <section class="f-1">
+            
+            
+            <p class="f-post-time"><time datetime="2014-10-27T11:27:00&#43;08:00">October 27, 2014</time></p>
+        </section>
+                        
+        <section class="f-2">
+            <section class="share">
+                <span>Share:
+                <a class="icon-twitter" href="http://twitter.com/share?text=%e7%90%86%e8%a7%a3%e7%ba%a2%e9%bb%91%e6%a0%91&url=http%3a%2f%2fwww.leyafo.com%2fpost%2f2014-10-27-a-red-black-tree-implementation%2f"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <i class="fa fa-twitter"></i>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fwww.leyafo.com%2fpost%2f2014-10-27-a-red-black-tree-implementation%2f"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <i class="fa fa-facebook"></i>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2fwww.leyafo.com%2fpost%2f2014-10-27-a-red-black-tree-implementation%2f"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <i class="fa fa-google-plus"></i>
+                </a>
+                </span>
+            </section>
+
+            
+        </section>
+                
+        <section id="comments">
+            <div id="disqus_thread" class="post-comments"></div>
+            <script type="text/javascript">
+              if (window.location.hostname != "localhost") {
+                var disqus_shortname = 'yafo';
+                (function() {
+                  var dsq = document.createElement('script');
+                  dsq.type = 'text/javascript';
+                  dsq.async = true;
+                  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              }
+            </script>
+            <noscript>
+              Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+            </noscript>
+        </section>
+                
+    </footer>
+</article>
+
+	</div>
+</main>
+    <footer id="site-footer">
+        <div class="container">
+            <a href="http://www.leyafo.comindex.xml" title="Get the RSS feed"><span class="tooltip"><i class="fa fa-rss"></i></span></a>
+            <section>&copy; <a href="http://www.leyafo.com"></a> 2015 | All rights reserved</section>
+            <section>Theme by <a href="http://www.jrdnbwmn.com">Jordan Bowman</a>. Generated with <a href="http://gohugo.io/">Hugo</a>.</section>
+        </div>
+    </footer>
+
+    <script type="text/javascript" src="http://www.leyafo.comjs/fittext.js"></script>
+    <script type="text/javascript">
+      $(".heading").fitText();
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" prefix="og: http://ogp.me/ns#" xmlns:og="http://ogp.me/ns#"><!--<![endif]-->
+
+    <head>
+                <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="author" content="">
+        <meta name="keywords" content="awesome, definitely">
+	
+        <meta property="og:site_name" content="Do Right Things">
+        <meta property="og:title" content="Do Right Things">
+        <meta property="og:url" content="http://www.leyafo.com/post/2013-11-14-on-nosql/">
+        <meta property="og:description" content="">
+    
+        <meta property="og:type" content="article" />
+        <meta property="og:article:author" content="" />
+        <meta property="og:article:published_time" content="2013-11-14T09:39:00&#43;08:00" />
+    
+        <meta name="generator" content="Hugo 0.16" />
+        
+        <title>关于NoSQL - leyafo</title>
+        <meta property='og:title' content="关于NoSQL - Do Right Things">
+        <meta property="og:type" content="article">
+        
+
+        <link rel="canonical" href="http://www.leyafo.com" />
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="">
+        <link rel="stylesheet" type='text/css' href="http://www.leyafo.comcss/main.css"/>
+        <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300|Montserrat:700' rel='stylesheet' type='text/css'>
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+        <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+    </head>
+
+<body>
+<!--[if lt IE 7]><p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chrome/‎">install Google Chrome</a> to experience this site.</p><![endif]-->
+
+    <header id="site-header">
+        <div class="container">
+            <a href="http://www.leyafo.com" alt="Do Right Things"><h1 class="blog-title heading">Do Right Things</h1></a>
+            <p class="blog-description"></p>
+        </div>
+    </header>
+
+<main class="content" role="main">
+	<div class="container">
+		<article class="post">
+	<header class="post-header">
+        <h3 class="p-post-title">关于NoSQL</h3>
+    </header>
+
+    <section class="post-content">
+        
+
+<p>传统关系型数据库,将数据以表结构的方式存储起来.并且所有的数据是基于 <em>ACID</em><sup class="footnote-ref" id="fnref:ACID"><a rel="footnote" href="#fn:ACID">1</a></sup> 原则.这种方式存储数据有很明显的缺点.首先,为了保证一致性,基于 <em>ACID<sup class="footnote-ref" id="fnref:ACID"><a rel="footnote" href="#fn:ACID">2</a></sup></em> 类型的数据库都是使用事物来保持数据的一致性.也就是说同时只能有一个 <em>client</em> 提交数据.然后,以表结构存储的数据库架构是死的,一个表的列基本上是固定的.如果变化的话会带来很多问题.<br />
+比如:<br />
+1.我有一种数据,这些数据都是一些 <em>Excle</em> 表格.每个表格的列都不相同.但实际上他们都是一种数据.该如何存储?<br />
+2.一个表有 10 列,我想再加一个字段,但这个字段并不是所有数据都需要的.<br />
+3.问题同上,如果加 20 个字段呢?再新建一个表?新建的表如何与现有的表关联?</p>
+
+<p>最后关联性数据库还有个不利于分布的弱点,如果数据分布在 <em>N</em> 台分布式的机器上,数据库该如何管理?</p>
+
+<p>为了弥补这些缺点, <em>NoSQL</em> 类数据库诞生了.首先 <em>NoSQL</em> 类数据库有以下特点:<br />
+<strong>schema-less</strong>: 数据没有字段的概念,并且数据仓库(关联型数据库的 <em>table</em> )可以随时变化字段.<br />
+<strong>Strong Consistency</strong>: 保证数据最终的一致性.<br />
+<strong>High Availability</strong>: 保证所有请求数据的客户端都能得到一份数据的 <em>copy</em>.<br />
+<strong>Partition-tolerance</strong>: 数据可以不限于分布在同一台机器上.</p>
+
+<p>一般 <em>NoSQL</em> 类数据库存储数据的模型有 4 种方式:</p>
+
+<p><strong>Key-Value</strong>: 类似于 <em>json</em> 的 <em>key-value</em> 的方式进行数据存储</p>
+
+<p><strong>BigTable</strong>:  多维度的 <em>key-value</em> 结构,并且存储方式是分布式,稀疏的<sup class="footnote-ref" id="fnref:-"><a rel="footnote" href="#fn:-">3</a></sup>,严格排序的. *Google*很多产品都在用,具有高压缩,高性能,易于查询的特点.</p>
+
+<p><strong>Documents</strong>:
+多个 <em>key-value</em> 结构的数据合为一条数据,每一条数据称为为一个 <em>docment</em>. 并且每个 <em>docment</em> 的 <em>key-value</em> 个数和 <em>key</em> 都可以不同.并且在搜索时,可以以 <em>value</em> 做为关键字来搜索.</p>
+
+<p><strong>Graph</strong>:
+以网状方式将数据存储在一个 <em>dataset</em> 中.适合存储有关联的数据.</p>
+
+<p>从以上的特性可以看出, <em>NoSQL</em> 类数据库是一种将数据以 <em>OO(Object Oriented)</em> 方式存储起来.适合做社交网络的关联分析,尤其是 <em>Graph</em> 模型的 <em>NoSQL</em> 类数据库.同时 <em>NoSQL</em> 类数据库的分布式特点在海量数据和海量并发上有着传统关联型数据库无可比拟的优势.</p>
+
+<h2 id="参考资料">参考资料</h2>
+
+<p><a href="http://en.wikipedia.org/wiki/nosql">NoSQL at wikipedia</a><br />
+<a href="http://www.infoq.com/articles/graph-nosql-neo4j">Graph Databases, NoSQL and Neo4j</a><br />
+<a href="http://en.wikipedia.org/wiki/MongoDB">MongoDB</a></p>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:ACID">即原子性(<em>atomicity</em>),一致性(<em>consistency</em>),持久性(<em>durability</em>),隔离性(<em>isolation</em>).
+ <a class="footnote-return" href="#fnref:ACID"><sup>[return]</sup></a></li>
+<li id="fn:ACID">即原子性(<em>atomicity</em>),一致性(<em>consistency</em>),持久性(<em>durability</em>),隔离性(<em>isolation</em>).
+ <a class="footnote-return" href="#fnref:ACID"><sup>[return]</sup></a></li>
+<li id="fn:-">这里的稀疏指的并不是存储方式的稀疏,它指的是(<em>map</em> 结构中的 <em>key-Value</em> 可以是多维的.<a href="http://jimbojw.com/wiki/index.php?title=Understanding_Hbase_and_BigTable">参考链接</a> 
+ <a class="footnote-return" href="#fnref:-"><sup>[return]</sup></a></li>
+</ol>
+</div>
+
+    </section>
+
+    <hr>
+
+    <footer class="post-footer">
+        <section class="f-1">
+            
+            
+            <p class="f-post-time"><time datetime="2013-11-14T09:39:00&#43;08:00">November 14, 2013</time></p>
+        </section>
+                        
+        <section class="f-2">
+            <section class="share">
+                <span>Share:
+                <a class="icon-twitter" href="http://twitter.com/share?text=%e5%85%b3%e4%ba%8eNoSQL&url=http%3a%2f%2fwww.leyafo.com%2fpost%2f2013-11-14-on-nosql%2f"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <i class="fa fa-twitter"></i>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fwww.leyafo.com%2fpost%2f2013-11-14-on-nosql%2f"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <i class="fa fa-facebook"></i>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2fwww.leyafo.com%2fpost%2f2013-11-14-on-nosql%2f"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <i class="fa fa-google-plus"></i>
+                </a>
+                </span>
+            </section>
+
+            
+        </section>
+                
+        <section id="comments">
+            <div id="disqus_thread" class="post-comments"></div>
+            <script type="text/javascript">
+              if (window.location.hostname != "localhost") {
+                var disqus_shortname = 'yafo';
+                (function() {
+                  var dsq = document.createElement('script');
+                  dsq.type = 'text/javascript';
+                  dsq.async = true;
+                  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              }
+            </script>
+            <noscript>
+              Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+            </noscript>
+        </section>
+                
+    </footer>
+</article>
+
+	</div>
+</main>
+    <footer id="site-footer">
+        <div class="container">
+            <a href="http://www.leyafo.comindex.xml" title="Get the RSS feed"><span class="tooltip"><i class="fa fa-rss"></i></span></a>
+            <section>&copy; <a href="http://www.leyafo.com"></a> 2015 | All rights reserved</section>
+            <section>Theme by <a href="http://www.jrdnbwmn.com">Jordan Bowman</a>. Generated with <a href="http://gohugo.io/">Hugo</a>.</section>
+        </div>
+    </footer>
+
+    <script type="text/javascript" src="http://www.leyafo.comjs/fittext.js"></script>
+    <script type="text/javascript">
+      $(".heading").fitText();
+    </script>
+
+
+</body>
+</html>
