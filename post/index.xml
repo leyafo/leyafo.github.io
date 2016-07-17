@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Do Right Things</title>
-    <link>http://leyafo.com/post/</link>
+    <link>http://www.leyafo.com/post/</link>
     <description>Recent content in Posts on Do Right Things</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 13 Jul 2016 02:51:00 +0800</lastBuildDate>
-    <atom:link href="http://leyafo.com/post/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://www.leyafo.com/post/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>开发笔记(1) － Count 问题 </title>
-      <link>http://leyafo.com/post/2016-07-13-development-notes-1-count-problems/</link>
+      <link>http://www.leyafo.com/post/2016-07-13-development-notes-1-count-problems/</link>
       <pubDate>Wed, 13 Jul 2016 02:51:00 +0800</pubDate>
       
-      <guid>http://leyafo.com/post/2016-07-13-development-notes-1-count-problems/</guid>
+      <guid>http://www.leyafo.com/post/2016-07-13-development-notes-1-count-problems/</guid>
       <description>&lt;p&gt;我们现在的生产环境里面最大的表数据量大概是 1kw 左右。我们这里有一个页面是将这张表里面的数据以列表的方式呈现出来。这个列表的功能有：上一页/下一页、跳页、总数页、数据的总条目数。这是一个很常见的 web 列表拥有的功能，这一系列的功能在数据量 10w 以下工作得很好。超过 10w 后页面 load 就会变得很慢。慢的主要原因是每次刷新操作和跳页操作都会去 Count 整个表，而且是精确的 Count，算法的复杂度为 O(n)。这种方式对于经常需要使用列表页查看数据的用户是完全不可接受的。&lt;/p&gt;
 
 &lt;p&gt;我们开始着手优化这个问题。羊毛出在羊身上，我们用的是 Postgresql 的数据库，当然会想到使用 Postgres 的一些功能去做这个事情。很快我们在 Google 搜索到了 Postgresql 的 &lt;a href=&#34;https://wiki.postgresql.org/wiki/Count_estimate&#34;&gt;Count estimate&lt;/a&gt; 机制。它通过获取 pg_class 这张元表纪录的信息来得到一个表里面大致的数据量。这种方法非常快，速度可达到毫秒级。但它有以下缺点：1.无法精确统计（从 estimate 这个词的意思就能看出来） 2.只能获取整张表的大致数量，无法做 where 条件过滤。问题到这里似乎还是没有解决。&lt;/p&gt;
@@ -27,10 +27,10 @@
     
     <item>
       <title>关于测试</title>
-      <link>http://leyafo.com/post/2016-05-16-about-test/</link>
+      <link>http://www.leyafo.com/post/2016-05-16-about-test/</link>
       <pubDate>Mon, 16 May 2016 00:25:00 +0800</pubDate>
       
-      <guid>http://leyafo.com/post/2016-05-16-about-test/</guid>
+      <guid>http://www.leyafo.com/post/2016-05-16-about-test/</guid>
       <description>&lt;p&gt;在我做 C/C++ 开发时测试这个概念在这个圈子里不那么流行，这也有可能是 C/C++ 这类静态语言写 test 不是那么好写。 C/C++ 这类静态语言写 test code 光想一想也挺烦的。但这并不是因此就不写测试一个借口。我现在做的 Rails 项目一开始也认为写测试会拖慢项目进度的，后来实践下来发现测试能很好的维护项目的稳定，这实际上节约了不少时间。只要克服下一开始认为测试代码会增加的心智负担就好了。&lt;/p&gt;
 
 &lt;p&gt;我们也不必太需要去理会什么 TDD，BDD，DDD 等一类名词。这一类名词对写测试的帮助并不大，而且有害。把原来本来很简单的事情弄得很复杂。写测试关键是要简单，只有简单的测试代码才能测试简单的测试代码。恩，这个有点绕。意思就是代码必须要容易测试，不容易测试的代码要把它改成容易测试的代码。TDD 奉行的测试驱动开发在我看来是挺难做到的。因为有时候我自己都不知道这个代码写好后会变成什么样子。单纯的一个输入输出是很难决定代码中间所经历的一些过程。还有一个重要的点就是被测试代码粒度越小越好，越小意味着模块化程度越高，接口的定义也越干净，这是非常值得的。所以别管什么 BDD, TDD, DDD 这一类名词，尽管写测试代码好了，尽可能把测试覆盖面辐射到更广才是最重要的。&lt;/p&gt;
@@ -45,10 +45,10 @@ Rspec 定义了测试的领域语言，他的目的是让非开发人员也能�
     
     <item>
       <title>彻底理解 KMP算法</title>
-      <link>http://leyafo.com/post/2014-11-14-a-thorough-understanding-of-kmp/</link>
+      <link>http://www.leyafo.com/post/2014-11-14-a-thorough-understanding-of-kmp/</link>
       <pubDate>Fri, 14 Nov 2014 07:02:00 +0800</pubDate>
       
-      <guid>http://leyafo.com/post/2014-11-14-a-thorough-understanding-of-kmp/</guid>
+      <guid>http://www.leyafo.com/post/2014-11-14-a-thorough-understanding-of-kmp/</guid>
       <description>&lt;p&gt;&lt;a href=&#34;http://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm&#34;&gt;KMP&lt;/a&gt; 算法是一种子串匹配算法。其特点在于匹配子串时&lt;strong&gt;利用已经匹配成功的部分子串来跳转到下一次能再次匹配的串&lt;/strong&gt;。书上列举的一大堆公式看着很犯晕，网上各类码农博客里面用代码写的文章，让本来逻辑有点绕的 kmp 更加绕。就我最近看到的文章来说最清晰的就是&lt;a href=&#34;http://www.ruanyifeng.com/blog/2013/05/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm.html&#34;&gt;阮一峰&lt;/a&gt; 和 &lt;a href=&#34;http://www.cnblogs.com/yjiyjige/p/3263858.html&#34;&gt;详解KMP算法&lt;/a&gt;。这两辆篇文章解释的通俗易懂，也有一些不太明晰的地方。本文的目的是在于解释笔者本人在理解 kmp，及阅读这些资料时不明白的地方。
 首先还是来看 kmp 匹配子串所使用的方法，下文中字符串“TEST ABCABCABCDEF” 表示要匹配的主串，字符串 &amp;ldquo;ABCABCDEF&amp;rdquo; 表示待匹配的子串。(用肉眼我们可以看到要匹配的子串的位置在最后的位置)。首先像暴力匹配一样我们把不匹配的字符串全部进行匹配并跳过。&lt;/p&gt;
 
@@ -134,10 +134,10 @@ next          ---&amp;gt; 000123000
     
     <item>
       <title>理解红黑树</title>
-      <link>http://leyafo.com/post/2014-10-27-a-red-black-tree-implementation/</link>
+      <link>http://www.leyafo.com/post/2014-10-27-a-red-black-tree-implementation/</link>
       <pubDate>Mon, 27 Oct 2014 11:27:00 +0800</pubDate>
       
-      <guid>http://leyafo.com/post/2014-10-27-a-red-black-tree-implementation/</guid>
+      <guid>http://www.leyafo.com/post/2014-10-27-a-red-black-tree-implementation/</guid>
       <description>
 
 &lt;p&gt;红黑树是有序平衡 BST(binary search tree) 的一种，它于1978年由 Guibas 和 Sedgewick 发明。红黑树是&lt;a href=&#34;http://en.wikipedia.org/wiki/2%E2%80%933%E2%80%934_tree&#34;&gt;2-3-4 树&lt;/a&gt; 的一种抽象表示。有趣的是现在大多数算法书关于红黑树都没有提到过 2-3-4 树。算法书上关于红黑树的讲解都是基于定理来实现红黑树。至于这些定理怎么来的，算法书却没有描述过。这就是为啥算法书上的红黑树难以理解，这是算法书的坑。所以要理解红黑树，理解 2-3-4树 是必不可少的一个过程。&lt;/p&gt;
@@ -329,10 +329,10 @@ Sedgewick 的 &lt;a href=&#34;http://www.cs.princeton.edu/~rs/talks/LLRB/RedBlac
     
     <item>
       <title>rails 注册登录</title>
-      <link>http://leyafo.com/post/2014-07-24-rails-log/</link>
+      <link>http://www.leyafo.com/post/2014-07-24-rails-log/</link>
       <pubDate>Thu, 24 Jul 2014 08:53:00 +0800</pubDate>
       
-      <guid>http://leyafo.com/post/2014-07-24-rails-log/</guid>
+      <guid>http://www.leyafo.com/post/2014-07-24-rails-log/</guid>
       <description>
 
 &lt;p&gt;这几天在做一个小型的论坛，做到了注册登录这一块。之前没有完整做过注册登录这个东西，这次我打算从头写到尾去详细的了解里面的一些基本原理。所以这次并没有使用&lt;a href=&#34;https://github.com/plataformatec/devise&#34;&gt;devise&lt;/a&gt;这样的 *gem*。&lt;/p&gt;
@@ -352,10 +352,10 @@ Sedgewick 的 &lt;a href=&#34;http://www.cs.princeton.edu/~rs/talks/LLRB/RedBlac
     
     <item>
       <title>Capistrano 部署</title>
-      <link>http://leyafo.com/post/2014-06-19-capistrano-deployment/</link>
+      <link>http://www.leyafo.com/post/2014-06-19-capistrano-deployment/</link>
       <pubDate>Thu, 19 Jun 2014 03:07:00 +0800</pubDate>
       
-      <guid>http://leyafo.com/post/2014-06-19-capistrano-deployment/</guid>
+      <guid>http://www.leyafo.com/post/2014-06-19-capistrano-deployment/</guid>
       <description>
 
 &lt;p&gt;这几天要部署自己做的一个小板凳，是用 sinatra 写的一个简单的 blog 程序。这个程序很简单，代码非常少，可以像 php 那样直接使用 async 将代码。但我想熟悉下 Ruby 关于部署方面的技术，因此找到了 Capistrano 这个东西。Rails 的 web 后台对环境非常挑剔，Capistrano 是 Ruby 写的， 虽然它可以部署各种语言的代码，但可以部署 Rails 的程序不会太简单。&lt;/p&gt;
@@ -404,10 +404,10 @@ Capistrano 3 去掉了 current_path, shared_path 等一些公有变量，据说�
     
     <item>
       <title>我认为PHP不好的地方</title>
-      <link>http://leyafo.com/post/2014-05-22-i-think-php-is-terrible/</link>
+      <link>http://www.leyafo.com/post/2014-05-22-i-think-php-is-terrible/</link>
       <pubDate>Thu, 22 May 2014 00:29:00 +0800</pubDate>
       
-      <guid>http://leyafo.com/post/2014-05-22-i-think-php-is-terrible/</guid>
+      <guid>http://www.leyafo.com/post/2014-05-22-i-think-php-is-terrible/</guid>
       <description>
 
 &lt;p&gt;最近在用PHP做项目，让我个人感觉PHP是门非常不顺手的编程语言。PHP太多东西给人的感觉就像是一个半成品。&lt;/p&gt;
@@ -428,10 +428,10 @@ Capistrano 3 去掉了 current_path, shared_path 等一些公有变量，据说�
     
     <item>
       <title>avl 树的实现</title>
-      <link>http://leyafo.com/post/2014-02-09-avl-tree-implementation/</link>
+      <link>http://www.leyafo.com/post/2014-02-09-avl-tree-implementation/</link>
       <pubDate>Sun, 09 Feb 2014 07:01:00 +0800</pubDate>
       
-      <guid>http://leyafo.com/post/2014-02-09-avl-tree-implementation/</guid>
+      <guid>http://www.leyafo.com/post/2014-02-09-avl-tree-implementation/</guid>
       <description>&lt;p&gt;过年在家没事，找出了几年前把我折磨得死去活来的&lt;a href=&#34;http://book.douban.com/subject/1971825/&#34;&gt;&amp;lt;数据结构与算法分析&amp;gt;&lt;/a&gt;这本书。确切的说，这段时间这本书也在折磨我。上面的avl树的旋转说得不清不楚的，而且还是使用递归实现了avl树的插入与删除操作。让这本书上本身就已经不太清晰的描述变得更加的扑朔迷离，让我有一种想烧掉这本书的冲动。到最后我实在没法看懂书上描述的avl树的操作方式只好自己从网上找一些资料实现了avl树(&lt;a href=&#34;https://github.com/leyafo/practice-algorithm/blob/master/DataStruct/avl_tree.c&#34;&gt;代码在此&lt;/a&gt;)。另外&lt;a href=&#34;http://zh.wikipedia.org/wiki/AVL%E6%A0%91&#34;&gt;维基百科&lt;/a&gt;上有关于avl树基本性质的描述，我在这里也不过多介绍。但是请勿对照这篇文章去实现avl树，这篇描述的删除操作是有问题的。关于树的旋转，这篇文章也没有把最根本的问题说清楚。avl树最难的部分就是关于树的旋转，本文主要讨旋转的问题。&lt;/p&gt;
 
 &lt;p&gt;首先，旋转的作用是降低子树的高度。旋转的方式有两种，一种是用来降低左子树高度一般被称作右旋。一种是用来降低右子树高度一般被称为左旋。这两种旋转在物理上是对称的，在编码上也是无脑对称的。因此，在编码方面我们只需要实现出一种旋转后另一种旋转也可以依葫芦画瓢的实现出来。另外在每个节点中保存一个父节点可以让编码的复杂度大大降低。&lt;/p&gt;
@@ -489,10 +489,10 @@ Capistrano 3 去掉了 current_path, shared_path 等一些公有变量，据说�
     
     <item>
       <title>我认为12306 可以改进的地方</title>
-      <link>http://leyafo.com/post/2014-01-07-i-think-12306-areas-for-improvement/</link>
+      <link>http://www.leyafo.com/post/2014-01-07-i-think-12306-areas-for-improvement/</link>
       <pubDate>Tue, 07 Jan 2014 10:10:00 +0800</pubDate>
       
-      <guid>http://leyafo.com/post/2014-01-07-i-think-12306-areas-for-improvement/</guid>
+      <guid>http://www.leyafo.com/post/2014-01-07-i-think-12306-areas-for-improvement/</guid>
       <description>
 
 &lt;h2 id=&#34;几条社会数据&#34;&gt;几条社会数据：&lt;/h2&gt;
@@ -552,10 +552,10 @@ Capistrano 3 去掉了 current_path, shared_path 等一些公有变量，据说�
     
     <item>
       <title>Rails 的 AJAX</title>
-      <link>http://leyafo.com/post/2014-01-06-rails-ajax/</link>
+      <link>http://www.leyafo.com/post/2014-01-06-rails-ajax/</link>
       <pubDate>Mon, 06 Jan 2014 14:00:00 +0800</pubDate>
       
-      <guid>http://leyafo.com/post/2014-01-06-rails-ajax/</guid>
+      <guid>http://www.leyafo.com/post/2014-01-06-rails-ajax/</guid>
       <description>&lt;p&gt;在 &lt;em&gt;Rails&lt;/em&gt; 中只需要指定在 &lt;em&gt;erb&lt;/em&gt; 模板中指定 &lt;em&gt;remote=true&lt;/em&gt; 选项就可以将请求变为异步的了。&lt;strong&gt;request-handle-response-callback&lt;/strong&gt; 这是一个 &lt;em&gt;AJAX&lt;/em&gt; 请求的过程。&lt;em&gt;rails&lt;/em&gt; 将这些步骤直接简化成了 &lt;em&gt;request&lt;/em&gt; 和 &lt;em&gt;handle&lt;/em&gt; 两步，让它看起来的像魔法一样而简洁神秘。在我初次接触 &lt;em&gt;Rails&lt;/em&gt; 的 &lt;em&gt;AJAX&lt;/em&gt; 时，我也随手去翻了下 &lt;em&gt;wikipedia&lt;/em&gt; 关于 &lt;em&gt;AJAX&lt;/em&gt; 的条目。&lt;em&gt;AJAX&lt;/em&gt; 很好理解，但这并未让我更好的去完全理解 &lt;em&gt;Rails&lt;/em&gt; 魔法般的 *AJAX*。主要被困惑的在 &lt;em&gt;controller&lt;/em&gt; 的 &lt;em&gt;handle&lt;/em&gt; 函数里面的 &lt;em&gt;response&lt;/em&gt; 实现。&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;        def handle
@@ -579,10 +579,10 @@ Capistrano 3 去掉了 current_path, shared_path 等一些公有变量，据说�
     
     <item>
       <title>vim 最佳实践</title>
-      <link>http://leyafo.com/post/2013-11-26-the-best-practical-vim/</link>
+      <link>http://www.leyafo.com/post/2013-11-26-the-best-practical-vim/</link>
       <pubDate>Tue, 26 Nov 2013 04:01:00 +0800</pubDate>
       
-      <guid>http://leyafo.com/post/2013-11-26-the-best-practical-vim/</guid>
+      <guid>http://www.leyafo.com/post/2013-11-26-the-best-practical-vim/</guid>
       <description>&lt;p&gt;#重装你的vim
 是的,重新安装你的 &lt;em&gt;vim&lt;/em&gt;. 因为默认安装的 &lt;em&gt;vim&lt;/em&gt; 是不带 &lt;em&gt;python&lt;/em&gt; 和 &lt;em&gt;lua,ruby,perl&lt;/em&gt; 这一系列脚本支持的.因此你需要加入这些脚本支持,然后重新编译安装.重新安装前请先备份好 &lt;em&gt;~/.vim&lt;/em&gt; 目录中的东西与 &lt;em&gt;vimrc&lt;/em&gt;.&lt;/p&gt;
 
@@ -626,10 +626,10 @@ Capistrano 3 去掉了 current_path, shared_path 等一些公有变量，据说�
     
     <item>
       <title>尾递归优化</title>
-      <link>http://leyafo.com/post/2013-11-23-tail-recursion-optimization/</link>
+      <link>http://www.leyafo.com/post/2013-11-23-tail-recursion-optimization/</link>
       <pubDate>Sat, 23 Nov 2013 11:47:00 +0800</pubDate>
       
-      <guid>http://leyafo.com/post/2013-11-23-tail-recursion-optimization/</guid>
+      <guid>http://www.leyafo.com/post/2013-11-23-tail-recursion-optimization/</guid>
       <description>&lt;p&gt;&lt;em&gt;递归是一个奇特的玩意,能简洁的描述复杂的思考.&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;一个简单的递归函数:&lt;/p&gt;
@@ -683,10 +683,10 @@ fibonacci.L = [1,1]
     
     <item>
       <title>关于NoSQL</title>
-      <link>http://leyafo.com/post/2013-11-14-on-nosql/</link>
+      <link>http://www.leyafo.com/post/2013-11-14-on-nosql/</link>
       <pubDate>Thu, 14 Nov 2013 09:39:00 +0800</pubDate>
       
-      <guid>http://leyafo.com/post/2013-11-14-on-nosql/</guid>
+      <guid>http://www.leyafo.com/post/2013-11-14-on-nosql/</guid>
       <description>
 
 &lt;p&gt;传统关系型数据库,将数据以表结构的方式存储起来.并且所有的数据是基于 &lt;em&gt;ACID&lt;/em&gt;&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:ACID&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:ACID&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; 原则.这种方式存储数据有很明显的缺点.首先,为了保证一致性,基于 &lt;em&gt;ACID&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:ACID&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:ACID&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/em&gt; 类型的数据库都是使用事物来保持数据的一致性.也就是说同时只能有一个 &lt;em&gt;client&lt;/em&gt; 提交数据.然后,以表结构存储的数据库架构是死的,一个表的列基本上是固定的.如果变化的话会带来很多问题.&lt;br /&gt;
@@ -740,10 +740,10 @@ fibonacci.L = [1,1]
     
     <item>
       <title>Python内存管理</title>
-      <link>http://leyafo.com/post/2013-11-08-python-memory-management/</link>
+      <link>http://www.leyafo.com/post/2013-11-08-python-memory-management/</link>
       <pubDate>Fri, 08 Nov 2013 11:25:00 +0800</pubDate>
       
-      <guid>http://leyafo.com/post/2013-11-08-python-memory-management/</guid>
+      <guid>http://www.leyafo.com/post/2013-11-08-python-memory-management/</guid>
       <description>
 
 &lt;blockquote&gt;
