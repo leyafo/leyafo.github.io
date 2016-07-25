@@ -52,6 +52,27 @@
 	
 		<article class="li post">
     <header class="post-header">
+        <h3 class="post-title"><a href="http://www.leyafo.com/post/2014-01-06-rails-ajax/">Rails 的 AJAX</a></h3>
+        <p class="post-time"><time datetime="2014-01-06T14:00:00&#43;08:00">January 6, 2014</time></p>
+    </header>
+    
+    <section class="post-excerpt">
+        <p>在 Rails 中只需要指定在 erb 模板中指定 remote=true 选项就可以将请求变为异步的了。request-handle-response-callback 这是一个 AJAX 请求的过程。rails 将这些步骤直接简化成了 request 和 handle 两步，让它看起来的像魔法一样而简洁神秘。在我初次接触 Rails 的 AJAX 时，我也随手去翻了下 wikipedia 关于 AJAX 的条目。AJAX 很好理解，但这并未让我更好的去完全理解 Rails 魔法般的 *AJAX*。主要被困惑的在 controller 的 handle 函数里面的 response 实现。 def handle @model = new some_model #do something if @model.save respond_to do |format| format.js end end 上面是一个典型的 Rails 应用场景，完全没有了那些简单粗暴原生的 html 与 javascript 的代码，更加别想看到 XMLHttpRequest 这种对象了。respond_to 是一个接收代码块的方法。而 format 表示 response 时使用的数据格式，format.js 会找到对应的 handle.js 并将里面的 js 代码 repond 到客户端。这仅仅只是客户端需要</p>
+    </section>
+
+    <footer class="post-footer">
+        <span>
+            
+            <a href="http://www.leyafo.com/post/2014-01-06-rails-ajax/#comments"><i class="fa fa-comment"></i> Comments</a>
+            
+            
+        </span>
+    </footer>
+</article>
+
+	
+		<article class="li post">
+    <header class="post-header">
         <h3 class="post-title"><a href="http://www.leyafo.com/post/2013-11-26-the-best-practical-vim/">vim 最佳实践</a></h3>
         <p class="post-time"><time datetime="2013-11-26T04:01:00&#43;08:00">November 26, 2013</time></p>
     </header>
@@ -127,6 +148,27 @@
         <span>
             
             <a href="http://www.leyafo.com/post/2013-11-08-python-memory-management/#comments"><i class="fa fa-comment"></i> Comments</a>
+            
+            
+        </span>
+    </footer>
+</article>
+
+	
+		<article class="li post">
+    <header class="post-header">
+        <h3 class="post-title"><a href="http://www.leyafo.com/post/2016-07-25-rent-room-story/"></a></h3>
+        <p class="post-time"><time datetime="0001-01-01T00:00:00Z">January 1, 0001</time></p>
+    </header>
+    
+    <section class="post-excerpt">
+        <p>Untitled /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */ /* Remove comment around @import statement below when using as a custom stylesheet */ /*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/ article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,summary{display:block} audio,canvas,video{display:inline-block} audio:not([controls]){display:none;height:0} [hidden],template{display:none} script{display:none!important} html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%} body{margin:0} a{background:transparent} a:focus{outline:thin dotted} a:active,a:hover{outline:0} h1{font-size:2em;margin:.67em 0} abbr[title]{border-bottom:1px dotted} b,strong{font-weight:bold} dfn{font-style:italic} hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0} mark{background:#ff0;color:#000} code,kbd,pre,samp{font-family:monospace;font-size:1em} pre{white-space:pre-wrap} q{quotes:"\201C" "\201D" "\2018" "\2019"} small{font-size:80%} sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline} sup{top:-.5em} sub{bottom:-.25em} img{border:0} svg:not(:root){overflow:hidden} figure{margin:0} fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em} legend{border:0;padding:0} button,input,select,textarea{font-family:inherit;font-size:100%;margin:0} button,input{line-height:normal} button,select{text-transform:none} button,html</p>
+    </section>
+
+    <footer class="post-footer">
+        <span>
+            
+            <a href="http://www.leyafo.com/post/2016-07-25-rent-room-story/#comments"><i class="fa fa-comment"></i> Comments</a>
             
             
         </span>
