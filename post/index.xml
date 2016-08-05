@@ -6,8 +6,34 @@
     <description>Recent content in Posts on Doing Right Things</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 25 Jul 2016 21:15:22 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 05 Aug 2016 11:25:19 +0800</lastBuildDate>
     <atom:link href="http://www.leyafo.com/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>开发笔记(2) － 部署遇到的麻烦事儿</title>
+      <link>http://www.leyafo.com/post/2016-08-05-deployment-as-chore/</link>
+      <pubDate>Fri, 05 Aug 2016 11:25:19 +0800</pubDate>
+      
+      <guid>http://www.leyafo.com/post/2016-08-05-deployment-as-chore/</guid>
+      <description>
+
+&lt;p&gt;我们现在用 Rails 做开发，线上的环境配置非常繁琐。到现在仍然没有找到一个可以快速 setup 一个 server 的解决方案。以下是我们在部署一个新的 server 时要做的一些麻烦事，我希望有一天能够在半小时内不用 ssh 登陆服务器就能把这些事情做好。&lt;/p&gt;
+
+&lt;h4 id=&#34;一-服务器-setup&#34;&gt;一、服务器 setup&lt;/h4&gt;
+
+&lt;p&gt;我们现在全线使用阿里云来配置 qa, production, db, backup 这些环境。每次新拿到一个 vps，我们做的第一件事情就是配置 ssh，创建相关人员账户，设置 public key，关闭免密码登录。这一系列的动作我们使用了 &lt;a href=&#34;https://www.chef.io/&#34;&gt;chef&lt;/a&gt; 来做这件事情，基本上做到了一键设置。还有像一些 bash，hosts 文件配置，安装一些常用软件等着一些比较简单的事情 chef 也做得很好。但 chef 能做好的事情也仅仅只有这一些而已。一旦我们需要安装类似于 rvm，ruby，postgresql 这样配置比较复杂的软件时 chef 就完全不能胜任了。其中有很大一方面的原因是 chef 配置非常之复杂、繁琐。里面各种各样的依赖，和每个 node 之间相互不同的 attributes 很让人焦头烂额。每次修改配置的时间超过了 setup 一个 server 的时间。如果长时间不去维护里面的 cookbook，过一段后又要重新去翻文档配置。这就是 chef 的问题，它带来的问题比要解决的问题更多。&lt;/p&gt;
+
+&lt;h4 id=&#34;二-ruby-环境-setup&#34;&gt;二、ruby 环境 setup&lt;/h4&gt;
+
+&lt;p&gt;我们现在用的是 rvm + ruby 的组合来运行我们的 app。rvm 主要的作用是管理不同的 ruby 版本，这几乎是所有解释型语言的通病，需要有一个版本管理工具来管理不同版本的解释器。静下心来想一想，我们其实并不需要多个ruby 版本。尤其是在服务器的环境里面很难会容许不同版本的 ruby 共存这样复杂的情况。因此 rvm 最主要的功能实际上我们是不需要的。我们尝试过在 server 自己手动编译一个指定的版本，但这样带来的问题是安装 gem 包需要 sudo 权限。也尝试过更改 gem 所在目录的权限，但一些 gem 有可执行文件，需要放在系统的 bin 目录下，这也需要 sudo 权限，这个再更改 bin 的目录权限就不那么适合了。我们现在的解决方案是使用 rbenv，这个工具和 rvm 做一样的事情，但安装配置比 rvm 要简单很多。到这时我才发现 rvm 和 rbenv 这样的工具更重要的是解决 gem 包的存放问题。&lt;/p&gt;
+
+&lt;h4 id=&#34;三-app-setup&#34;&gt;三、app setup&lt;/h4&gt;
+
+&lt;p&gt;我们的 rails 应用现在使用的是 capistrano 这个工具来做一键化部署。这是一个很复杂的工具，每次部署时会输出一大堆不太容易看明白的 log。尽管如此，它还是可靠的。基本上做到了一键化部署，新增 server 不需要过多的配置。比较麻烦的是新增的 server 需要配置 db，有时候碰到网络不好的情况 bundler 还要花掉不少的时间。另外就是 passenger、nginx、log rotate 这些东西配置尽管不是太复杂，但非常繁琐。&lt;/p&gt;
+
+&lt;p&gt;中国的网络问题是部署时非常大的一个问题，下载一些第三方依赖的 library 会花掉不少时间。甚至有时干脆访问不了一些服务镜像，甚至大部分 setup 浪费掉的时间都与网络有关。我想过 docker 可以很好的解决我以上碰到的一些问题。也花了一些时间去研究，但 docker 镜像在中国的下载速度让我非常失望。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>找室友经历</title>
@@ -764,75 +790,6 @@ fibonacci.L = [1,1]
  &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:-&#34;&gt;&lt;sup&gt;[return]&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Python内存管理</title>
-      <link>http://www.leyafo.com/post/2013-11-08-python-memory-management/</link>
-      <pubDate>Fri, 08 Nov 2013 11:25:00 +0800</pubDate>
-      
-      <guid>http://www.leyafo.com/post/2013-11-08-python-memory-management/</guid>
-      <description>
-
-&lt;blockquote&gt;
-&lt;p&gt;本文基于Python2.7.5源码中的obmalloc.c模块&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;在 Python 的内部系统中，它的内存管理结构是以金子塔结构呈现的.如下图所示:&lt;br /&gt;
-&lt;img src=&#34;http://user-image.logdown.io/user/4793/blog/4808/post/159345/6BJdTezMSYK9GlyKCPpO_QQ20131108-2.png&#34; alt=&#34;QQ20131108-2.png&#34; /&gt;
-- 其中-1和-2这两层是跟操作系统来负责的,这里我们略过不表.&lt;br /&gt;
-- 第0层就是我们平常在 C 中使用的 malloc, Python 不会直接使用它,而是会在此基础上做一个内存池.
-- 第1层是 Python 自己在基于 malloc 的基础上构造的一个内存池.
-- 第2和第3层是基于第1层的.每当 Python 内部需要使用内存时,会使用第1层做好的分配器来分配内存.
-因此第1层是 Python 内部管理内存的主要地方.&lt;/p&gt;
-
-&lt;h2 id=&#34;作用&#34;&gt;作用&lt;/h2&gt;
-
-&lt;p&gt;在 C 中如果频繁的调用 malloc 与 free 时,是会产生性能问题的.再加上频繁的分配与释放小块的内存会产生内存碎片. Python 在这里主要干的工作有:
-1. 如果请求分配的内存在1~256字节之间就使用自己的内存管理系统,否则直接使用 malloc.
-2. 这里还是会调用 malloc 分配内存,但每次会分配一块大小为256k的大块内存.
-3. 经由内存池登记的内存到最后还是会回收到内存池,并不会调用 C 的 free 释放掉.以便下次使用.&lt;/p&gt;
-
-&lt;h2 id=&#34;内存池结构&#34;&gt;内存池结构&lt;/h2&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://user-image.logdown.io/user/4793/blog/4808/post/159345/3Dm6gO5oSFS9uTPwvPrE_temp.png&#34; alt=&#34;temp.png&#34; /&gt;
-如上图所示,整个黑框格子代表内存池(usedpools).每个单元格存放一个双向链表,每个链表的节点是一个大小为4k的内存块.在这个池中,每个单元格负责管理不同的小块内存.为了便于管理,每个单元格管理的内存块总是以8的倍数为单位.以如下代码为例:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-C&#34;&gt;PyObject_Malloc(3)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;这里我们需要一块大小为3个字节的内存.它将定位到管理大小为8字节的单元格.然后返回大小8字节的内存.在这里 usedpools 有一个令人蛋疼的 ticky. usedpools 在初始化时用了如下代码:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-C&#34;&gt;#define PTA(x)  ((poolp )((uchar *)&amp;amp;(usedpools[2*(x)]) - 2*sizeof(block *)))
-#define PT(x)   PTA(x), PTA(x)
-static poolp usedpools[2 * ((NB_SMALL_SIZE_CLASSES + 7) / 8) * 8] = {
-    PT(0), PT(1), PT(2), PT(3), PT(4), PT(5), PT(6), PT(7)
-    ......
-};
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;如上面所示使用了两个一组的指针来初始化 usedpools, 每次定位到单元格他使用的是 usedpools[idx+idx] 这样来定位的.我也不知道它为什么会使用这么蛋疼且令人费解的设计,连注释都这样写着:
-&amp;gt;It&amp;rsquo;s unclear why the usedpools setup is so convoluted.&lt;/p&gt;
-
-&lt;h2 id=&#34;分配&#34;&gt;分配&lt;/h2&gt;
-
-&lt;p&gt;PyObject_Malloc 函数首先会判断进来申请分配的字节数是否在 1&amp;lt;x&amp;lt;256 bytes 这个范围内.然后再从 usedpools  中的管理对应大小的 pool 拿到一块 block, 每个 pool 的大小是4k.每当使用完 pool 中的最后一个 block 时,它会将这个 pool 从 usedpools 剥离出去.
-在调用 malloc 获取内存时,这里做了一层缓存(arenas).每次调用 malloc 会分配一块大小为256k的内存,然后将这块内存分解为一块一块大小为4k的 pool,每当 pool 中 block 用完后,就会重新从 arenas 拿一块 pool 并放入到 usedpools.&lt;br /&gt;
-在获取空闲 block 时,这里使用了一个 ticky. pool 中的 freeblock 成员是指向一块空闲的 block. 但这个 freeblock 在空闲时,它里面存了一个地址这个地址指向下一块空闲的 block. 下一块空闲的 block 里同样也存放了一个空闲 block 的地址,以此往下推.直到最后的 block 指向 NULL 为止.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-C&#34;&gt;bp = pool-&amp;gt;freeblock;
-if ((pool-&amp;gt;freeblock = *(block **)bp) != NULL) {
-    UNLOCK();
-    return (void *)bp;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;如上面所示,拿到一块 block 后,直接获取 freeblock 里面存的地址,并指向它.&lt;/p&gt;
-
-&lt;h2 id=&#34;释放&#34;&gt;释放&lt;/h2&gt;
-
-&lt;p&gt;在释放时会判断将要释放的内存是否属于 usedpools 管理.通常情况下它会直接将这块内存放到的 usedpools 对应 pools 中.如果发现这个 pools 中的 block 全部是 free 状态,它将会返到 arenas .如果 arenas 中的所有的 pool 都为 free 状态的话,则会直接调用 C 中的 free 函数将内存归还与操作系统.否则将这块 arenas 链接到 usable_arenas 正确的位置中.&lt;/p&gt;
 </description>
     </item>
     
