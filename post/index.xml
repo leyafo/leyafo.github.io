@@ -10,6 +10,263 @@
     <atom:link href="http://www.leyafo.com/post/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>git 初级教程</title>
+      <link>http://www.leyafo.com/post/2016-12-18-git-getting-started/</link>
+      <pubDate>Sun, 14 Aug 2016 12:10:03 +0800</pubDate>
+      
+      <guid>http://www.leyafo.com/post/2016-12-18-git-getting-started/</guid>
+      <description>
+
+&lt;h2 id=&#34;introduce&#34;&gt;Introduce&lt;/h2&gt;
+
+&lt;p&gt;git 不是一个对新手友好的工具，大多数新手第一次面对 git 总会有点手无足措。这时当你开始怀疑是不是一个蠢货时请不要停止，继续保持怀疑。面对一大堆命令和魔法般的黑色 terminal 大多数新手都会手无足措，不知道该怎么去用 git 去提交自己的代码。更可怕的事情是，如果搞砸了还会导致你旁边的豹子头同事把你给撕了的危险。本文档的主要作用是就是可以让你顺利的把代码提交到 git 库，避免产生意外的人身伤害。&lt;/p&gt;
+
+&lt;h2 id=&#34;example&#34;&gt;Example&lt;/h2&gt;
+
+&lt;p&gt;在被我忽悠 git 后你可能会偷偷的跑去网上找 git 相关的教程读。或者在看到我贱指如飞、神乎奇技地在键盘上狂按一通的时候你偷偷的拿笔在旁边记录我敲过的顺序。作为一个踏坑无数，身经百战的老司机有必要在这时告诉你一点儿人生经验，你这么做并没有什么卵用！！！因为你碰到的问题和网上那些教程说的是不一样的，老司机和你看到的世界也是不一样的（隔壁老王用的撩妹技能你直接拿去用会有什么后果？）。因此我们现在以平常工作中最简单的一个应用场景来解释 git 的基本用法。&lt;/p&gt;
+
+&lt;p&gt;现在假设有两个农民工张大锤，王大锤，以下简称老张和老王。老张和老王每天搬砖太累了，他们决定写一部电影剧本来改变世界。但两个人在同一个剧情时间点上写同一件事情的时候总是会产生冲突。老张本来在 1970 年10月24日把男主角写挂了。但老王由于刚在淘宝买了块机械键盘，打字打得太爽了。在1970年10月24日这一天写成男主角正在吃着火锅唱着歌。这个时候冲突产生了，老王和老张为了这个事情从相亲相爱变成了砖角遇到爱。下面我们开始详细描述这一起恶性暴力的流血事件。&lt;/p&gt;
+
+&lt;h2 id=&#34;commit&#34;&gt;Commit&lt;/h2&gt;
+
+&lt;p&gt;张大锤和王大锤已经写好了一些剧情了。他们的最开始的共同成果如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt; 1	从前有个人，名字叫赵铁柱。他人长得帅，又多金，还会写代码。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最前面那个 1 表示第一行。&lt;/p&gt;
+
+&lt;p&gt;老张刚和前女友分手，伤心难过，悲痛欲绝，以致于影响了日常严肃文学创作。所以他把接下来的剧本改成了这样：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt; 1	从前有个人，名字叫赵铁柱。他人长得帅，又多金，还会写代码。
+ 2	后来他死了。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;写完后老张开始提交代码，他先输入 git status 查看 git 库给出的文件改动信息。(git status 是一个人畜无害的命令，你敲破桌子也不会有人理你)。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;[老张]$ git status                                                                      
+On branch master
+Your branch is up-to-date with &#39;origin/master&#39;.
+Changes not staged for commit:
+  (use &amp;quot;git add &amp;lt;file&amp;gt;...&amp;quot; to update what will be committed)
+  (use &amp;quot;git checkout -- &amp;lt;file&amp;gt;...&amp;quot; to discard changes in working directory)
+
+	modified:   scenario
+
+no changes added to commit (use &amp;quot;git add&amp;quot; and/or &amp;quot;git commit -a&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这里给出的信息我们可以得到如下信息：&lt;/p&gt;
+
+&lt;p&gt;1.现在所在的分支在 master 上。（你可以先不用管什么是分支）&lt;/p&gt;
+
+&lt;p&gt;2.改动的文件是 scenario。&lt;/p&gt;
+
+&lt;p&gt;3.提示显示如果你要提交这个改动先使用 git add 和 git commit -a。&lt;/p&gt;
+
+&lt;p&gt;这里解释下 git add 和 git commit 这两个命令，这两个命令是要合用的。git add 是添加改动，git commit 是提交改动。git commit -a 表示的是添加并提交。现在看不懂 git commit -a 这个命令没关系，只要使用按照流程先用 git add 再用 git commit 就可以了。&lt;/p&gt;
+
+&lt;p&gt;老张按照流程输入了如下的命令进行 commit。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;[老张]$ git add scenario
+[老张]$ git commit -m &amp;quot;自古空情多余恨，此恨绵绵无绝期。&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中 -m 后面双引号括起来的那一串表示你对提交的改动信息说明，主要为了让别人能快速理解你的修改。&lt;/p&gt;
+
+&lt;p&gt;老张输入了 git status 查看 git 库给出的信息。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;[老张]$ git status                                                                       
+On branch master
+Your branch is ahead of &#39;origin/master&#39; by 1 commit.
+  (use &amp;quot;git push&amp;quot; to publish your local commits)
+nothing to commit, working directory clean
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这个时候提示我们可以往远程的 git 库进行提交了。&lt;/p&gt;
+
+&lt;p&gt;于是老张使用了 git push origin master (你只需要知道 origin 表示仓库，master 表示分支就可以了)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;[老张]$ git push origin master
+Counting objects: 3, done.
+Delta compression using up to 8 threads.
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 342 bytes | 0 bytes/s, done.
+Total 3 (delta 1), reused 0 (delta 0)
+To git@data-git.mana.com:yafo_bitch/git-tutorial.git
+   84179ac..060cd28  master -&amp;gt; master
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;以上信息告诉我们提交到远程库成功了，master -&amp;gt; master 表示远程的与本地的 master 同步了。&lt;/p&gt;
+
+&lt;p&gt;张大锤的工作到此为止，幸福生活依然还很幸福。但以下事情开始让张大锤觉得生活并不是那么的一帆风顺。&lt;/p&gt;
+
+&lt;h2 id=&#34;conflict&#34;&gt;Conflict&lt;/h2&gt;
+
+&lt;p&gt;王大锤鬼混了一天后开始改邪归正为改变世界写剧本了。他也从如下状态的剧本开始写。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt; 1	从前有个人，名字叫赵铁柱。他人长得帅，又多金，还会写代码。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;老王自从用上了淘宝买的机械键盘后，打字快如狗。他使用了他那把逼格甚高的上等无刻 HHKB 添加如下的剧情：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt; 1	从前有个人，名字叫赵铁柱。他人长得帅，又多金，还会写代码。
+ 2	他最大的爱好是吃着火锅，听着 beatles 与高富帅们谈笑风声。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;老王也按照流程开始提交他本地的改动&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;[老王]$ git add scenario
+[老王]$ git commit -m &amp;quot;两情若是久长时，一枝红杏出墙来。&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后他把本地的改动 push 到远程的 git 库。但是 push 不上去了，提示信息告诉他与远程的 git 库冲突了。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;[老王]$ git push origin master 
+To git@data-git.mana.com:yafo_bitch/git-tutorial.git
+ ! [rejected]        master -&amp;gt; master (fetch first)
+error: failed to push some refs to &#39;git@data-git.mana.com:yafo_bitch/git-tutorial.git&#39;
+hint: Updates were rejected because the remote contains work that you do
+hint: not have locally. This is usually caused by another repository pushing
+hint: to the same ref. You may want to first integrate the remote changes
+hint: (e.g., &#39;git pull ...&#39;) before pushing again.
+hint: See the &#39;Note about fast-forwards&#39; in &#39;git push --help&#39; for details.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;提示信息显示远程库的改动和本地不一致，必须要先 pull 下来再 push。这个时候可以使用命令 pull（用 pull 命令一定要加 &lt;code&gt;--rebase&lt;/code&gt; 参数） 先把远程的改动拉下来。拉下来后会出现两种情况。&lt;/p&gt;
+
+&lt;p&gt;一、你和别人代码没有冲突。pull 完了以后，这个时候你可以再一次 push 就好了。&lt;/p&gt;
+
+&lt;p&gt;二、你和别人的代码有冲突，这种情况一般是你和别人改了同一个位置的代码。就像这次王大锤和张大锤同时改了第二行的剧本一样。会产生如下的输出：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;[老王]$ git pull --rebase origin master   #一定要加 --rebase 参数。
+remote: Counting objects: 3, done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 1), reused 0 (delta 0)
+Unpacking objects: 100% (3/3), done.
+From data-git.mana.com:yafo_bitch/git-tutorial
+ * branch            master     -&amp;gt; FETCH_HEAD
+   84179ac..060cd28  master     -&amp;gt; origin/master
+First, rewinding head to replay your work on top of it...
+Applying: 两情若是久长时，一枝红杏出墙来。
+Using index info to reconstruct a base tree...
+M	scenario
+Falling back to patching base and 3-way merge...
+Auto-merging scenario
+CONFLICT (content): Merge conflict in scenario
+Failed to merge in the changes.
+Patch failed at 0001 两情若是久长时，一枝红杏出墙来。
+The copy of the patch that failed is found in:
+   /Users/老王/t/1/.git/rebase-apply/patch
+
+When you have resolved this problem, run &amp;quot;git rebase --continue&amp;quot;.
+If you prefer to skip this patch, run &amp;quot;git rebase --skip&amp;quot; instead.
+To check out the original branch and stop rebasing, run &amp;quot;git rebase --abort&amp;quot;.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;以上信息显示同时被修改的文件是 scenario（注意前面那个大写的 M，表示 modify 的意思），conflict 出现在了这个文件。我们先把注意力放到最下的三行。下面有请伟大的中文，英文，计算机文，三语使用者张全蛋先生为我们翻译。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;When you have resolved this problem, run &amp;quot;git rebase --continue&amp;quot;.
+搞定所有的麻烦后请使用 &amp;quot;git rebase --continue&amp;quot; 命令.
+
+If you prefer to skip this patch, run &amp;quot;git rebase --skip&amp;quot; instead.
+如果你想挨揍请使用 &amp;quot;git rebase --skip&amp;quot; 命令。
+
+To check out the original branch and stop rebasing, run &amp;quot;git rebase --abort&amp;quot;.
+如果你想被开除请使用 &amp;quot;git rebase --abort&amp;quot; 命令。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;很明显，为了生命安全，生活质量我们要按照第一条规则来行事。为了更方便解决冲突我们可以使用 git status 来查看更具体的冲突信息。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;[老王]$ git status
+rebase in progress; onto 060cd28
+You are currently rebasing branch &#39;master&#39; on &#39;060cd28&#39;.
+  (fix conflicts and then run &amp;quot;git rebase --continue&amp;quot;)
+  (use &amp;quot;git rebase --skip&amp;quot; to skip this patch)
+  (use &amp;quot;git rebase --abort&amp;quot; to check out the original branch)
+
+Unmerged paths:
+  (use &amp;quot;git reset HEAD &amp;lt;file&amp;gt;...&amp;quot; to unstage)
+  (use &amp;quot;git add &amp;lt;file&amp;gt;...&amp;quot; to mark resolution)
+
+	both modified:   scenario
+
+no changes added to commit (use &amp;quot;git add&amp;quot; and/or &amp;quot;git commit -a&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样就可以更清楚的看到具体的 both modified 文件路径。现在我们打开 scenario 文件可以看到另一个作者张大锤先生写的剧本。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;     1	从前有个人，名字叫赵铁柱。他人长得帅，又多金，还会写代码。
+     2	&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt; HEAD
+     3	后来他死了。
+     4	=======
+     5	他最大的爱好是吃着火锅，听着 beatles 与高富帅们谈笑风声。
+     6	&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt; 两情若是久长时，一枝红杏出墙来。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在 scenario 文件告诉我们具体冲突的地方（使用git diff scenario 可以快速查看冲突） 。&lt;/p&gt;
+
+&lt;p&gt;就是以 &lt;code&gt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt; HEAD&lt;/code&gt; 开始到 &lt;code&gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&lt;/code&gt; 结束的地方。中间的 &lt;code&gt;=======&lt;/code&gt; 用来分割开两次的改动。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt; HEAD&lt;/code&gt; 下面的是别人那边提交过来的代码&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;=======&lt;/code&gt;  下面的是我们这次修改后的代码&lt;/p&gt;
+
+&lt;p&gt;决定好留低3行或第5行后，在文件里面其他的所有东西都要都要删除掉。&lt;/p&gt;
+
+&lt;p&gt;王大锤和张大锤后来打了很多场架，留过很多血后，终于决定了到底保留第3行还是第5行。&lt;/p&gt;
+
+&lt;p&gt;这时王大锤可以继续提交了。以下是修改好冲突后提交的流程：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;[老王]$ git add scenario  #由于只是修改冲突，所以并不需要再使用 commit
+[老王]$ git rebase --continue
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这时可以使用 push 把本地的修改提交到远程去。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;[老王]$ git push origin master
+Counting objects: 3, done.
+Delta compression using up to 8 threads.
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 462 bytes | 0 bytes/s, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To git@data-git.mana.com:yafo_bitch/git-tutorial.git
+   060cd28..7f1794c  master -&amp;gt; master
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ok，Everything is all right. 幸福的生活可以继续了。&lt;/p&gt;
+
+&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+
+&lt;p&gt;为了在关键时刻不手忙脚乱的再从头开始读文章，我把所有的步骤全列在下面供你们快速查看。$ 后面表示命令行。千万别使用 &lt;code&gt;Ctrl-C&lt;/code&gt; copy 任何命令，否则出现生命危险后果请自负！&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;#正常步骤
+....  edit some files ....
+$ git add edited_file
+$ git commit -m &amp;quot;some changes message&amp;quot;
+$ git push origin master
+
+#冲突步骤
+....  edit some files ....
+$ git add edited_file
+$ git commit -m &amp;quot;some changes message&amp;quot;
+$ git push origin master
+....  failed to push some refs to ....
+$ git pull --rebase origin master
+
+## 如果没有冲突？
+$ git push origin master
+
+## 如果有冲突？
+... resolved all of conflicts ...
+$ git add some_resolved_file
+$ git rebase --contine
+$ git push origin master
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
       <title>我看奥运会</title>
       <link>http://www.leyafo.com/post/2016-08-14-olympics-I-say/</link>
       <pubDate>Sun, 14 Aug 2016 12:10:03 +0800</pubDate>
@@ -704,63 +961,6 @@ Capistrano 3 去掉了 current_path, shared_path 等一些公有变量，据说�
 
 &lt;p&gt;##macro
 &lt;em&gt;vim&lt;/em&gt; 的 &lt;em&gt;macro&lt;/em&gt; 是用来录制一段动作,然后保存到命名的 &lt;em&gt;macro&lt;/em&gt; 中去的. 使用方法为:在命令模式下使用 &lt;strong&gt;qa&lt;/strong&gt;命令(&lt;strong&gt;a&lt;/strong&gt;代表 &lt;em&gt;marcro&lt;/em&gt; 名,可以是其他数字与字母).这时候状态栏的左边上会显示 &lt;strong&gt;recording&lt;/strong&gt;, 然后做一些操作,做完后在命令模式下使用 &lt;strong&gt;q&lt;/strong&gt; 命令退出录制.然后就可以使用 &lt;strong&gt;@a&lt;/strong&gt; 将这段 &lt;em&gt;macro&lt;/em&gt; &amp;lsquo;播放&amp;rsquo;出来. 如果需要连续做10次,使用 &lt;strong&gt;10@a&lt;/strong&gt;即可.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>尾递归优化</title>
-      <link>http://www.leyafo.com/post/2013-11-23-tail-recursion-optimization/</link>
-      <pubDate>Sat, 23 Nov 2013 11:47:00 +0800</pubDate>
-      
-      <guid>http://www.leyafo.com/post/2013-11-23-tail-recursion-optimization/</guid>
-      <description>&lt;p&gt;&lt;em&gt;递归是一个奇特的玩意,能简洁的描述复杂的思考.&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;一个简单的递归函数:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def fibonacci(n):
-    if n &amp;lt;= 1:
-        return 1
-    return fibonacci(n-1) + fibonacci(n-2) 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;这个函数实现了一个裴波那契数列.非常简单,代码只有 3 行,但如果跟着函数运行的轨迹走.会发现这个函数背后的调用过程非常的复杂.每次递归都会依赖前面两次计算的结果.随着递归的层级上升,每次都会重新去调用前两次计算产生的结果.为了简化描述,下面是以 fibonacci(5) 模拟递归调用过程.
-&lt;img src=&#34;http://user-image.logdown.io/user/4793/blog/4808/post/161697/ACy9LF8WSqK0PWHRVX83_fib.png&#34; alt=&#34;fib.png&#34; /&gt;
-可以看到,每次递归都会重复前两次的调用过程.实际上这个递归数列并不需要每次都重复去求前两次的结果.如果用压栈的方法,一遍递归就可以搞定了.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def fibonacci(n):
-    L = fibonacci.L
-    if n &amp;lt;= 2:
-        return L[-1]  #get top
-    else:
-        n2 = L.pop()  
-        n1 = L.pop()
-        L.append(n2)  #&#39;append&#39; is stack&#39;s push  
-        L.append(n1+n2)
-    return fibonacci(n-1)
-fibonacci.L = [1,1]  
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;上面的代码耍了一个小花招.首先先设定好两个初始的计算结果,然后开始递归迭代.与前一版本递归不同的是,前一个递归需要在进入到递归底部后,才开始跳出来计算每一步递归后的结果,直到返回.而后一个递归会在最开始递归进入时就开始计算,进入到递归底部后(也就是 n &amp;lt;= 2)最终的结果就已经计算出来了,直接一层一层返回这个结果就可以了.
-为了便于说明下面代码是利用两个变量做中间结果的版本:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def fib(n, n1=1, n2=1):
-    if n &amp;lt; 2:
-        return n1
-    return fib(n-1, n2, n1+n2)  
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;跟上面那个压栈的方式一样.先设定好两个默认的结果,在递归进入时直接将结果计算出来并保存好.
-下面是这个函数的调用过程:
-  fib(n = 10, n1 = 1, n2 = 1)
-  fib(n = 9, n1 = 1, n2 = 2)
-  fib(n = 8, n1 = 2, n2 = 3)
-  fib(n = 7, n1 = 3, n2 = 5)
-  fib(n = 6, n1 = 5, n2 = 8)
-  fib(n = 5, n1 = 8, n2 = 13)
-  fib(n = 4, n1 = 13, n2 = 21)
-  fib(n = 3, n1 = 21, n2 = 34)
-  fib(n = 2, n1 = 34, n2 = 55)
-  fib(n = 1, n1 = 55, n2 = 89)&lt;/p&gt;
 </description>
     </item>
     
