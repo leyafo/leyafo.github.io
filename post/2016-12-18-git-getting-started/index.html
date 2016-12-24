@@ -1,100 +1,128 @@
-
 <!DOCTYPE html>
-<html lang="en-us">
+<html lang="zh-CN">
+<head>
 
-    <head>
-
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
-        <meta property="og:title" content=" git 初级教程 &middot;  Doing Right Things" />
-        <meta property="og:site_name" content="Doing Right Things" />
-        <meta property="og:url" content="http://www.leyafo.com/post/2016-12-18-git-getting-started/" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     
-        <meta property="og:type" content="article" />
-        <meta property="og:article:published_time" content="2016-12-20T11:11:54&#43;08:00" />
+
+
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="git 初级教程"/>
+<meta name="twitter:description" content="Introduce git 不是一个对新手友好的工具，大多数新手第一次面对 git 总会有点手无足措。这时当你开始怀疑是不是一个蠢货时请不要停止，继续保持怀疑。面对一大堆命令和魔法般的黑色 terminal 大多数新手都会手无足措，不知道该怎么去用 git 去提交自己的代码。更可怕的事情是，如果搞砸了还会导致你旁边的豹子头同事把你给撕了的危险。本文档的主要作用是就是可以让你顺利的把代码提交到 git 库，避免产生意外的人身伤害。 Example 在被我忽悠 git 后你可能会偷偷的跑去网上找 git 相关的教程读。或者在看到我贱指如飞、神乎奇技地在键盘上狂按一通的时候你偷偷的拿笔在旁边记录我敲过的顺序。作为一个踏坑无数，身经百战的老司机有必要在这时告诉你一点儿人生经验，你这么做并没有什么卵用！！！因为你碰到的问题和网上那些教程说的是不一样的，老司机和你看到的世界也是不一样的（隔壁老王用的撩妹技能你直接拿去用会有什么后果？）。因此我们现在以平常工作中最简单的一个应用场景来解释 git 的基本用法。 现在假设有两个农民工张大锤，王大锤，以下简称老张和老王。老张和老王每天搬砖太累了，他们决定写一部电影剧本来改变世界。但两个人在同一个剧情时间点上写同一件事情的时候总是会产生冲突。老张本来在 1970 年10月24日把男主角写挂了。但老王由于刚在淘宝买了块机械键盘，打字打得太爽了。在1970年10月24日这一天写成男主角正在吃着火锅唱着歌。这个时候冲突产生了，老王和老张为了这个事情从相亲相爱变成了砖角遇到爱。下面我们开始详细描述这一起恶性暴力的流血事件。 Commit 张大锤和王大锤已经写好了一些剧情了。他们的最开始的共同成果如下： 1 从前有个人，名字叫赵铁柱。他人长得帅，又多金，还会写代码。 最前面那个 1 表示第一行。 老张刚和前女友分手，伤心难过，悲痛欲绝，以致于影响了日常严肃文学创作。所以他把接下来的剧本改成了这样： 1 从前有个人，名字叫赵铁柱。他人长得帅，又多金，还会写代码。 2 后来他死了。 写完后老张开始提交代码，他先输入 git status 查看 git 库给出的文件改动信息。(git status 是一个人畜无害的命令，你敲破桌子也不会有人理你)。 [老张]$ git status On branch master Your branch is up-to-date with &#39;origin/master&#39;. Changes not staged for commit: (use &quot;git add &lt;file&gt;...&quot; to update what will be committed) (use &quot;git checkout -- &lt;file&gt;...&quot; to discard changes in working directory) modified: scenario no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;) 这里给出的信息我们可以得到如下信息： 1.现在所在的分支在 master 上。（你可以先不用管什么是分支） 2.改动的文件是 scenario。 3.提示显示如果你要提交这个改动先使用 git add 和 git commit -a。 这里解释下 git add 和 git commit 这两个命令，这两个命令是要合用的。git add 是添加改动，git commit 是提交改动。git commit -a 表示的是添加并提交。现在看不懂 git commit -a 这个命令没关系，只要使用按照流程先用 git add 再用 git commit 就可以了。 老张按照流程输入了如下的命令进行 commit。 [老张]$ git add scenario [老张]$ git commit -m &quot;自古空情多余恨，此恨绵绵无绝期。&quot; 其中 -m 后面双引号括起来的那一串表示你对提交的改动信息说明，主要为了让别人能快速理解你的修改。 老张输入了 git status 查看 git 库给出的信息。 [老张]$ git status On branch master Your branch is ahead of &#39;origin/master&#39; by 1 commit."/>
+
+
+
+  	<meta property="og:title" content=" git 初级教程 &middot;  Doing Right Things" />
+  	<meta property="og:site_name" content="Doing Right Things" />
+  	<meta property="og:url" content="http://www.leyafo.com/post/2016-12-18-git-getting-started/" />
+
+    
+  	<meta property="og:type" content="article" />
+
+    <meta property="og:article:published_time" content="2016-12-20T11:11:54&#43;08:00" />
+
+    
+    
+
+    <title>
+       git 初级教程 &middot;  Doing Right Things
+    </title>
+
+    <meta name="description" content="Just Write Some Minds" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="http://www.leyafo.com/images/favicon.ico">
+	  <link rel="apple-touch-icon" href="http://www.leyafo.com/images/apple-touch-icon.png" />
+
+    <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400|Inconsolata" />
+
+
+    
+      
+          <link href="http://www.leyafo.com/index.xml" rel="alternate" type="application/rss+xml" title="Doing Right Things" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.16" />
+
+    <link rel="canonical" href="http://www.leyafo.com/post/2016-12-18-git-getting-started/" />
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
         
-
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:site" content="@" />
-        <meta name="twitter:creator" content="@" />
-        <meta name="twitter:title" content="git 初级教程" />
-        <meta name="twitter:description" content="" />
-        <meta name="twitter:url" content="http://www.leyafo.com/post/2016-12-18-git-getting-started/" />
-    
-
-        <title> git 初级教程 &middot;  Doing Right Things</title>
-
-    
-        <meta name="description" content="" />
-    
-        
-        <meta name="p:domain_verify" content="fc173d84e3a4de948ed4bda2908afd3e"/>
-        <meta name="HandheldFriendly" content="True" />
-        <meta name="MobileOptimized" content="320" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-        
-          
-
-    
-        <link href="http://www.leyafo.com/index.xml" rel="alternate" type="application/rss+xml" title="Doing Right Things" />
-    
-
-    
-        <link rel="canonical" href="http://www.leyafo.com/post/2016-12-18-git-getting-started/" />
-
-    
-    
-    
         
         
-        
-        
-            
-            
-        
-        
-        
-        
+    </ul>
     
     
+    <a class="subscribe-button icon-feed" href="http://www.leyafo.com/index.xml">Subscribe</a>
     
-    
-    <style>
-*{padding:0;margin:0}body,html{font-size:1em;line-height:1.65em;font-family:"Open Sans",sans-serif;font-weight:300;color:#444}html{height:100%}body{padding:2em 2.5em 1em 20em}header{border-right:1px #eee solid;padding:2em;position:fixed;top:0;left:0;height:100%;width:13.5em}#content{display:block;width:100%}footer{padding:1em 0 2.5em;font-size:.8em;line-height:1.5em;color:#888}article{border-bottom:.1em #eee solid;padding-bottom:1.7em;max-width:56em}h4,h5,h6,hr,p{margin-top:.9em;margin-bottom:.9em}h1,h2,h3,h4,h5,h6{font-family:"Bree Serif",serif;font-weight:400!important}h1{font-size:2.5em;line-height:1.1em;margin-top:.6em;margin-bottom:.6em}h2{font-size:1.9em;line-height:1.2em;margin-top:.7em;margin-bottom:.7em}h3{font-size:1.4em;line-height:1.3em;margin-top:.8em;margin-bottom:.8em}h4{font-size:1.3em}h5{font-size:1.2em}h6{font-size:1.1em}iframe,img{max-width:100%}a{font-weight:700;text-decoration:none;color:#5cc265}a:hover{text-decoration:underline}h1 a,h2 a,h3 a,h4 a,h5 a,h6 a{font-weight:400!important}strong{font-weight:700}blockquote{border-left:.4em solid #eee;padding-left:1.2em;font-size:1.3em}hr{border:0;height:1px;background:#eee}ol,ul{margin-left:3em}code{font-size:1.4em;background:#eee}pre{font-size:.8em;line-height:2em;background:#eee;padding:1em;word-break:break-all;word-wrap:break-word;white-space:pre;white-space:-moz-pre-wrap;white-space:pre-wrap}input{font-size:1em;padding:.3em}header h1{font-size:1.9em;margin-top:.8em;margin-bottom:.6em}header h1 a{color:#444}header h1 a:hover{text-decoration:none}header #logo img{width:9em;height:9em;border-radius:4.5em;-moz-border-radius:4.5em;-webkit-border-radius:4.5em;border:none}#follow-icons{font-size:.7em;margin-top:-.7em;margin-bottom:1.5em}#follow-icons a{color:#ccc}#follow-icons span{vertical-align:top;margin-left:-.15em;margin-right:-.15em}#follow-icons span .fa-stack-1x{font-size:1.05em;line-height:1.9em}header h6{margin-top:.5em}article span.post-stamp{color:#888}h1.post-title{margin-top:.35em;margin-bottom:.6em}h3.post-title{margin-top:.4em;padding-bottom:.9em;border-bottom:1px solid #eee;font-size:1.2em;color:#444}.post-title .feature-star{font-size:.9em}.feature-star,.separator,.taglist{color:#ccc}.taglist a{background-color:#ccc;color:#fff;display:inline-block;line-height:1.5em;padding:.3em .6em;vertical-align:20%;font-size:.5em;font-family:"Open Sans",sans-serif;font-weight:700!important;text-transform:uppercase;letter-spacing:.05em;border-radius:.25em;-moz-border-radius:.25em;-webkit-border-radius:.25em}#social-bar{margin-top:1.5em;background-color:#eee;padding:.5em}#comments{margin-top:.15em;padding-bottom:.2em;border-bottom:1px solid #eee}.pagination{margin-bottom:1em}footer a{font-weight:300;color:#888;text-decoration:underline}footer a:hover{color:#444;text-decoration:none}@media only screen and (min-width:1281px){body,html{font-size:1.1em}}@media only screen and (max-width:800px){body{padding:0}header{border-right:none;border-bottom:1px #eee solid;position:relative;height:auto;width:auto;text-align:center;padding-bottom:1em}#content{margin-left:0;padding:2em 2em 1em;width:auto}footer{padding:0 2.5em 2em}}@media only screen and (max-width:320px){#content,header{padding:1.2em 1.2em .6em}footer{padding:0 1.5em 1.2em}ol,ul{margin-left:2em}}
-</style>
-    </head>
-    <body>
-        <header id="header">
-            <a id="logo" href="http://www.leyafo.com/"><img src="https://s.gravatar.com/avatar/00b3262fe3d762a258c856dd95444d0a?s=80" alt="Doing Right Things" /></a>
-            <h1><a href="http://www.leyafo.com/">Doing Right Things</a></h1>
-            <p></p>
+</div>
+<span class="nav-cover"></span>
 
-            <div id="follow-icons">
-  <a href="http://twitter.com/leyafo" rel="me"><i class="fa fa-twitter-square fa-2x"></i></a>
-  <a href="http://github.com/leyafo" rel="me"><i class="fa fa-github-square fa-2x"></i></a>
-  <a href="http://www.leyafo.com/index.xml" rel="me"><i class="fa fa-rss-square fa-2x"></i></a>
-</div>  
 
-            <h6><a href="http://www.leyafo.com">About</a></h6>
+ <div class="site-wrapper">
 
-        </header>
 
-<main id="content">
 
-<article id="" class="post">
-    <div class="post-stamp">
-        <time datetime="2016-12-20T11:11:54&#43;08:00">
-            20 Dec 2016
-        </time>
-        <span class="taglist">
+
+<header class="main-header post-head no-cover">
+  <nav class="main-nav clearfix">
+
+
+  
+  
+      <a class="menu-button icon-feed" href="http://www.leyafo.com/index.xml">&nbsp;&nbsp;Subscribe</a>
+  
+  </nav>
+</header>
+
+
+
+<main class="content" role="main">
+
+
+
+
+  <article class="post post">
+
+    <header class="post-header">
+        <h1 class="post-title">git 初级教程</h1>
+        <small></small>
+
+        <section class="post-meta">
         
-        </span>
-    </div>
-    <h1 class="post-title">git 初级教程</h1>
-    
+          <time class="post-date" datetime="2016-12-20T11:11:54&#43;08:00">
+            Dec 20, 2016
+          </time>
+        
+         
+        </section>
+    </header>
+
+    <section class="post-content">
+      
 
 <h2 id="introduce">Introduce</h2>
 
@@ -343,47 +371,63 @@ $ git rebase --contine
 $ git push origin master
 </code></pre>
 
-    
-    <div itemprop="author">
-  <h5>About me</h5>
-  <section>
-    <p>Nothing here</p>
-  </section>
-</div>
+    </section>
+
+
+  <footer class="post-footer">
+
 
     
+
+    <section class="author">
+  <h4><a href="http://www.leyafo.com/">leyafo</a></h4>
+</section>
+
+
+    
+<section class="share">
+  <h4>Share this post</h4>
+  <a class="icon-twitter" style="font-size: 1.4em" href="https://twitter.com/share?text=git%20%e5%88%9d%e7%ba%a7%e6%95%99%e7%a8%8b&nbsp;-&nbsp;Doing%20Right%20Things&amp;url=http%3a%2f%2fwww.leyafo.com%2fpost%2f2016-12-18-git-getting-started%2f"
+      onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+      <span class="hidden">Twitter</span>
+  </a>
+  <a class="icon-facebook" style="font-size: 1.4em" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fwww.leyafo.com%2fpost%2f2016-12-18-git-getting-started%2f"
+      onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+      <span class="hidden">Facebook</span>
+  </a>
+  <a class="icon-pinterest" style="font-size: 1.4em" href="http://pinterest.com/pin/create/button/?url=http%3a%2f%2fwww.leyafo.com%2fpost%2f2016-12-18-git-getting-started%2f&amp;description=git%20%e5%88%9d%e7%ba%a7%e6%95%99%e7%a8%8b"
+      onclick="window.open(this.href, 'pinterest-share','width=580,height=296');return false;">
+      <span class="hidden">Pinterest</span>
+  </a>
+  <a class="icon-google-plus" style="font-size: 1.4em" href="https://plus.google.com/share?url=http%3a%2f%2fwww.leyafo.com%2fpost%2f2016-12-18-git-getting-started%2f"
+     onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+      <span class="hidden">Google+</span>
+  </a>
+</section>
+
+
+
+    
+
+
+
+
+  </footer>
 </article>
 
 </main>
-		<footer id="footer">
-			<section id="footer-message">&copy; Doing Right Things. All rights reserved. Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
-		</footer>
-
-    <script>
-      (function(c,f){asyncLoader=function(i,h){i.foreach(function(k,j){e(j,d(j),h)});if(typeof h.callback=="function"){var g=setInterval(function(){if(f.readyState==="complete"){clearInterval(g);h.callback()}},10)}};var d=function(g){var h=g.split(".");return h[h.length-1]},e=function(h,i,g){switch(i){case"js":a(h,g);break;case"css":b(h);break;default:break}},a=function(i,h){var g=document.createElement("script");g.type="text/javascript";g.async=true;g.src=i;document.getElementsByTagName("head")[0].appendChild(g)},b=function(g){var h=document.createElement("link");h.type="text/css";h.rel="stylesheet";h.href=g;document.getElementsByTagName("head")[0].appendChild(h)};Array.prototype.foreach=function(h){for(var g=0;g<this.length;g++){h(g,this[g])}}})(this,document);
-
-      var WebFontConfig={google:{families:["Open Sans:300italic,700italic,300,700","Bree+Serif"]}};
-      asyncLoader([
-        "//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css",
-        "//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js",
-        "//cdnjs.cloudflare.com/ajax/libs/webfont/1.5.16/webfontloader.js",
-        "//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"
-      ],{
-        callback:function(){
-          asyncLoader([
-            "http:\/\/www.leyafo.com\/css/rrssb.css",
-            "http:\/\/www.leyafo.com\/js/gist.min.js", 
-            "http:\/\/www.leyafo.com\/js/rrssb.min.js",
-            "//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/default.min.css"
-          ], { callback:function() {
-              hljs.initHighlighting();
-          }});
-        }
-      });
-    </script>
-    <script id='nodebb-comments-script' ourl="https://v2mm.tech" ocid="49" blogger='leyafo' src="https://v2mm.tech/plugins/nodebb-plugin-blog-comments2/lib/simple-hugo.js">
-    </script>
-	
-	</body>
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">Doing Right Things</a> All rights reserved by Leyafo</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="http://www.leyafo.com/js/jquery.js"></script>
+    <script type="text/javascript" src="http://www.leyafo.com/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="http://www.leyafo.com/js/index.js"></script>
+    <script id='nodebb-comments-script' ourl="https://v2mm.tech" ocid="49" blogger='leyafo' src="https://v2mm.tech/plugins/nodebb-plugin-blog-comments2/lib/simple-hugo.js"></script>
+    
+</body>
 </html>
 

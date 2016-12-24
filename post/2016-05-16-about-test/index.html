@@ -1,100 +1,128 @@
-
 <!DOCTYPE html>
-<html lang="en-us">
+<html lang="zh-CN">
+<head>
 
-    <head>
-
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
-        <meta property="og:title" content=" 关于测试 &middot;  Doing Right Things" />
-        <meta property="og:site_name" content="Doing Right Things" />
-        <meta property="og:url" content="http://www.leyafo.com/post/2016-05-16-about-test/" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     
-        <meta property="og:type" content="article" />
-        <meta property="og:article:published_time" content="2016-05-16T00:25:00&#43;08:00" />
+
+
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="关于测试"/>
+<meta name="twitter:description" content="在我做 C/C&#43;&#43; 开发时测试这个概念在这个圈子里不那么流行，这也有可能是 C/C&#43;&#43; 这类静态语言写 test 不是那么好写。 C/C&#43;&#43; 这类静态语言写 test code 光想一想也挺烦的。但这并不是因此就不写测试一个借口。我现在做的 Rails 项目一开始也认为写测试会拖慢项目进度的，后来实践下来发现测试能很好的维护项目的稳定，这实际上节约了不少时间。只要克服下一开始认为测试代码会增加的心智负担就好了。 我们也不必太需要去理会什么 TDD，BDD，DDD 等一类名词。这一类名词对写测试的帮助并不大，而且有害。把原来本来很简单的事情弄得很复杂。写测试关键是要简单，只有简单的测试代码才能测试简单的测试代码。恩，这个有点绕。意思就是代码必须要容易测试，不容易测试的代码要把它改成容易测试的代码。TDD 奉行的测试驱动开发在我看来是挺难做到的。因为有时候我自己都不知道这个代码写好后会变成什么样子。单纯的一个输入输出是很难决定代码中间所经历的一些过程。还有一个重要的点就是被测试代码粒度越小越好，越小意味着模块化程度越高，接口的定义也越干净，这是非常值得的。所以别管什么 BDD, TDD, DDD 这一类名词，尽管写测试代码好了，尽可能把测试覆盖面辐射到更广才是最重要的。 Rspec 的问题 Rspec 定义了测试的领域语言，他的目的是让非开发人员也能写测试。这个目的挺美好的，想想也挺美好的。实际上我们在项目中很难找到一个会去写测试的测试工程师。写 Rspec 这个东西没有一点开发能力还真搞不定。所以 Rspec 的让非开发人员写 test code 还是想想就好了，test code 还是得你自己来写，因为你对你自己写得模块是最清楚的。另外相对于 Rails 自带的测试框架 Rspec 解决的还是相同的问题。Rails 自带的测试框架已经挺好的了，模块化分析测试也很好的控制了测试的粒度。关键是它非常快，跑完所有的测试要同样数量的 Rspec 快很多。这很重要，Rspec 的性能很为人诟病，因为会增加对写 test code 的厌恶。一个简单的测试用例要跑 10 秒是很影响写代码的体验的。 测试的作用 改代码比写新的代码要烦，需要小心的应对以前的历史包袱，还要了解以前的工作机制是怎样的。所以，如果有一些现成的测试用例代码就能很好的应对这些问题。它能保证你不回对以前的代码产生副作用，并且在些测试代码阶段可以让你自己在代码层面对接口的合理性做更详细的检查。能让代码质量变得更高。在项目部署前跑一遍所有的测试用例可安心不少，尽管部署时出现的问题大多数集中在恶劣的服务器环境上。"/>
+
+
+
+  	<meta property="og:title" content=" 关于测试 &middot;  Doing Right Things" />
+  	<meta property="og:site_name" content="Doing Right Things" />
+  	<meta property="og:url" content="http://www.leyafo.com/post/2016-05-16-about-test/" />
+
+    
+  	<meta property="og:type" content="article" />
+
+    <meta property="og:article:published_time" content="2016-05-16T00:25:00&#43;08:00" />
+
+    
+    
+
+    <title>
+       关于测试 &middot;  Doing Right Things
+    </title>
+
+    <meta name="description" content="Just Write Some Minds" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="http://www.leyafo.com/images/favicon.ico">
+	  <link rel="apple-touch-icon" href="http://www.leyafo.com/images/apple-touch-icon.png" />
+
+    <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400|Inconsolata" />
+
+
+    
+      
+          <link href="http://www.leyafo.com/index.xml" rel="alternate" type="application/rss+xml" title="Doing Right Things" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.16" />
+
+    <link rel="canonical" href="http://www.leyafo.com/post/2016-05-16-about-test/" />
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
         
-
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:site" content="@" />
-        <meta name="twitter:creator" content="@" />
-        <meta name="twitter:title" content="关于测试" />
-        <meta name="twitter:description" content="" />
-        <meta name="twitter:url" content="http://www.leyafo.com/post/2016-05-16-about-test/" />
-    
-
-        <title> 关于测试 &middot;  Doing Right Things</title>
-
-    
-        <meta name="description" content="" />
-    
-        
-        <meta name="p:domain_verify" content="fc173d84e3a4de948ed4bda2908afd3e"/>
-        <meta name="HandheldFriendly" content="True" />
-        <meta name="MobileOptimized" content="320" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-        
-          
-
-    
-        <link href="http://www.leyafo.com/index.xml" rel="alternate" type="application/rss+xml" title="Doing Right Things" />
-    
-
-    
-        <link rel="canonical" href="http://www.leyafo.com/post/2016-05-16-about-test/" />
-
-    
-    
-    
         
         
-        
-        
-            
-            
-        
-        
-        
-        
+    </ul>
     
     
+    <a class="subscribe-button icon-feed" href="http://www.leyafo.com/index.xml">Subscribe</a>
     
-    
-    <style>
-*{padding:0;margin:0}body,html{font-size:1em;line-height:1.65em;font-family:"Open Sans",sans-serif;font-weight:300;color:#444}html{height:100%}body{padding:2em 2.5em 1em 20em}header{border-right:1px #eee solid;padding:2em;position:fixed;top:0;left:0;height:100%;width:13.5em}#content{display:block;width:100%}footer{padding:1em 0 2.5em;font-size:.8em;line-height:1.5em;color:#888}article{border-bottom:.1em #eee solid;padding-bottom:1.7em;max-width:56em}h4,h5,h6,hr,p{margin-top:.9em;margin-bottom:.9em}h1,h2,h3,h4,h5,h6{font-family:"Bree Serif",serif;font-weight:400!important}h1{font-size:2.5em;line-height:1.1em;margin-top:.6em;margin-bottom:.6em}h2{font-size:1.9em;line-height:1.2em;margin-top:.7em;margin-bottom:.7em}h3{font-size:1.4em;line-height:1.3em;margin-top:.8em;margin-bottom:.8em}h4{font-size:1.3em}h5{font-size:1.2em}h6{font-size:1.1em}iframe,img{max-width:100%}a{font-weight:700;text-decoration:none;color:#5cc265}a:hover{text-decoration:underline}h1 a,h2 a,h3 a,h4 a,h5 a,h6 a{font-weight:400!important}strong{font-weight:700}blockquote{border-left:.4em solid #eee;padding-left:1.2em;font-size:1.3em}hr{border:0;height:1px;background:#eee}ol,ul{margin-left:3em}code{font-size:1.4em;background:#eee}pre{font-size:.8em;line-height:2em;background:#eee;padding:1em;word-break:break-all;word-wrap:break-word;white-space:pre;white-space:-moz-pre-wrap;white-space:pre-wrap}input{font-size:1em;padding:.3em}header h1{font-size:1.9em;margin-top:.8em;margin-bottom:.6em}header h1 a{color:#444}header h1 a:hover{text-decoration:none}header #logo img{width:9em;height:9em;border-radius:4.5em;-moz-border-radius:4.5em;-webkit-border-radius:4.5em;border:none}#follow-icons{font-size:.7em;margin-top:-.7em;margin-bottom:1.5em}#follow-icons a{color:#ccc}#follow-icons span{vertical-align:top;margin-left:-.15em;margin-right:-.15em}#follow-icons span .fa-stack-1x{font-size:1.05em;line-height:1.9em}header h6{margin-top:.5em}article span.post-stamp{color:#888}h1.post-title{margin-top:.35em;margin-bottom:.6em}h3.post-title{margin-top:.4em;padding-bottom:.9em;border-bottom:1px solid #eee;font-size:1.2em;color:#444}.post-title .feature-star{font-size:.9em}.feature-star,.separator,.taglist{color:#ccc}.taglist a{background-color:#ccc;color:#fff;display:inline-block;line-height:1.5em;padding:.3em .6em;vertical-align:20%;font-size:.5em;font-family:"Open Sans",sans-serif;font-weight:700!important;text-transform:uppercase;letter-spacing:.05em;border-radius:.25em;-moz-border-radius:.25em;-webkit-border-radius:.25em}#social-bar{margin-top:1.5em;background-color:#eee;padding:.5em}#comments{margin-top:.15em;padding-bottom:.2em;border-bottom:1px solid #eee}.pagination{margin-bottom:1em}footer a{font-weight:300;color:#888;text-decoration:underline}footer a:hover{color:#444;text-decoration:none}@media only screen and (min-width:1281px){body,html{font-size:1.1em}}@media only screen and (max-width:800px){body{padding:0}header{border-right:none;border-bottom:1px #eee solid;position:relative;height:auto;width:auto;text-align:center;padding-bottom:1em}#content{margin-left:0;padding:2em 2em 1em;width:auto}footer{padding:0 2.5em 2em}}@media only screen and (max-width:320px){#content,header{padding:1.2em 1.2em .6em}footer{padding:0 1.5em 1.2em}ol,ul{margin-left:2em}}
-</style>
-    </head>
-    <body>
-        <header id="header">
-            <a id="logo" href="http://www.leyafo.com/"><img src="https://s.gravatar.com/avatar/00b3262fe3d762a258c856dd95444d0a?s=80" alt="Doing Right Things" /></a>
-            <h1><a href="http://www.leyafo.com/">Doing Right Things</a></h1>
-            <p></p>
+</div>
+<span class="nav-cover"></span>
 
-            <div id="follow-icons">
-  <a href="http://twitter.com/leyafo" rel="me"><i class="fa fa-twitter-square fa-2x"></i></a>
-  <a href="http://github.com/leyafo" rel="me"><i class="fa fa-github-square fa-2x"></i></a>
-  <a href="http://www.leyafo.com/index.xml" rel="me"><i class="fa fa-rss-square fa-2x"></i></a>
-</div>  
 
-            <h6><a href="http://www.leyafo.com">About</a></h6>
+ <div class="site-wrapper">
 
-        </header>
 
-<main id="content">
 
-<article id="" class="post">
-    <div class="post-stamp">
-        <time datetime="2016-05-16T00:25:00&#43;08:00">
-            16 May 2016
-        </time>
-        <span class="taglist">
+
+<header class="main-header post-head no-cover">
+  <nav class="main-nav clearfix">
+
+
+  
+  
+      <a class="menu-button icon-feed" href="http://www.leyafo.com/index.xml">&nbsp;&nbsp;Subscribe</a>
+  
+  </nav>
+</header>
+
+
+
+<main class="content" role="main">
+
+
+
+
+  <article class="post post">
+
+    <header class="post-header">
+        <h1 class="post-title">关于测试</h1>
+        <small></small>
+
+        <section class="post-meta">
         
-        </span>
-    </div>
-    <h1 class="post-title">关于测试</h1>
-    <p>在我做 C/C++ 开发时测试这个概念在这个圈子里不那么流行，这也有可能是 C/C++ 这类静态语言写 test 不是那么好写。 C/C++ 这类静态语言写 test code 光想一想也挺烦的。但这并不是因此就不写测试一个借口。我现在做的 Rails 项目一开始也认为写测试会拖慢项目进度的，后来实践下来发现测试能很好的维护项目的稳定，这实际上节约了不少时间。只要克服下一开始认为测试代码会增加的心智负担就好了。</p>
+          <time class="post-date" datetime="2016-05-16T00:25:00&#43;08:00">
+            May 16, 2016
+          </time>
+        
+         
+        </section>
+    </header>
+
+    <section class="post-content">
+      <p>在我做 C/C++ 开发时测试这个概念在这个圈子里不那么流行，这也有可能是 C/C++ 这类静态语言写 test 不是那么好写。 C/C++ 这类静态语言写 test code 光想一想也挺烦的。但这并不是因此就不写测试一个借口。我现在做的 Rails 项目一开始也认为写测试会拖慢项目进度的，后来实践下来发现测试能很好的维护项目的稳定，这实际上节约了不少时间。只要克服下一开始认为测试代码会增加的心智负担就好了。</p>
 
 <p>我们也不必太需要去理会什么 TDD，BDD，DDD 等一类名词。这一类名词对写测试的帮助并不大，而且有害。把原来本来很简单的事情弄得很复杂。写测试关键是要简单，只有简单的测试代码才能测试简单的测试代码。恩，这个有点绕。意思就是代码必须要容易测试，不容易测试的代码要把它改成容易测试的代码。TDD 奉行的测试驱动开发在我看来是挺难做到的。因为有时候我自己都不知道这个代码写好后会变成什么样子。单纯的一个输入输出是很难决定代码中间所经历的一些过程。还有一个重要的点就是被测试代码粒度越小越好，越小意味着模块化程度越高，接口的定义也越干净，这是非常值得的。所以别管什么 BDD, TDD, DDD 这一类名词，尽管写测试代码好了，尽可能把测试覆盖面辐射到更广才是最重要的。</p>
 
@@ -104,47 +132,63 @@ Rspec 定义了测试的领域语言，他的目的是让非开发人员也能�
 <p>测试的作用
 改代码比写新的代码要烦，需要小心的应对以前的历史包袱，还要了解以前的工作机制是怎样的。所以，如果有一些现成的测试用例代码就能很好的应对这些问题。它能保证你不回对以前的代码产生副作用，并且在些测试代码阶段可以让你自己在代码层面对接口的合理性做更详细的检查。能让代码质量变得更高。在项目部署前跑一遍所有的测试用例可安心不少，尽管部署时出现的问题大多数集中在恶劣的服务器环境上。</p>
 
-    
-    <div itemprop="author">
-  <h5>About me</h5>
-  <section>
-    <p>Nothing here</p>
-  </section>
-</div>
+    </section>
+
+
+  <footer class="post-footer">
+
 
     
+
+    <section class="author">
+  <h4><a href="http://www.leyafo.com/">leyafo</a></h4>
+</section>
+
+
+    
+<section class="share">
+  <h4>Share this post</h4>
+  <a class="icon-twitter" style="font-size: 1.4em" href="https://twitter.com/share?text=%e5%85%b3%e4%ba%8e%e6%b5%8b%e8%af%95&nbsp;-&nbsp;Doing%20Right%20Things&amp;url=http%3a%2f%2fwww.leyafo.com%2fpost%2f2016-05-16-about-test%2f"
+      onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+      <span class="hidden">Twitter</span>
+  </a>
+  <a class="icon-facebook" style="font-size: 1.4em" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fwww.leyafo.com%2fpost%2f2016-05-16-about-test%2f"
+      onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+      <span class="hidden">Facebook</span>
+  </a>
+  <a class="icon-pinterest" style="font-size: 1.4em" href="http://pinterest.com/pin/create/button/?url=http%3a%2f%2fwww.leyafo.com%2fpost%2f2016-05-16-about-test%2f&amp;description=%e5%85%b3%e4%ba%8e%e6%b5%8b%e8%af%95"
+      onclick="window.open(this.href, 'pinterest-share','width=580,height=296');return false;">
+      <span class="hidden">Pinterest</span>
+  </a>
+  <a class="icon-google-plus" style="font-size: 1.4em" href="https://plus.google.com/share?url=http%3a%2f%2fwww.leyafo.com%2fpost%2f2016-05-16-about-test%2f"
+     onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+      <span class="hidden">Google+</span>
+  </a>
+</section>
+
+
+
+    
+
+
+
+
+  </footer>
 </article>
 
 </main>
-		<footer id="footer">
-			<section id="footer-message">&copy; Doing Right Things. All rights reserved. Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
-		</footer>
-
-    <script>
-      (function(c,f){asyncLoader=function(i,h){i.foreach(function(k,j){e(j,d(j),h)});if(typeof h.callback=="function"){var g=setInterval(function(){if(f.readyState==="complete"){clearInterval(g);h.callback()}},10)}};var d=function(g){var h=g.split(".");return h[h.length-1]},e=function(h,i,g){switch(i){case"js":a(h,g);break;case"css":b(h);break;default:break}},a=function(i,h){var g=document.createElement("script");g.type="text/javascript";g.async=true;g.src=i;document.getElementsByTagName("head")[0].appendChild(g)},b=function(g){var h=document.createElement("link");h.type="text/css";h.rel="stylesheet";h.href=g;document.getElementsByTagName("head")[0].appendChild(h)};Array.prototype.foreach=function(h){for(var g=0;g<this.length;g++){h(g,this[g])}}})(this,document);
-
-      var WebFontConfig={google:{families:["Open Sans:300italic,700italic,300,700","Bree+Serif"]}};
-      asyncLoader([
-        "//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css",
-        "//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js",
-        "//cdnjs.cloudflare.com/ajax/libs/webfont/1.5.16/webfontloader.js",
-        "//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"
-      ],{
-        callback:function(){
-          asyncLoader([
-            "http:\/\/www.leyafo.com\/css/rrssb.css",
-            "http:\/\/www.leyafo.com\/js/gist.min.js", 
-            "http:\/\/www.leyafo.com\/js/rrssb.min.js",
-            "//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/default.min.css"
-          ], { callback:function() {
-              hljs.initHighlighting();
-          }});
-        }
-      });
-    </script>
-    <script id='nodebb-comments-script' ourl="https://v2mm.tech" ocid="49" blogger='leyafo' src="https://v2mm.tech/plugins/nodebb-plugin-blog-comments2/lib/simple-hugo.js">
-    </script>
-	
-	</body>
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">Doing Right Things</a> All rights reserved by Leyafo</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="http://www.leyafo.com/js/jquery.js"></script>
+    <script type="text/javascript" src="http://www.leyafo.com/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="http://www.leyafo.com/js/index.js"></script>
+    <script id='nodebb-comments-script' ourl="https://v2mm.tech" ocid="49" blogger='leyafo' src="https://v2mm.tech/plugins/nodebb-plugin-blog-comments2/lib/simple-hugo.js"></script>
+    
+</body>
 </html>
 

@@ -1,100 +1,128 @@
-
 <!DOCTYPE html>
-<html lang="en-us">
+<html lang="zh-CN">
+<head>
 
-    <head>
-
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
-        <meta property="og:title" content=" 我认为12306 可以改进的地方 &middot;  Doing Right Things" />
-        <meta property="og:site_name" content="Doing Right Things" />
-        <meta property="og:url" content="http://www.leyafo.com/post/2014-01-07-i-think-12306-areas-for-improvement/" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     
-        <meta property="og:type" content="article" />
-        <meta property="og:article:published_time" content="2014-01-07T10:10:00&#43;08:00" />
+
+
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="我认为12306 可以改进的地方"/>
+<meta name="twitter:description" content="几条社会数据： 2013年春运期间卖出2.4亿张火车票，折半的话单趟就是1.2亿。 这1.2亿张火车票 网络售票数量不到4成 流动人口总数是2.2亿(不包括市辖区内人户分离)。 12306日每天2000万人访问点击量 高达14亿 最高日售票460万张 以上数据可以得出以下结论： 1.火车的运载量是不太够的。 2.实际网络买票人数员远大于12306售票数的总数。 3.12306卖出的票还是少了点。 下面是我认为12306可以改进的地方。 ##网页前端可以改进的地方： 我这几天也经历过几次买票，在高峰期进入网站后基本上是一个卡住不动的状态了。经过仔细观察12306的前端我发现改进的余地还是非常大的。 尽量静态化： 这么高访问量的网站必须要尽可能的减少客户端请求，网页前端能静态就静态。少设置一点图片，js与css可以参考rails的AssetsPipline 把所有的资源打包成一个文件，去掉不必要图片。这里可以参考奥巴马的选举网站。 页面功能单一化 访问量这么高，完全可以把网站所有不同功能的页面分开。订票与查询完全可以分开成两个页面，订票页面就不要再有其他的资源链接或者其它功能。 订票过程尽量简单 现在用户订票需要选择日期后再查询，然后服务器再返回好几趟车的数据。我认为这一步实在是很多余，买票的人这么多，大家都会事先查好需要买哪趟车，不会等到出票时间去查询再买。面对这种情况，最好是让用户直接再事前输入准确的车次，起终点站就可以了。这样就能减少服务器与客户端之间的数据传输次数与数据量。 可增加的功能（没错，我认为应该增加一些功能。） 现在的订票助手已经做到了离线化订票，既然这样12306为什么不直接把这件事给干了呢？12306拿到用户的订票信息，可根据偏远程度与火车的运载量在后台进行订票的优先级排序。甚至可以在某辆车运载量不够的情况下为用户自动安排最优化的换乘方案与对应的车票。 增加电话订票的可用度 不得不说电话订票实在太难用了，中间经历的过程非常烦琐。能用电话订到票的基本上需要一部带有机械键盘的座机与职业游戏玩家的反应与手速才能做到。简化电话订票中间的流程，多开通几个订票号码，这样能分流一部分订票压力。 ##后台改进 从春运的卖出的2.4亿张火车票的数量上来看，这真的是实实在在的大数据处理。甚至被称为世界级难题我认为都是可以的。因为后台跟12306前端所面对的问题完全是不再一个层面上的。因为后台需要将电话，售票点，代售点，网络售票，退票这几个点的火车票全部进行管理。也就是需要为这2.4亿张火车票做一个中心数据库系统。而且这个系统需要满足： 高并发：几百万人在一个时间点同时买票。 高可用性：不能done机 高响应：读写的时间不能太长 恐怖的一致性：是的，这个一致性很恐怖。因为所有的订票请求，都需要在一个地方去拿，不能出现两个人订到了同一张票的情况。虽然电话，售票点，代售点，退票这几个点可以提前分配好资源。网络售票在一个时间点保持几百万个资源的一致性是非常恐怖的操作。 ###改进方案： 陈皓在去年提出了几点解决方案：数据镜像 ，数据分区 ，后端系统负载均衡 他的大致思路是一个数据负载均衡的思路。就是尽量不让用户去大量的访问一个点。实际上铁道部已经在去年开始就使用了分时间段买票的方法。这一方法就是一个负载均衡的思路。效果是有了，但是实际上只是消化了一部分数据，但还是有海量的数据存在。我倒是比较赞同他的另外一个思路，就是收集用户的订单，然后到了一定的时间与数量再提交到中数据库中。 我的思路： 既然要批量提交，为什么不把剩余票源提前从数据库里面挖出来做一个缓存，然后读写这块缓存，到最后在提交这块缓存到中心数据库。每个节点服务一批用户，缓存的节点不能太少，缓存应该在从中心数据里挖出来的那时候起就要保证将来数据库里一致性的问题。但难度在于如何将用户分配到适合的票源缓存点去？这就要按车次与席别还有乘车日期类型的不同来分配车票的类型。这个计算过程是独立，完全可以很轻松的做到并行计算。 ##小结 春运火车票这个问题基本上无解，因为 需要买票的人数 〉 票的总数。火车的载量也只有那么大，技术能解决的问题只能是让尽可能多人的人更顺利的买的票，不能产生更多的票。所以我想无论是叫阿里还是其他市场化的公司来做这个系统，没有买到票的人该骂的还是照样会骂。当然，上面的提出的一些方式也是比较理想化的。并没有过多的去考虑太多的细节问题。"/>
+
+
+
+  	<meta property="og:title" content=" 我认为12306 可以改进的地方 &middot;  Doing Right Things" />
+  	<meta property="og:site_name" content="Doing Right Things" />
+  	<meta property="og:url" content="http://www.leyafo.com/post/2014-01-07-i-think-12306-areas-for-improvement/" />
+
+    
+  	<meta property="og:type" content="article" />
+
+    <meta property="og:article:published_time" content="2014-01-07T10:10:00&#43;08:00" />
+
+    
+    
+
+    <title>
+       我认为12306 可以改进的地方 &middot;  Doing Right Things
+    </title>
+
+    <meta name="description" content="Just Write Some Minds" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="http://www.leyafo.com/images/favicon.ico">
+	  <link rel="apple-touch-icon" href="http://www.leyafo.com/images/apple-touch-icon.png" />
+
+    <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400|Inconsolata" />
+
+
+    
+      
+          <link href="http://www.leyafo.com/index.xml" rel="alternate" type="application/rss+xml" title="Doing Right Things" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.16" />
+
+    <link rel="canonical" href="http://www.leyafo.com/post/2014-01-07-i-think-12306-areas-for-improvement/" />
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
         
-
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:site" content="@" />
-        <meta name="twitter:creator" content="@" />
-        <meta name="twitter:title" content="我认为12306 可以改进的地方" />
-        <meta name="twitter:description" content="" />
-        <meta name="twitter:url" content="http://www.leyafo.com/post/2014-01-07-i-think-12306-areas-for-improvement/" />
-    
-
-        <title> 我认为12306 可以改进的地方 &middot;  Doing Right Things</title>
-
-    
-        <meta name="description" content="" />
-    
-        
-        <meta name="p:domain_verify" content="fc173d84e3a4de948ed4bda2908afd3e"/>
-        <meta name="HandheldFriendly" content="True" />
-        <meta name="MobileOptimized" content="320" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-        
-          
-
-    
-        <link href="http://www.leyafo.com/index.xml" rel="alternate" type="application/rss+xml" title="Doing Right Things" />
-    
-
-    
-        <link rel="canonical" href="http://www.leyafo.com/post/2014-01-07-i-think-12306-areas-for-improvement/" />
-
-    
-    
-    
         
         
-        
-        
-            
-            
-        
-        
-        
-        
+    </ul>
     
     
+    <a class="subscribe-button icon-feed" href="http://www.leyafo.com/index.xml">Subscribe</a>
     
-    
-    <style>
-*{padding:0;margin:0}body,html{font-size:1em;line-height:1.65em;font-family:"Open Sans",sans-serif;font-weight:300;color:#444}html{height:100%}body{padding:2em 2.5em 1em 20em}header{border-right:1px #eee solid;padding:2em;position:fixed;top:0;left:0;height:100%;width:13.5em}#content{display:block;width:100%}footer{padding:1em 0 2.5em;font-size:.8em;line-height:1.5em;color:#888}article{border-bottom:.1em #eee solid;padding-bottom:1.7em;max-width:56em}h4,h5,h6,hr,p{margin-top:.9em;margin-bottom:.9em}h1,h2,h3,h4,h5,h6{font-family:"Bree Serif",serif;font-weight:400!important}h1{font-size:2.5em;line-height:1.1em;margin-top:.6em;margin-bottom:.6em}h2{font-size:1.9em;line-height:1.2em;margin-top:.7em;margin-bottom:.7em}h3{font-size:1.4em;line-height:1.3em;margin-top:.8em;margin-bottom:.8em}h4{font-size:1.3em}h5{font-size:1.2em}h6{font-size:1.1em}iframe,img{max-width:100%}a{font-weight:700;text-decoration:none;color:#5cc265}a:hover{text-decoration:underline}h1 a,h2 a,h3 a,h4 a,h5 a,h6 a{font-weight:400!important}strong{font-weight:700}blockquote{border-left:.4em solid #eee;padding-left:1.2em;font-size:1.3em}hr{border:0;height:1px;background:#eee}ol,ul{margin-left:3em}code{font-size:1.4em;background:#eee}pre{font-size:.8em;line-height:2em;background:#eee;padding:1em;word-break:break-all;word-wrap:break-word;white-space:pre;white-space:-moz-pre-wrap;white-space:pre-wrap}input{font-size:1em;padding:.3em}header h1{font-size:1.9em;margin-top:.8em;margin-bottom:.6em}header h1 a{color:#444}header h1 a:hover{text-decoration:none}header #logo img{width:9em;height:9em;border-radius:4.5em;-moz-border-radius:4.5em;-webkit-border-radius:4.5em;border:none}#follow-icons{font-size:.7em;margin-top:-.7em;margin-bottom:1.5em}#follow-icons a{color:#ccc}#follow-icons span{vertical-align:top;margin-left:-.15em;margin-right:-.15em}#follow-icons span .fa-stack-1x{font-size:1.05em;line-height:1.9em}header h6{margin-top:.5em}article span.post-stamp{color:#888}h1.post-title{margin-top:.35em;margin-bottom:.6em}h3.post-title{margin-top:.4em;padding-bottom:.9em;border-bottom:1px solid #eee;font-size:1.2em;color:#444}.post-title .feature-star{font-size:.9em}.feature-star,.separator,.taglist{color:#ccc}.taglist a{background-color:#ccc;color:#fff;display:inline-block;line-height:1.5em;padding:.3em .6em;vertical-align:20%;font-size:.5em;font-family:"Open Sans",sans-serif;font-weight:700!important;text-transform:uppercase;letter-spacing:.05em;border-radius:.25em;-moz-border-radius:.25em;-webkit-border-radius:.25em}#social-bar{margin-top:1.5em;background-color:#eee;padding:.5em}#comments{margin-top:.15em;padding-bottom:.2em;border-bottom:1px solid #eee}.pagination{margin-bottom:1em}footer a{font-weight:300;color:#888;text-decoration:underline}footer a:hover{color:#444;text-decoration:none}@media only screen and (min-width:1281px){body,html{font-size:1.1em}}@media only screen and (max-width:800px){body{padding:0}header{border-right:none;border-bottom:1px #eee solid;position:relative;height:auto;width:auto;text-align:center;padding-bottom:1em}#content{margin-left:0;padding:2em 2em 1em;width:auto}footer{padding:0 2.5em 2em}}@media only screen and (max-width:320px){#content,header{padding:1.2em 1.2em .6em}footer{padding:0 1.5em 1.2em}ol,ul{margin-left:2em}}
-</style>
-    </head>
-    <body>
-        <header id="header">
-            <a id="logo" href="http://www.leyafo.com/"><img src="https://s.gravatar.com/avatar/00b3262fe3d762a258c856dd95444d0a?s=80" alt="Doing Right Things" /></a>
-            <h1><a href="http://www.leyafo.com/">Doing Right Things</a></h1>
-            <p></p>
+</div>
+<span class="nav-cover"></span>
 
-            <div id="follow-icons">
-  <a href="http://twitter.com/leyafo" rel="me"><i class="fa fa-twitter-square fa-2x"></i></a>
-  <a href="http://github.com/leyafo" rel="me"><i class="fa fa-github-square fa-2x"></i></a>
-  <a href="http://www.leyafo.com/index.xml" rel="me"><i class="fa fa-rss-square fa-2x"></i></a>
-</div>  
 
-            <h6><a href="http://www.leyafo.com">About</a></h6>
+ <div class="site-wrapper">
 
-        </header>
 
-<main id="content">
 
-<article id="" class="post">
-    <div class="post-stamp">
-        <time datetime="2014-01-07T10:10:00&#43;08:00">
-            7 Jan 2014
-        </time>
-        <span class="taglist">
+
+<header class="main-header post-head no-cover">
+  <nav class="main-nav clearfix">
+
+
+  
+  
+      <a class="menu-button icon-feed" href="http://www.leyafo.com/index.xml">&nbsp;&nbsp;Subscribe</a>
+  
+  </nav>
+</header>
+
+
+
+<main class="content" role="main">
+
+
+
+
+  <article class="post post">
+
+    <header class="post-header">
+        <h1 class="post-title">我认为12306 可以改进的地方</h1>
+        <small></small>
+
+        <section class="post-meta">
         
-        </span>
-    </div>
-    <h1 class="post-title">我认为12306 可以改进的地方</h1>
-    
+          <time class="post-date" datetime="2014-01-07T10:10:00&#43;08:00">
+            Jan 7, 2014
+          </time>
+        
+         
+        </section>
+    </header>
+
+    <section class="post-content">
+      
 
 <h2 id="几条社会数据">几条社会数据：</h2>
 
@@ -149,47 +177,63 @@
 <p>##小结
 春运火车票这个问题基本上无解，因为 需要买票的人数 〉 票的总数。火车的载量也只有那么大，技术能解决的问题只能是让尽可能多人的人更顺利的买的票，不能产生更多的票。所以我想无论是叫阿里还是其他市场化的公司来做这个系统，没有买到票的人该骂的还是照样会骂。当然，上面的提出的一些方式也是比较理想化的。并没有过多的去考虑太多的细节问题。</p>
 
-    
-    <div itemprop="author">
-  <h5>About me</h5>
-  <section>
-    <p>Nothing here</p>
-  </section>
-</div>
+    </section>
+
+
+  <footer class="post-footer">
+
 
     
+
+    <section class="author">
+  <h4><a href="http://www.leyafo.com/">leyafo</a></h4>
+</section>
+
+
+    
+<section class="share">
+  <h4>Share this post</h4>
+  <a class="icon-twitter" style="font-size: 1.4em" href="https://twitter.com/share?text=%e6%88%91%e8%ae%a4%e4%b8%ba12306%20%e5%8f%af%e4%bb%a5%e6%94%b9%e8%bf%9b%e7%9a%84%e5%9c%b0%e6%96%b9&nbsp;-&nbsp;Doing%20Right%20Things&amp;url=http%3a%2f%2fwww.leyafo.com%2fpost%2f2014-01-07-i-think-12306-areas-for-improvement%2f"
+      onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+      <span class="hidden">Twitter</span>
+  </a>
+  <a class="icon-facebook" style="font-size: 1.4em" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fwww.leyafo.com%2fpost%2f2014-01-07-i-think-12306-areas-for-improvement%2f"
+      onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+      <span class="hidden">Facebook</span>
+  </a>
+  <a class="icon-pinterest" style="font-size: 1.4em" href="http://pinterest.com/pin/create/button/?url=http%3a%2f%2fwww.leyafo.com%2fpost%2f2014-01-07-i-think-12306-areas-for-improvement%2f&amp;description=%e6%88%91%e8%ae%a4%e4%b8%ba12306%20%e5%8f%af%e4%bb%a5%e6%94%b9%e8%bf%9b%e7%9a%84%e5%9c%b0%e6%96%b9"
+      onclick="window.open(this.href, 'pinterest-share','width=580,height=296');return false;">
+      <span class="hidden">Pinterest</span>
+  </a>
+  <a class="icon-google-plus" style="font-size: 1.4em" href="https://plus.google.com/share?url=http%3a%2f%2fwww.leyafo.com%2fpost%2f2014-01-07-i-think-12306-areas-for-improvement%2f"
+     onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+      <span class="hidden">Google+</span>
+  </a>
+</section>
+
+
+
+    
+
+
+
+
+  </footer>
 </article>
 
 </main>
-		<footer id="footer">
-			<section id="footer-message">&copy; Doing Right Things. All rights reserved. Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
-		</footer>
-
-    <script>
-      (function(c,f){asyncLoader=function(i,h){i.foreach(function(k,j){e(j,d(j),h)});if(typeof h.callback=="function"){var g=setInterval(function(){if(f.readyState==="complete"){clearInterval(g);h.callback()}},10)}};var d=function(g){var h=g.split(".");return h[h.length-1]},e=function(h,i,g){switch(i){case"js":a(h,g);break;case"css":b(h);break;default:break}},a=function(i,h){var g=document.createElement("script");g.type="text/javascript";g.async=true;g.src=i;document.getElementsByTagName("head")[0].appendChild(g)},b=function(g){var h=document.createElement("link");h.type="text/css";h.rel="stylesheet";h.href=g;document.getElementsByTagName("head")[0].appendChild(h)};Array.prototype.foreach=function(h){for(var g=0;g<this.length;g++){h(g,this[g])}}})(this,document);
-
-      var WebFontConfig={google:{families:["Open Sans:300italic,700italic,300,700","Bree+Serif"]}};
-      asyncLoader([
-        "//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css",
-        "//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js",
-        "//cdnjs.cloudflare.com/ajax/libs/webfont/1.5.16/webfontloader.js",
-        "//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"
-      ],{
-        callback:function(){
-          asyncLoader([
-            "http:\/\/www.leyafo.com\/css/rrssb.css",
-            "http:\/\/www.leyafo.com\/js/gist.min.js", 
-            "http:\/\/www.leyafo.com\/js/rrssb.min.js",
-            "//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/default.min.css"
-          ], { callback:function() {
-              hljs.initHighlighting();
-          }});
-        }
-      });
-    </script>
-    <script id='nodebb-comments-script' ourl="https://v2mm.tech" ocid="49" blogger='leyafo' src="https://v2mm.tech/plugins/nodebb-plugin-blog-comments2/lib/simple-hugo.js">
-    </script>
-	
-	</body>
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">Doing Right Things</a> All rights reserved by Leyafo</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="http://www.leyafo.com/js/jquery.js"></script>
+    <script type="text/javascript" src="http://www.leyafo.com/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="http://www.leyafo.com/js/index.js"></script>
+    <script id='nodebb-comments-script' ourl="https://v2mm.tech" ocid="49" blogger='leyafo' src="https://v2mm.tech/plugins/nodebb-plugin-blog-comments2/lib/simple-hugo.js"></script>
+    
+</body>
 </html>
 

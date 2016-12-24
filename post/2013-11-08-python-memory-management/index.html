@@ -1,100 +1,128 @@
-
 <!DOCTYPE html>
-<html lang="en-us">
+<html lang="zh-CN">
+<head>
 
-    <head>
-
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
-        <meta property="og:title" content=" Python内存管理 &middot;  Doing Right Things" />
-        <meta property="og:site_name" content="Doing Right Things" />
-        <meta property="og:url" content="http://www.leyafo.com/post/2013-11-08-python-memory-management/" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     
-        <meta property="og:type" content="article" />
-        <meta property="og:article:published_time" content="2013-11-08T11:25:00&#43;08:00" />
+
+
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="Python内存管理"/>
+<meta name="twitter:description" content="本文基于Python2.7.5源码中的obmalloc.c模块 在 Python 的内部系统中，它的内存管理结构是以金子塔结构呈现的.如下图所示: - 其中-1和-2这两层是跟操作系统来负责的,这里我们略过不表. - 第0层就是我们平常在 C 中使用的 malloc, Python 不会直接使用它,而是会在此基础上做一个内存池. - 第1层是 Python 自己在基于 malloc 的基础上构造的一个内存池. - 第2和第3层是基于第1层的.每当 Python 内部需要使用内存时,会使用第1层做好的分配器来分配内存. 因此第1层是 Python 内部管理内存的主要地方. 作用 在 C 中如果频繁的调用 malloc 与 free 时,是会产生性能问题的.再加上频繁的分配与释放小块的内存会产生内存碎片. Python 在这里主要干的工作有: 1. 如果请求分配的内存在1~256字节之间就使用自己的内存管理系统,否则直接使用 malloc. 2. 这里还是会调用 malloc 分配内存,但每次会分配一块大小为256k的大块内存. 3. 经由内存池登记的内存到最后还是会回收到内存池,并不会调用 C 的 free 释放掉.以便下次使用. 内存池结构 如上图所示,整个黑框格子代表内存池(usedpools).每个单元格存放一个双向链表,每个链表的节点是一个大小为4k的内存块.在这个池中,每个单元格负责管理不同的小块内存.为了便于管理,每个单元格管理的内存块总是以8的倍数为单位.以如下代码为例: PyObject_Malloc(3) 这里我们需要一块大小为3个字节的内存.它将定位到管理大小为8字节的单元格.然后返回大小8字节的内存.在这里 usedpools 有一个令人蛋疼的 ticky. usedpools 在初始化时用了如下代码: #define PTA(x) ((poolp )((uchar *)&amp;(usedpools[2*(x)]) - 2*sizeof(block *))) #define PT(x) PTA(x), PTA(x) static poolp usedpools[2 * ((NB_SMALL_SIZE_CLASSES &#43; 7) / 8) * 8] = { PT(0), PT(1), PT(2), PT(3), PT(4), PT(5), PT(6), PT(7) ......"/>
+
+
+
+  	<meta property="og:title" content=" Python内存管理 &middot;  Doing Right Things" />
+  	<meta property="og:site_name" content="Doing Right Things" />
+  	<meta property="og:url" content="http://www.leyafo.com/post/2013-11-08-python-memory-management/" />
+
+    
+  	<meta property="og:type" content="article" />
+
+    <meta property="og:article:published_time" content="2013-11-08T11:25:00&#43;08:00" />
+
+    
+    
+
+    <title>
+       Python内存管理 &middot;  Doing Right Things
+    </title>
+
+    <meta name="description" content="Just Write Some Minds" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="http://www.leyafo.com/images/favicon.ico">
+	  <link rel="apple-touch-icon" href="http://www.leyafo.com/images/apple-touch-icon.png" />
+
+    <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400|Inconsolata" />
+
+
+    
+      
+          <link href="http://www.leyafo.com/index.xml" rel="alternate" type="application/rss+xml" title="Doing Right Things" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.16" />
+
+    <link rel="canonical" href="http://www.leyafo.com/post/2013-11-08-python-memory-management/" />
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
         
-
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:site" content="@" />
-        <meta name="twitter:creator" content="@" />
-        <meta name="twitter:title" content="Python内存管理" />
-        <meta name="twitter:description" content="" />
-        <meta name="twitter:url" content="http://www.leyafo.com/post/2013-11-08-python-memory-management/" />
-    
-
-        <title> Python内存管理 &middot;  Doing Right Things</title>
-
-    
-        <meta name="description" content="" />
-    
-        
-        <meta name="p:domain_verify" content="fc173d84e3a4de948ed4bda2908afd3e"/>
-        <meta name="HandheldFriendly" content="True" />
-        <meta name="MobileOptimized" content="320" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-        
-          
-
-    
-        <link href="http://www.leyafo.com/index.xml" rel="alternate" type="application/rss+xml" title="Doing Right Things" />
-    
-
-    
-        <link rel="canonical" href="http://www.leyafo.com/post/2013-11-08-python-memory-management/" />
-
-    
-    
-    
         
         
-        
-        
-            
-            
-        
-        
-        
-        
+    </ul>
     
     
+    <a class="subscribe-button icon-feed" href="http://www.leyafo.com/index.xml">Subscribe</a>
     
-    
-    <style>
-*{padding:0;margin:0}body,html{font-size:1em;line-height:1.65em;font-family:"Open Sans",sans-serif;font-weight:300;color:#444}html{height:100%}body{padding:2em 2.5em 1em 20em}header{border-right:1px #eee solid;padding:2em;position:fixed;top:0;left:0;height:100%;width:13.5em}#content{display:block;width:100%}footer{padding:1em 0 2.5em;font-size:.8em;line-height:1.5em;color:#888}article{border-bottom:.1em #eee solid;padding-bottom:1.7em;max-width:56em}h4,h5,h6,hr,p{margin-top:.9em;margin-bottom:.9em}h1,h2,h3,h4,h5,h6{font-family:"Bree Serif",serif;font-weight:400!important}h1{font-size:2.5em;line-height:1.1em;margin-top:.6em;margin-bottom:.6em}h2{font-size:1.9em;line-height:1.2em;margin-top:.7em;margin-bottom:.7em}h3{font-size:1.4em;line-height:1.3em;margin-top:.8em;margin-bottom:.8em}h4{font-size:1.3em}h5{font-size:1.2em}h6{font-size:1.1em}iframe,img{max-width:100%}a{font-weight:700;text-decoration:none;color:#5cc265}a:hover{text-decoration:underline}h1 a,h2 a,h3 a,h4 a,h5 a,h6 a{font-weight:400!important}strong{font-weight:700}blockquote{border-left:.4em solid #eee;padding-left:1.2em;font-size:1.3em}hr{border:0;height:1px;background:#eee}ol,ul{margin-left:3em}code{font-size:1.4em;background:#eee}pre{font-size:.8em;line-height:2em;background:#eee;padding:1em;word-break:break-all;word-wrap:break-word;white-space:pre;white-space:-moz-pre-wrap;white-space:pre-wrap}input{font-size:1em;padding:.3em}header h1{font-size:1.9em;margin-top:.8em;margin-bottom:.6em}header h1 a{color:#444}header h1 a:hover{text-decoration:none}header #logo img{width:9em;height:9em;border-radius:4.5em;-moz-border-radius:4.5em;-webkit-border-radius:4.5em;border:none}#follow-icons{font-size:.7em;margin-top:-.7em;margin-bottom:1.5em}#follow-icons a{color:#ccc}#follow-icons span{vertical-align:top;margin-left:-.15em;margin-right:-.15em}#follow-icons span .fa-stack-1x{font-size:1.05em;line-height:1.9em}header h6{margin-top:.5em}article span.post-stamp{color:#888}h1.post-title{margin-top:.35em;margin-bottom:.6em}h3.post-title{margin-top:.4em;padding-bottom:.9em;border-bottom:1px solid #eee;font-size:1.2em;color:#444}.post-title .feature-star{font-size:.9em}.feature-star,.separator,.taglist{color:#ccc}.taglist a{background-color:#ccc;color:#fff;display:inline-block;line-height:1.5em;padding:.3em .6em;vertical-align:20%;font-size:.5em;font-family:"Open Sans",sans-serif;font-weight:700!important;text-transform:uppercase;letter-spacing:.05em;border-radius:.25em;-moz-border-radius:.25em;-webkit-border-radius:.25em}#social-bar{margin-top:1.5em;background-color:#eee;padding:.5em}#comments{margin-top:.15em;padding-bottom:.2em;border-bottom:1px solid #eee}.pagination{margin-bottom:1em}footer a{font-weight:300;color:#888;text-decoration:underline}footer a:hover{color:#444;text-decoration:none}@media only screen and (min-width:1281px){body,html{font-size:1.1em}}@media only screen and (max-width:800px){body{padding:0}header{border-right:none;border-bottom:1px #eee solid;position:relative;height:auto;width:auto;text-align:center;padding-bottom:1em}#content{margin-left:0;padding:2em 2em 1em;width:auto}footer{padding:0 2.5em 2em}}@media only screen and (max-width:320px){#content,header{padding:1.2em 1.2em .6em}footer{padding:0 1.5em 1.2em}ol,ul{margin-left:2em}}
-</style>
-    </head>
-    <body>
-        <header id="header">
-            <a id="logo" href="http://www.leyafo.com/"><img src="https://s.gravatar.com/avatar/00b3262fe3d762a258c856dd95444d0a?s=80" alt="Doing Right Things" /></a>
-            <h1><a href="http://www.leyafo.com/">Doing Right Things</a></h1>
-            <p></p>
+</div>
+<span class="nav-cover"></span>
 
-            <div id="follow-icons">
-  <a href="http://twitter.com/leyafo" rel="me"><i class="fa fa-twitter-square fa-2x"></i></a>
-  <a href="http://github.com/leyafo" rel="me"><i class="fa fa-github-square fa-2x"></i></a>
-  <a href="http://www.leyafo.com/index.xml" rel="me"><i class="fa fa-rss-square fa-2x"></i></a>
-</div>  
 
-            <h6><a href="http://www.leyafo.com">About</a></h6>
+ <div class="site-wrapper">
 
-        </header>
 
-<main id="content">
 
-<article id="" class="post">
-    <div class="post-stamp">
-        <time datetime="2013-11-08T11:25:00&#43;08:00">
-            8 Nov 2013
-        </time>
-        <span class="taglist">
+
+<header class="main-header post-head no-cover">
+  <nav class="main-nav clearfix">
+
+
+  
+  
+      <a class="menu-button icon-feed" href="http://www.leyafo.com/index.xml">&nbsp;&nbsp;Subscribe</a>
+  
+  </nav>
+</header>
+
+
+
+<main class="content" role="main">
+
+
+
+
+  <article class="post post">
+
+    <header class="post-header">
+        <h1 class="post-title">Python内存管理</h1>
+        <small></small>
+
+        <section class="post-meta">
         
-        </span>
-    </div>
-    <h1 class="post-title">Python内存管理</h1>
-    
+          <time class="post-date" datetime="2013-11-08T11:25:00&#43;08:00">
+            Nov 8, 2013
+          </time>
+        
+         
+        </section>
+    </header>
+
+    <section class="post-content">
+      
 
 <blockquote>
 <p>本文基于Python2.7.5源码中的obmalloc.c模块</p>
@@ -155,47 +183,63 @@ if ((pool-&gt;freeblock = *(block **)bp) != NULL) {
 
 <p>在释放时会判断将要释放的内存是否属于 usedpools 管理.通常情况下它会直接将这块内存放到的 usedpools 对应 pools 中.如果发现这个 pools 中的 block 全部是 free 状态,它将会返到 arenas .如果 arenas 中的所有的 pool 都为 free 状态的话,则会直接调用 C 中的 free 函数将内存归还与操作系统.否则将这块 arenas 链接到 usable_arenas 正确的位置中.</p>
 
-    
-    <div itemprop="author">
-  <h5>About me</h5>
-  <section>
-    <p>Nothing here</p>
-  </section>
-</div>
+    </section>
+
+
+  <footer class="post-footer">
+
 
     
+
+    <section class="author">
+  <h4><a href="http://www.leyafo.com/">leyafo</a></h4>
+</section>
+
+
+    
+<section class="share">
+  <h4>Share this post</h4>
+  <a class="icon-twitter" style="font-size: 1.4em" href="https://twitter.com/share?text=Python%e5%86%85%e5%ad%98%e7%ae%a1%e7%90%86&nbsp;-&nbsp;Doing%20Right%20Things&amp;url=http%3a%2f%2fwww.leyafo.com%2fpost%2f2013-11-08-python-memory-management%2f"
+      onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+      <span class="hidden">Twitter</span>
+  </a>
+  <a class="icon-facebook" style="font-size: 1.4em" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fwww.leyafo.com%2fpost%2f2013-11-08-python-memory-management%2f"
+      onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+      <span class="hidden">Facebook</span>
+  </a>
+  <a class="icon-pinterest" style="font-size: 1.4em" href="http://pinterest.com/pin/create/button/?url=http%3a%2f%2fwww.leyafo.com%2fpost%2f2013-11-08-python-memory-management%2f&amp;description=Python%e5%86%85%e5%ad%98%e7%ae%a1%e7%90%86"
+      onclick="window.open(this.href, 'pinterest-share','width=580,height=296');return false;">
+      <span class="hidden">Pinterest</span>
+  </a>
+  <a class="icon-google-plus" style="font-size: 1.4em" href="https://plus.google.com/share?url=http%3a%2f%2fwww.leyafo.com%2fpost%2f2013-11-08-python-memory-management%2f"
+     onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+      <span class="hidden">Google+</span>
+  </a>
+</section>
+
+
+
+    
+
+
+
+
+  </footer>
 </article>
 
 </main>
-		<footer id="footer">
-			<section id="footer-message">&copy; Doing Right Things. All rights reserved. Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>. <a href="https://github.com/kathyqian/crisp-ghost-theme" target="_blank">Crisp</a> theme by <a href="http://kathyqian.com" target="_blank">Kathy Qian</a>.</section>
-		</footer>
-
-    <script>
-      (function(c,f){asyncLoader=function(i,h){i.foreach(function(k,j){e(j,d(j),h)});if(typeof h.callback=="function"){var g=setInterval(function(){if(f.readyState==="complete"){clearInterval(g);h.callback()}},10)}};var d=function(g){var h=g.split(".");return h[h.length-1]},e=function(h,i,g){switch(i){case"js":a(h,g);break;case"css":b(h);break;default:break}},a=function(i,h){var g=document.createElement("script");g.type="text/javascript";g.async=true;g.src=i;document.getElementsByTagName("head")[0].appendChild(g)},b=function(g){var h=document.createElement("link");h.type="text/css";h.rel="stylesheet";h.href=g;document.getElementsByTagName("head")[0].appendChild(h)};Array.prototype.foreach=function(h){for(var g=0;g<this.length;g++){h(g,this[g])}}})(this,document);
-
-      var WebFontConfig={google:{families:["Open Sans:300italic,700italic,300,700","Bree+Serif"]}};
-      asyncLoader([
-        "//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css",
-        "//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js",
-        "//cdnjs.cloudflare.com/ajax/libs/webfont/1.5.16/webfontloader.js",
-        "//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"
-      ],{
-        callback:function(){
-          asyncLoader([
-            "http:\/\/www.leyafo.com\/css/rrssb.css",
-            "http:\/\/www.leyafo.com\/js/gist.min.js", 
-            "http:\/\/www.leyafo.com\/js/rrssb.min.js",
-            "//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/default.min.css"
-          ], { callback:function() {
-              hljs.initHighlighting();
-          }});
-        }
-      });
-    </script>
-    <script id='nodebb-comments-script' ourl="https://v2mm.tech" ocid="49" blogger='leyafo' src="https://v2mm.tech/plugins/nodebb-plugin-blog-comments2/lib/simple-hugo.js">
-    </script>
-	
-	</body>
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">Doing Right Things</a> All rights reserved by Leyafo</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="http://www.leyafo.com/js/jquery.js"></script>
+    <script type="text/javascript" src="http://www.leyafo.com/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="http://www.leyafo.com/js/index.js"></script>
+    <script id='nodebb-comments-script' ourl="https://v2mm.tech" ocid="49" blogger='leyafo' src="https://v2mm.tech/plugins/nodebb-plugin-blog-comments2/lib/simple-hugo.js"></script>
+    
+</body>
 </html>
 
