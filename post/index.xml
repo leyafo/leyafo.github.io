@@ -7,8 +7,28 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved by Leyafo</copyright>
-    <lastBuildDate>Tue, 20 Dec 2016 11:11:54 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 19 Mar 2017 17:39:43 +0800</lastBuildDate>
     <atom:link href="http://www.leyafo.com/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>前后端分离实践</title>
+      <link>http://www.leyafo.com/post/2017-03-19-divsion-back-and-frond-end/</link>
+      <pubDate>Sun, 19 Mar 2017 17:39:43 +0800</pubDate>
+      
+      <guid>http://www.leyafo.com/post/2017-03-19-divsion-back-and-frond-end/</guid>
+      <description>&lt;p&gt;我们产品以前用的 Framework 是 Rails。Rails 有诸多好处，ActiveRecord 对数据库访问非常友好，各类 Gem 使用起来非常方便，新开一个项目无需过多调研就能立马做出一个看起来像那么回事的产品。这些好处显而易见对新手非常有利，可以克服开发过程中前期徒峭的学习过程。&lt;/p&gt;
+
+&lt;p&gt;Rails 可以很快的解决各类繁琐的业务逻辑，这都是基于 ruby 这门语言编程效率高。开发高效随之带来的代价就是运行效率低，效率问题只会在大规模用户量才会突显（参见 twitter）。在做产品的过程中解决复杂业务逻辑的效率取决于程序员对业务的理解程度，足够透彻的理解自然就会浮现简单的实现方案。从这个角度来说，业务逻辑与编程语言联系没有那么紧密，处理业务逻辑应该更多的去设计架构。&lt;/p&gt;
+
+&lt;p&gt;在 Rails 火爆的的年代，刚好是前端发展起步的年代。那个时候前端几乎只有 jQuery，那时做网页最快的就是使用 Rails 了。Rails 应该是那时前后端结合得最好的 Framework 了。Rails 的特点就是弱化前端，让后端的程序员顺带把前端的事情也干了，由此就产生 Full Stack Programmer 这样一个称谓。这几年 web 前端发展突飞猛进，这得益于 Javascript 的灵活。Rails 在后端做肯定是无法赶上 Javascript 的灵活性。如果现在依然还坚持使用 Rails 这种重后端的架构，肯定是无法获取到前端这几年迸发出巨大的生产力。&lt;/p&gt;
+
+&lt;p&gt;前后端分离可以让架构变得更加灵活，后端提供数据库端访问的 API 实现上会变得很简单，前端的程序员可以更加专注于界面效果的实现。现在手机端的 HTML5 是天然的前后端分离，这也更加促使项目不得不去做分离前后端。我们最开始分离前后端还是带着以前的思维去做的，在不用考虑数据库操作的情况下，我们选用了 Sinatra 做为后端提供。最开始我们还着把整个网站的 js 压缩打包到一个文件里面，我们甚至还把每一个 ajax 放到 Sinatra 里面单独处理。后来的事实证明这些思维给我们带来了不少的麻烦。&lt;/p&gt;
+
+&lt;p&gt;我们选用了 Vue 做为前端库，一开始用 Vue 的时候没有考虑到为每个页面单独加载一份 js，直到出现问题了才不得不去研究它的打包渲染机制。Vue 官方推荐的是 webpack 做为压缩打包的工具。在没有深入接触前端的情况下 webpack 对于我们来说明显是过于复杂了。所以我当时采用了 requirejs 这个几年前没那么激进的方案。当初不用 webpack 还有一个原因是我认为我们会需要在后端处理很多复杂的请求，用 webpack 我们就不得不去用 nodejs。后来的事实证明 Vue 表现非常好，我们的业务逻辑全部放到了前端去做，后端的作用只剩下 session 的管理和 API 的转发。&lt;/p&gt;
+
+&lt;p&gt;分离后端提供 API 的程序员负担大大的减轻了，架构变得非常灵活了。在设计好接口的情况下，如果有效率问题，可以非常迅速的替换一种高效的编程语言去实现。能迅速替换最主要的原因是后端变简单了，任何一个稍微有经验的程序员都能维护好 API。而前端的程序员也会轻松不少，新加入的前端程序员可以完全不需要知道后端的实现就能快速提供生产力。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>git 初级教程</title>
@@ -915,53 +935,6 @@ Capistrano 3 去掉了 current_path, shared_path 等一些公有变量，据说�
   这样做的好处有：
   1.&lt;em&gt;DRY&lt;/em&gt; 原则，不需要根据不同请求类型去定义对应的 &lt;em&gt;response&lt;/em&gt; 方法。
   2.避免因为 &lt;em&gt;request&lt;/em&gt; 与 &lt;em&gt;response&lt;/em&gt; 的数据类型不同而产生错误。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>vim 最佳实践</title>
-      <link>http://www.leyafo.com/post/2013-11-26-the-best-practical-vim/</link>
-      <pubDate>Tue, 26 Nov 2013 04:01:00 +0800</pubDate>
-      
-      <guid>http://www.leyafo.com/post/2013-11-26-the-best-practical-vim/</guid>
-      <description>&lt;p&gt;#重装你的vim
-是的,重新安装你的 &lt;em&gt;vim&lt;/em&gt;. 因为默认安装的 &lt;em&gt;vim&lt;/em&gt; 是不带 &lt;em&gt;python&lt;/em&gt; 和 &lt;em&gt;lua,ruby,perl&lt;/em&gt; 这一系列脚本支持的.因此你需要加入这些脚本支持,然后重新编译安装.重新安装前请先备份好 &lt;em&gt;~/.vim&lt;/em&gt; 目录中的东西与 &lt;em&gt;vimrc&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;##源码编译安装:
-以 &lt;em&gt;OSX&lt;/em&gt; 系统为例,在 &lt;em&gt;vim&lt;/em&gt; 源码目录的 &lt;em&gt;src&lt;/em&gt; 目录下有一个 &lt;em&gt;configure&lt;/em&gt; 文件.运行 &lt;em&gt;./configure &amp;ndash;help&lt;/em&gt; 可以看到一些编译选项,从中添加你想要的编译选项.在添加 &lt;em&gt;&amp;ndash;enable-pythoninterp&lt;/em&gt; 请一定要带上 &lt;em&gt;&amp;ndash;with-python-config-dir&lt;/em&gt; 这个选项,用来指向你的 &lt;em&gt;python config&lt;/em&gt; 目录.在 &lt;em&gt;OSX&lt;/em&gt; 系统中这个值一般是: &lt;em&gt;/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config&lt;/em&gt;. 另外请勿使用 &lt;em&gt;homebrew&lt;/em&gt; 安装的 &lt;em&gt;python&lt;/em&gt;, 编译过程中会找不到 &lt;em&gt;python frameworks&lt;/em&gt;. 如果配置有问题可以查看 &lt;em&gt;src&lt;/em&gt; 目录中 &lt;em&gt;auto/config.log&lt;/em&gt; 来看详细错误.编译成功后会在 &lt;em&gt;src/macvim/build/release&lt;/em&gt; 目录生成好 &lt;em&gt;dmg&lt;/em&gt; 安装包.&lt;/p&gt;
-
-&lt;p&gt;##从homebrew中安装:
-&lt;em&gt;homebrew&lt;/em&gt; 也是下载好源码然后编译安装的.在 &lt;em&gt;brew install macvim&lt;/em&gt; 前,可以使用 &lt;em&gt;brew edit macvim&lt;/em&gt; 来编辑一些编译选项.只需要在 &lt;em&gt;args = %w[]&lt;/em&gt; 这个中括号里面添加 &lt;em&gt;configure&lt;/em&gt; 中的编译选项. 编译中产生的错误日志可以在 &lt;em&gt;~/Library/Logs/Homebrew/macvim&lt;/em&gt; 目录下查看.&lt;/p&gt;
-
-&lt;p&gt;##重新安装所有的插件
-在没有包管理器之前 &lt;em&gt;vim&lt;/em&gt; 的插件是个很不科学的东西.一个插件每次都需要复制 &lt;em&gt;.vim&lt;/em&gt; 插件文件与 &lt;em&gt;doc&lt;/em&gt; 文件到特定的目录中.安装非常麻烦,容易出错.并且 &lt;em&gt;vim&lt;/em&gt; 内部并没有提供后续的插件升级机制.因此后续升级你得自己先去了解插件有没有升级,然后再重新复制文件进行插件安装.这完全是恶心人,因此,用这种方式安装的插件大部分人是不会想着去升级插件的.
-还好有了 &lt;a href=&#34;https://github.com/gmarik/vundle&#34;&gt;Vundle&lt;/a&gt; 这么个东西.它是基于 &lt;em&gt;github repositories&lt;/em&gt; 来安装与更新插件的.只需要在 &lt;em&gt;vimrc&lt;/em&gt; 配置好 &lt;em&gt;Bundle&lt;/em&gt; 项就可以搞定插件的安装与更新了.但请注意好 &lt;em&gt;Bundle&lt;/em&gt; 的名字,错了的话就会找不到 &lt;em&gt;github repositories&lt;/em&gt; .另外&lt;a href=&#34;http://vim-scripts.org/vim/scripts.html&#34;&gt;这里&lt;/a&gt;可以搜索到 &lt;em&gt;vim&lt;/em&gt; 几乎所有的插件.
-安装完后,将先前备份好的 &lt;em&gt;.vim&lt;/em&gt; 文件夹下的 &lt;em&gt;color&lt;/em&gt; 与 &lt;em&gt;syntax&lt;/em&gt; 复制到新的 &lt;em&gt;.vim&lt;/em&gt; 文件夹中去.因为这两个文件夹下的东西 &lt;em&gt;Bundle&lt;/em&gt; 并未做管理,也不需要管理.&lt;/p&gt;
-
-&lt;p&gt;#你不应该使用的东西
-##自动补全
-相信我, &lt;em&gt;vim&lt;/em&gt; 只是一个编辑器,自动补全这个玩意很难做到 &lt;em&gt;IDE&lt;/em&gt; 的那种效果.没有自动补全最开始可能会不习惯,写代码速度会慢一点.但习惯了会有很多好处.首先,你的代码命令会非常的规范,不会出现单词与大小写错误的问题.其次不使用自动补全你会对代码理解更好,更深刻.当然,你若要写 &lt;em&gt;Objective-C&lt;/em&gt; 这种的代码,你还是乖乖的用上 &lt;em&gt;IDE&lt;/em&gt; 去自动补全吧.不然这是不人道的.&lt;/p&gt;
-
-&lt;p&gt;##别试图将你的 vim 打造成IDE
-网上有很多 &amp;ldquo;将你的 vim 打造成 IDE&amp;rdquo; 一类的文章,别去看这种文章并且跟着他们去安装一些不解决&amp;rsquo;你碰到的问题&amp;rsquo;的插件.既然你都使用编辑器了,就别试图将改装成那种 &lt;em&gt;IDE&lt;/em&gt; 的环境.编辑有编辑器的用法,用得好会比 &lt;em&gt;IDE&lt;/em&gt; 效率更高.&lt;/p&gt;
-
-&lt;p&gt;##不要去使用别人的配置文件
-网上有很多公开的 &lt;em&gt;vimrc&lt;/em&gt; 文件,有很多高手的配置文件确实是神乎奇技.但那是别人的配置,别人有别人习惯与癖好.配置文件这个东西还是按你自己个人化的习惯来比较好.尤其是一些配置文件里改了快捷键后,你很难一下子去找到并适应这个快捷键.
-另外,也不要去盲目的使用别人推荐的插件.大部分插件是解决特定存在的问题而产生的.你如果安装好一个插件,这个插件你并没有经常拿它去解决&amp;rsquo;你碰到的问题&amp;rsquo;.这个插件迟早有一天会被你遗忘在角落里.而且一些你不经常使用的插件的命令选项会给你造成不必要的记忆负担.&lt;/p&gt;
-
-&lt;p&gt;#一些你应该知道的高级tips
-##tag 跳转与缓冲区跳转
-&lt;em&gt;vim&lt;/em&gt; 默认是集成了 &lt;em&gt;ctags&lt;/em&gt; 的接口,使用 &lt;em&gt;ctags&lt;/em&gt; 产生 &lt;em&gt;tag&lt;/em&gt; 文件后. &lt;strong&gt;ctrl+[&lt;/strong&gt; 可跳转到函数的定义与声明.使用 &lt;strong&gt;ctrl+o&lt;/strong&gt; 可以跳回上一个缓冲区, &lt;strong&gt;ctrl+i&lt;/strong&gt; 可以跳到下一个缓冲区.这三个快捷键基本上可以满足你到处跳来跳去了.
-&lt;!------ mark功能不能在文件之间跳转
-##mark
-上面的跳转实际上功能比较弱,属于盲跳. *vim* 自带的 *mark* 可以让你有目的性的跳转.在命令模式下,使用 **m**再加一个命名的字母标记就增加了一个类似书签的东西.添加好后,可以是用 **&#39;(单引号)**加上你个刚刚命令的标记就可以跳到指定的地方去了,并且这种跳转还可以跨文件的.比如:使用 **ma** 添加一个标记, 然后使用 **&#39;a** 就可以跳到刚才的那个标记.另外使用命令 **:marks** 可以看到你设置的标记.其中 *0~9* 是最近编辑的文件.
----&gt;
-##register
-&lt;em&gt;vim&lt;/em&gt; 的 &lt;em&gt;register&lt;/em&gt; 功能类似于 &lt;em&gt;mark&lt;/em&gt; 但他记录了你最近删除与复制的文字.你可以将一段文字复制到特定 &lt;em&gt;register&lt;/em&gt; 中去.然后再从 &lt;em&gt;register&lt;/em&gt; 中复制出来.
-使用 &lt;em&gt;visual&lt;/em&gt; 模式选择好一段文字,在命令模式下使用 &lt;strong&gt;&amp;ldquo;ay&lt;/strong&gt; 便将这段文字复制到了名字为 &lt;strong&gt;a&lt;/strong&gt; 的 &lt;em&gt;register&lt;/em&gt; 中.需要使用 &lt;strong&gt;a&lt;/strong&gt; 中的文字,来使用 &lt;strong&gt;&amp;ldquo;ap&lt;/strong&gt; 命令即可.使用 &lt;strong&gt;:reg&lt;/strong&gt; 命令可以看到所有的 &lt;em&gt;register&lt;/em&gt;, 其中 &lt;em&gt;0~9&lt;/em&gt; 显示了最近删除与复制的一些文字.&lt;/p&gt;
-
-&lt;p&gt;##macro
-&lt;em&gt;vim&lt;/em&gt; 的 &lt;em&gt;macro&lt;/em&gt; 是用来录制一段动作,然后保存到命名的 &lt;em&gt;macro&lt;/em&gt; 中去的. 使用方法为:在命令模式下使用 &lt;strong&gt;qa&lt;/strong&gt;命令(&lt;strong&gt;a&lt;/strong&gt;代表 &lt;em&gt;marcro&lt;/em&gt; 名,可以是其他数字与字母).这时候状态栏的左边上会显示 &lt;strong&gt;recording&lt;/strong&gt;, 然后做一些操作,做完后在命令模式下使用 &lt;strong&gt;q&lt;/strong&gt; 命令退出录制.然后就可以使用 &lt;strong&gt;@a&lt;/strong&gt; 将这段 &lt;em&gt;macro&lt;/em&gt; &amp;lsquo;播放&amp;rsquo;出来. 如果需要连续做10次,使用 &lt;strong&gt;10@a&lt;/strong&gt;即可.&lt;/p&gt;
 </description>
     </item>
     
