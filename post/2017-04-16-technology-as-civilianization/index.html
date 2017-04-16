@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+
+
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="技术平民化"/>
+<meta name="twitter:description" content="#技术平民化 &gt;Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away. &gt; — Antoine deSaint-Exupéry 这些年作后端开发的日子从来没有像现在这么好过，市面上流行的编程语言无法做到开发和运行效率兼得， golang 的出现改变了这一切。golang 这门语言的所有特性都非常简单，它的最大的特性就是简单，写代码的方式一致。学习曲线非常平缓，稍微有经验的开发者很快就能写出不错的程序员在线上跑。语言本身的简单让程序员毋需担心语言特性所带来的额外负担。 golang 是一门把 KISS (Keep It Simple, Stupid) 原则贯彻到了极致的语言。以下的这些特性是 KISS 原则最好的体现了。 ##简单 golang 的核心特性就是简单，关键字非常少。它的语言特性在现代其他所有语言都出现过，没有发明新的特性，也没有难以理解的特性。 OO 做得都比其他所有语言来得简单，无须再关注继承，多态，has_one, is_a 这些面相对象的抽象方法。golang 非常注重简单元素的组合，golang 里我们到处可以看到各种各样简单元素的组合，struct 与 function 的组合，struct 与 interface 的组合，goroutine 与 chan 的组合。所有的这些组合拆开都很简单，简单组合一下就能解决非常复杂的问题。 ##一致性好 一个软件项目总会有一份与其开发语言相匹配的规范，所有人遵循同一个规范开发软件可以极大的减少协作与维护资源。golang 直接在编译器层面去实现了这一点，你几乎看不到 golang 里面一个功能有两种写法。也不会出现一些团队协作时禁止使用的一些语言特性（比如动态语言的 eval）。甚至官方的工具还帮助你自动 format 代码。所有人遵循一种写法保证了投入无需太多资源进行培训，也不用担心新加入项目的人代码质量不佳影响整个工程的质量。新人也不会看到那些天书一样难以理解的“优雅”代码。这是非常务实的语言特性。 ##并发廉价 廉价的 Goroutine 让一般开发人员可以非常容易的构造高并发的应用。High Performance,"/>
+
+
+
+  	<meta property="og:title" content=" 技术平民化 &middot;  Doing Right Things" />
+  	<meta property="og:site_name" content="Doing Right Things" />
+  	<meta property="og:url" content="http://www.leyafo.com/post/2017-04-16-technology-as-civilianization/" />
+
+    
+  	<meta property="og:type" content="article" />
+
+    <meta property="og:article:published_time" content="2017-04-16T22:43:57&#43;08:00" />
+
+    
+    
+
+    <title>
+       技术平民化 &middot;  Doing Right Things
+    </title>
+
+    <meta name="description" content="Just Write Some Minds" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="http://www.leyafo.com/images/favicon.ico">
+	  <link rel="apple-touch-icon" href="http://www.leyafo.com/images/apple-touch-icon.png" />
+
+    <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400|Inconsolata" />
+
+
+    
+      
+          <link href="http://www.leyafo.com/index.xml" rel="alternate" type="application/rss+xml" title="Doing Right Things" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.16" />
+
+    <link rel="canonical" href="http://www.leyafo.com/post/2017-04-16-technology-as-civilianization/" />
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+    </ul>
+    
+    
+    <a class="subscribe-button icon-feed" href="http://www.leyafo.com/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+
+<header class="main-header post-head no-cover">
+  <nav class="main-nav clearfix">
+
+
+  
+  
+      <a class="menu-button icon-feed" href="http://www.leyafo.com/index.xml">&nbsp;&nbsp;Subscribe</a>
+  
+  </nav>
+</header>
+
+
+
+<main class="content" role="main">
+
+
+
+
+  <article class="post post">
+
+    <header class="post-header">
+        <h1 class="post-title">技术平民化</h1>
+        <small></small>
+
+        <section class="post-meta">
+        
+          <time class="post-date" datetime="2017-04-16T22:43:57&#43;08:00">
+            Apr 16, 2017
+          </time>
+        
+         
+        </section>
+    </header>
+
+    <section class="post-content">
+      <p>#技术平民化
+&gt;Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.
+&gt;                                 — Antoine deSaint-Exupéry
+这些年作后端开发的日子从来没有像现在这么好过，市面上流行的编程语言无法做到开发和运行效率兼得， golang 的出现改变了这一切。golang 这门语言的所有特性都非常简单，它的最大的特性就是简单，写代码的方式一致。学习曲线非常平缓，稍微有经验的开发者很快就能写出不错的程序员在线上跑。语言本身的简单让程序员毋需担心语言特性所带来的额外负担。</p>
+
+<p>golang 是一门把 KISS (Keep It Simple, Stupid) 原则贯彻到了极致的语言。以下的这些特性是 KISS 原则最好的体现了。
+##简单
+golang 的核心特性就是简单，关键字非常少。它的语言特性在现代其他所有语言都出现过，没有发明新的特性，也没有难以理解的特性。 OO 做得都比其他所有语言来得简单，无须再关注继承，多态，has_one, is_a 这些面相对象的抽象方法。golang 非常注重简单元素的组合，golang 里我们到处可以看到各种各样简单元素的组合，struct 与 function 的组合，struct 与 interface 的组合，goroutine 与 chan 的组合。所有的这些组合拆开都很简单，简单组合一下就能解决非常复杂的问题。
+##一致性好
+一个软件项目总会有一份与其开发语言相匹配的规范，所有人遵循同一个规范开发软件可以极大的减少协作与维护资源。golang 直接在编译器层面去实现了这一点，你几乎看不到 golang 里面一个功能有两种写法。也不会出现一些团队协作时禁止使用的一些语言特性（比如动态语言的 eval）。甚至官方的工具还帮助你自动 format 代码。所有人遵循一种写法保证了投入无需太多资源进行培训，也不用担心新加入项目的人代码质量不佳影响整个工程的质量。新人也不会看到那些天书一样难以理解的“优雅”代码。这是非常务实的语言特性。
+##并发廉价
+廉价的 Goroutine 让一般开发人员可以非常容易的构造高并发的应用。High Performance, Low Latency 这些东西不再属于只有“高级”程序员才能做出来的专利。goroutine 可以做到像写一个函数那样简单，线程间的通信就是 unix 非常常见的管道概念。只需要关注业务层面的任务分片就能很快的利用 cpu 的多核去写并发非常好的程序了。</p>
+
+<p>现在 golang 的性能还是比不上 C，但现在这样的性能已经完全够用了。牺牲的这一点点性能你能得到 GC，更友好的模块化，灵活的 interface 抽象。golang 最为人诟病的就是它的错误处理和缺少范型的支持。golang 的去掉了复杂的异常，让处理错误像写普通代码。随之带来的问题就是必须不停的去检查错误以保证程序的正确性。而类似 C 语言的 void  * 的 intefece{} 与真正范型还是有不少的差距。这些缺点都无关紧要，毕竟多敲几下键盘比多费脑子去 debug 查问题要来得简单的多。</p>
+
+<p>现在做软件开发机器越来越快，机器本身的问题越来越少，工具链越来越趋于完善。现在不太需要那种依靠一个厉害的“技术牛人”去支撑整个项目的关键部分了。近几年来互联网创业公司越来越多，需求与市场供给两方面都在增大，培训技术人员的成本越来越低，golang 把这个成本进一步降到了更低。行业如果持续这种发展趋势，未来 golang 会变得像以前的 java 一样流行。</p>
+
+<p>现在国内的 golang 社区发展得如火如荼，一个 gopher 大会聚起了 1000 多人。这些人大部分是从别的语言转过来有经验的开发者。大家发现转过来的学习成本非常低，社区做招聘的已经不再要求开发者有 golang 经验，培养一个能干活 golang 程序员非常容易，比以往的任何一门语言都要来得容易。现在阻碍国内开发者转 golang 的障碍可能只剩下英语问题了（golang 的中文资料特别少）。 但写代码的不翻墙，不读英文本身就不太靠谱。</p>
+
+    </section>
+
+
+  <footer class="post-footer">
+
+
+    
+
+    <section class="author">
+  <h4><a href="http://www.leyafo.com/">leyafo</a></h4>
+</section>
+
+
+    
+
+    
+
+  </footer>
+</article>
+
+</main>
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">Doing Right Things</a> All rights reserved by Leyafo</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="http://www.leyafo.com/js/jquery.js"></script>
+    <script type="text/javascript" src="http://www.leyafo.com/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="http://www.leyafo.com/js/index.js"></script>
+    <script id='nodebb-comments-script' ourl="https://v2mm.tech" ocid="49" blogger='leyafo' src="https://v2mm.tech/plugins/nodebb-plugin-blog-comments2/lib/simple-hugo.js"></script>
+    
+</body>
+</html>
+

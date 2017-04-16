@@ -7,8 +7,35 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved by Leyafo</copyright>
-    <lastBuildDate>Sun, 19 Mar 2017 17:39:43 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 16 Apr 2017 22:43:57 +0800</lastBuildDate>
     <atom:link href="http://www.leyafo.com/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>技术平民化</title>
+      <link>http://www.leyafo.com/post/2017-04-16-technology-as-civilianization/</link>
+      <pubDate>Sun, 16 Apr 2017 22:43:57 +0800</pubDate>
+      
+      <guid>http://www.leyafo.com/post/2017-04-16-technology-as-civilianization/</guid>
+      <description>&lt;p&gt;#技术平民化
+&amp;gt;Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.
+&amp;gt;                                 — Antoine deSaint-Exupéry
+这些年作后端开发的日子从来没有像现在这么好过，市面上流行的编程语言无法做到开发和运行效率兼得， golang 的出现改变了这一切。golang 这门语言的所有特性都非常简单，它的最大的特性就是简单，写代码的方式一致。学习曲线非常平缓，稍微有经验的开发者很快就能写出不错的程序员在线上跑。语言本身的简单让程序员毋需担心语言特性所带来的额外负担。&lt;/p&gt;
+
+&lt;p&gt;golang 是一门把 KISS (Keep It Simple, Stupid) 原则贯彻到了极致的语言。以下的这些特性是 KISS 原则最好的体现了。
+##简单
+golang 的核心特性就是简单，关键字非常少。它的语言特性在现代其他所有语言都出现过，没有发明新的特性，也没有难以理解的特性。 OO 做得都比其他所有语言来得简单，无须再关注继承，多态，has_one, is_a 这些面相对象的抽象方法。golang 非常注重简单元素的组合，golang 里我们到处可以看到各种各样简单元素的组合，struct 与 function 的组合，struct 与 interface 的组合，goroutine 与 chan 的组合。所有的这些组合拆开都很简单，简单组合一下就能解决非常复杂的问题。
+##一致性好
+一个软件项目总会有一份与其开发语言相匹配的规范，所有人遵循同一个规范开发软件可以极大的减少协作与维护资源。golang 直接在编译器层面去实现了这一点，你几乎看不到 golang 里面一个功能有两种写法。也不会出现一些团队协作时禁止使用的一些语言特性（比如动态语言的 eval）。甚至官方的工具还帮助你自动 format 代码。所有人遵循一种写法保证了投入无需太多资源进行培训，也不用担心新加入项目的人代码质量不佳影响整个工程的质量。新人也不会看到那些天书一样难以理解的“优雅”代码。这是非常务实的语言特性。
+##并发廉价
+廉价的 Goroutine 让一般开发人员可以非常容易的构造高并发的应用。High Performance, Low Latency 这些东西不再属于只有“高级”程序员才能做出来的专利。goroutine 可以做到像写一个函数那样简单，线程间的通信就是 unix 非常常见的管道概念。只需要关注业务层面的任务分片就能很快的利用 cpu 的多核去写并发非常好的程序了。&lt;/p&gt;
+
+&lt;p&gt;现在 golang 的性能还是比不上 C，但现在这样的性能已经完全够用了。牺牲的这一点点性能你能得到 GC，更友好的模块化，灵活的 interface 抽象。golang 最为人诟病的就是它的错误处理和缺少范型的支持。golang 的去掉了复杂的异常，让处理错误像写普通代码。随之带来的问题就是必须不停的去检查错误以保证程序的正确性。而类似 C 语言的 void  * 的 intefece{} 与真正范型还是有不少的差距。这些缺点都无关紧要，毕竟多敲几下键盘比多费脑子去 debug 查问题要来得简单的多。&lt;/p&gt;
+
+&lt;p&gt;现在做软件开发机器越来越快，机器本身的问题越来越少，工具链越来越趋于完善。现在不太需要那种依靠一个厉害的“技术牛人”去支撑整个项目的关键部分了。近几年来互联网创业公司越来越多，需求与市场供给两方面都在增大，培训技术人员的成本越来越低，golang 把这个成本进一步降到了更低。行业如果持续这种发展趋势，未来 golang 会变得像以前的 java 一样流行。&lt;/p&gt;
+
+&lt;p&gt;现在国内的 golang 社区发展得如火如荼，一个 gopher 大会聚起了 1000 多人。这些人大部分是从别的语言转过来有经验的开发者。大家发现转过来的学习成本非常低，社区做招聘的已经不再要求开发者有 golang 经验，培养一个能干活 golang 程序员非常容易，比以往的任何一门语言都要来得容易。现在阻碍国内开发者转 golang 的障碍可能只剩下英语问题了（golang 的中文资料特别少）。 但写代码的不翻墙，不读英文本身就不太靠谱。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>前后端分离实践</title>
@@ -908,33 +935,6 @@ Capistrano 3 去掉了 current_path, shared_path 等一些公有变量，据说�
 
 &lt;p&gt;##小结
 春运火车票这个问题基本上无解，因为 需要买票的人数 〉 票的总数。火车的载量也只有那么大，技术能解决的问题只能是让尽可能多人的人更顺利的买的票，不能产生更多的票。所以我想无论是叫阿里还是其他市场化的公司来做这个系统，没有买到票的人该骂的还是照样会骂。当然，上面的提出的一些方式也是比较理想化的。并没有过多的去考虑太多的细节问题。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Rails 的 AJAX</title>
-      <link>http://www.leyafo.com/post/2014-01-06-rails-ajax/</link>
-      <pubDate>Mon, 06 Jan 2014 14:00:00 +0800</pubDate>
-      
-      <guid>http://www.leyafo.com/post/2014-01-06-rails-ajax/</guid>
-      <description>&lt;p&gt;在 &lt;em&gt;Rails&lt;/em&gt; 中只需要指定在 &lt;em&gt;erb&lt;/em&gt; 模板中指定 &lt;em&gt;remote=true&lt;/em&gt; 选项就可以将请求变为异步的了。&lt;strong&gt;request-handle-response-callback&lt;/strong&gt; 这是一个 &lt;em&gt;AJAX&lt;/em&gt; 请求的过程。&lt;em&gt;rails&lt;/em&gt; 将这些步骤直接简化成了 &lt;em&gt;request&lt;/em&gt; 和 &lt;em&gt;handle&lt;/em&gt; 两步，让它看起来的像魔法一样而简洁神秘。在我初次接触 &lt;em&gt;Rails&lt;/em&gt; 的 &lt;em&gt;AJAX&lt;/em&gt; 时，我也随手去翻了下 &lt;em&gt;wikipedia&lt;/em&gt; 关于 &lt;em&gt;AJAX&lt;/em&gt; 的条目。&lt;em&gt;AJAX&lt;/em&gt; 很好理解，但这并未让我更好的去完全理解 &lt;em&gt;Rails&lt;/em&gt; 魔法般的 *AJAX*。主要被困惑的在 &lt;em&gt;controller&lt;/em&gt; 的 &lt;em&gt;handle&lt;/em&gt; 函数里面的 &lt;em&gt;response&lt;/em&gt; 实现。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;        def handle
-        @model = new some_model
-              
-        #do something
-        
-                if @model.save
-            respond_to do |format|
-                format.js
-            end
-        end  
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;上面是一个典型的 &lt;em&gt;Rails&lt;/em&gt; 应用场景，完全没有了那些简单粗暴原生的 &lt;em&gt;html&lt;/em&gt; 与 &lt;em&gt;javascript&lt;/em&gt; 的代码，更加别想看到 &lt;strong&gt;XMLHttpRequest&lt;/strong&gt; 这种对象了。&lt;em&gt;respond_to&lt;/em&gt; 是一个接收代码块的方法。而 &lt;em&gt;format&lt;/em&gt; 表示 &lt;em&gt;response&lt;/em&gt; 时使用的数据格式，&lt;em&gt;format.js&lt;/em&gt; 会找到对应的 &lt;em&gt;handle.js&lt;/em&gt; 并将里面的 &lt;em&gt;js&lt;/em&gt; 代码 &lt;em&gt;repond&lt;/em&gt; 到客户端。这仅仅只是客户端需要 &lt;em&gt;js&lt;/em&gt; 类型回复的一个需求。如果客户端需要 &lt;em&gt;json，XML，HTML&lt;/em&gt; 等不同类型的数据，只需要在 &lt;em&gt;repondto&lt;/em&gt; 这个代码块使用 &lt;em&gt;format&lt;/em&gt; 对象调用对应的方法即可。&lt;em&gt;rails&lt;/em&gt; 会自动判断并回应对应的类型的数据到前台页面。
-  这样做的好处有：
-  1.&lt;em&gt;DRY&lt;/em&gt; 原则，不需要根据不同请求类型去定义对应的 &lt;em&gt;response&lt;/em&gt; 方法。
-  2.避免因为 &lt;em&gt;request&lt;/em&gt; 与 &lt;em&gt;response&lt;/em&gt; 的数据类型不同而产生错误。&lt;/p&gt;
 </description>
     </item>
     
