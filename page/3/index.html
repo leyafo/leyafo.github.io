@@ -14,7 +14,7 @@
 
 
 <meta name="twitter:title" content="Doing Right Things"/>
-<meta name="twitter:description" content="this is my description"/>
+<meta name="twitter:description" content="Just Write Some Minds"/>
 
 
 
@@ -30,7 +30,7 @@
        Doing Right Things
     </title>
 
-    <meta name="description" content="this is my description" />
+    <meta name="description" content="Just Write Some Minds" />
 
     <meta name="HandheldFriendly" content="True" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -88,8 +88,6 @@
 
     <nav class="main-nav overlay clearfix">
         
-            <a class="blog-logo" href="http://www.leyafo.com/"><img src="http://www.leyafo.com/images/logo.jpeg" alt="Blog Logo" /></a>
-        
         
             
               <a class="menu-button icon-feed" href="http://www.leyafo.com/index.xml">&nbsp;&nbsp;Subscribe</a>
@@ -106,18 +104,13 @@
             &nbsp;
             
             
-                <a class="bloglogo" href="https://twitter.com/leyafo" target="_blank">
-                    <span class="icon-twitter" style="color:white;font-size:2em"></span>
-                </a>
-            &nbsp;
-            
             
             
             
             
 
             <h1 class="page-title">Doing Right Things</h1>
-            <h2 class="page-description">this is my description</h2>
+            <h2 class="page-description">Just Write Some Minds</h2>
         </div>
     </div>
     <a class="scroll-down icon-arrow-left" href="#content"><span class="hidden">Scroll Down</span></a>
@@ -126,6 +119,12 @@
 
 <main id="content" class="content" role="main">
 
+    
+        
+    
+        
+    
+        
     
         
     
@@ -179,9 +178,7 @@
 	
 	    <a class="newer-posts" href="http://www.leyafo.com/page/2/">&larr; Newer Posts</a>
 	
-	<span class="page-number">Page 3 of 4</span>
-	
-	    <a class="older-posts" href="http://www.leyafo.com/page/4/">Older Posts &rarr;</a>
+	<span class="page-number">Page 3 of 3</span>
 	
 </nav>
 
@@ -191,118 +188,20 @@
         
 <article class="post post">
     <header class="post-header">
-        <h2 class="post-title"><a href="http://www.leyafo.com/post/2014-05-22-i-think-php-is-terrible/">我认为PHP不好的地方</a></h2>
+        <h2 class="post-title"><a href="http://www.leyafo.com/post/2013-11-08-python-memory-management/">Python内存管理</a></h2>
     </header>
-    <section class="post-excerpt">
-        <p>最近在用PHP做项目，让我个人感觉PHP是门非常不顺手的编程语言。PHP太多东西给人的感觉就像是一个半成品。 namespace PHP 的 namespace 是我见过的所有语言最难用的 namespace，没有之一。它使用反斜杠\**来进行层级切分，在使用上非常容易跟 include 使用的文件路径斜杠搞混淆。namespace** 的 use 语句使用也是让人赶到非常奇怪，它不能在代码中的任意作用域使用，只能在一个文件的最顶级作用域中使用 use。namespace 这个东西是控制访问冲突使用的，在文件顶级作用域中使用 namespace 是一个产生冲突的隐患。这就是一个半成品，PHP 中的内部库函数是没有使用 namespace 的，也不知道他们自己为啥不用这玩意。 变量 在每一个变量前加一个$符号，让我对这个语言的第一印象非常不好，给我的感觉是丑陋。变量名加$可以很方便的嵌入到字符串中，但是 PHP 在字符串内嵌中增加了 {} 语法，这让变量前面 $ 符号失去了它唯一的作用。$ 符号除了让代码变得更丑陋以外，没有任何的实际用处。另外在 PHP 中 if 和 for 还有 while 一系列控制语句中，变量是没有作用域的。可以很随意的去拿 if 和 else 中的变量，解释器不会报错。但是你不知道什么时候解释器会给你报一个 undefine 的错误。 函数与闭包 函数本身没啥好说的，每个语言最基本的单元。如果这玩意也实现不好那真的太糟了。但我要说的是 PHP 从5.3以后引入的匿名函数。PHP 的匿名函数看起来好像是可以在任意的地方定义它，这很符合匿名函数的特性。但问题是你如果要用到上下文变量需要显示的使用 use 将变量引入。这看起来好像是没有什么问题，但是如果函数嵌套的层级一多，这完全是个枷锁。另外如果要判断一个变量是不是一个函数 PHP 有一个 is_callable 的方法,这个方法的奇怪之处在于你可以传入变量名或者以字符串形式传入函数名。但如果直接传入一个函数它返回的值是 false。经过使用 is_callable 函数的一些失败尝试后，我彻底放弃了 PHP 的匿名函数与闭包。 <a class="read-more" href="http://www.leyafo.com/post/2014-05-22-i-think-php-is-terrible/">&raquo;</a></p>
-    </section>
-    <footer class="post-meta">
-        
-        
-
-        
-            <img class="author-thumb" src="http://www.leyafo.com/images/logo.jpeg" alt="Author image" nopin="nopin" />
-        
-        
-        
-        <time class="post-date" datetime="2014-05-22T00:29:00&#43;08:00">
-            22 May 2014
-        </time>
-    </footer>
-</article>
-
     
         
-<article class="post post">
-    <header class="post-header">
-        <h2 class="post-title"><a href="http://www.leyafo.com/post/2014-02-09-avl-tree-implementation/">avl 树的实现</a></h2>
-    </header>
-    <section class="post-excerpt">
-        <p>过年在家没事，找出了几年前把我折磨得死去活来的&lt;数据结构与算法分析&gt;这本书。确切的说，这段时间这本书也在折磨我。上面的avl树的旋转说得不清不楚的，而且还是使用递归实现了avl树的插入与删除操作。让这本书上本身就已经不太清晰的描述变得更加的扑朔迷离，让我有一种想烧掉这本书的冲动。到最后我实在没法看懂书上描述的avl树的操作方式只好自己从网上找一些资料实现了avl树(代码在此)。另外维基百科上有关于avl树基本性质的描述，我在这里也不过多介绍。但是请勿对照这篇文章去实现avl树，这篇描述的删除操作是有问题的。关于树的旋转，这篇文章也没有把最根本的问题说清楚。avl树最难的部分就是关于树的旋转，本文主要讨旋转的问题。 首先，旋转的作用是降低子树的高度。旋转的方式有两种，一种是用来降低左子树高度一般被称作右旋。一种是用来降低右子树高度一般被称为左旋。这两种旋转在物理上是对称的，在编码上也是无脑对称的。因此，在编码方面我们只需要实现出一种旋转后另一种旋转也可以依葫芦画瓢的实现出来。另外在每个节点中保存一个父节点可以让编码的复杂度大大降低。 下面是左旋的具体变化过程: A B \ / \ B 左旋 ==&gt; A C \ C 下面是右旋的具体变化过程: A B / / \ B 右旋 ==&gt; C A / C 上面的这两种情况是比较理想的情况，在实际的使用情况下是没有这么理想的。不能处理下面这些情况。 A A \ / B B / \ C C 上面的这两种情况就是书上所说的关于双旋转的问题。解决这两种情况的方法就是先旋转B节点,先将C点与B点旋转到A点与B点相同的指向方向。然后在根据A点做对应方向的旋转。 A A C A A C \ \ / \ / \ / \ B =&gt; C =&gt; A B B =&gt; C =&gt; A B / \ \ \ <a class="read-more" href="http://www.leyafo.com/post/2014-02-09-avl-tree-implementation/">&raquo;</a></p>
-    </section>
-    <footer class="post-meta">
-        
-        
-
-        
-            <img class="author-thumb" src="http://www.leyafo.com/images/logo.jpeg" alt="Author image" nopin="nopin" />
-        
-        
-        
-        <time class="post-date" datetime="2014-02-09T07:01:00&#43;08:00">
-            9 Feb 2014
-        </time>
-    </footer>
-</article>
-
     
-        
-<article class="post post">
-    <header class="post-header">
-        <h2 class="post-title"><a href="http://www.leyafo.com/post/2014-01-07-i-think-12306-areas-for-improvement/">我认为12306 可以改进的地方</a></h2>
-    </header>
-    <section class="post-excerpt">
-        <p>几条社会数据： 2013年春运期间卖出2.4亿张火车票，折半的话单趟就是1.2亿。 这1.2亿张火车票 网络售票数量不到4成 流动人口总数是2.2亿(不包括市辖区内人户分离)。 12306日每天2000万人访问点击量 高达14亿 最高日售票460万张 以上数据可以得出以下结论： 1.火车的运载量是不太够的。 2.实际网络买票人数员远大于12306售票数的总数。 3.12306卖出的票还是少了点。 下面是我认为12306可以改进的地方。 ##网页前端可以改进的地方： 我这几天也经历过几次买票，在高峰期进入网站后基本上是一个卡住不动的状态了。经过仔细观察12306的前端我发现改进的余地还是非常大的。 尽量静态化： 这么高访问量的网站必须要尽可能的减少客户端请求，网页前端能静态就静态。少设置一点图片，js与css可以参考rails的AssetsPipline 把所有的资源打包成一个文件，去掉不必要图片。这里可以参考奥巴马的选举网站。 页面功能单一化 访问量这么高，完全可以把网站所有不同功能的页面分开。订票与查询完全可以分开成两个页面，订票页面就不要再有其他的资源链接或者其它功能。 订票过程尽量简单 现在用户订票需要选择日期后再查询，然后服务器再返回好几趟车的数据。我认为这一步实在是很多余，买票的人这么多，大家都会事先查好需要买哪趟车，不会等到出票时间去查询再买。面对这种情况，最好是让用户直接再事前输入准确的车次，起终点站就可以了。这样就能减少服务器与客户端之间的数据传输次数与数据量。 可增加的功能（没错，我认为应该增加一些功能。） 现在的订票助手已经做到了离线化订票，既然这样12306为什么不直接把这件事给干了呢？12306拿到用户的订票信息，可根据偏远程度与火车的运载量在后台进行订票的优先级排序。甚至可以在某辆车运载量不够的情况下为用户自动安排最优化的换乘方案与对应的车票。 增加电话订票的可用度 不得不说电话订票实在太难用了，中间经历的过程非常烦琐。能用电话订到票的基本上需要一部带有机械键盘的座机与职业游戏玩家的反应与手速才能做到。简化电话订票中间的流程，多开通几个订票号码，这样能分流一部分订票压力。 ##后台改进 从春运的卖出的2.4亿张火车票的数量上来看，这真的是实实在在的大数据处理。甚至被称为世界级难题我认为都是可以的。因为后台跟12306前端所面对的问题完全是不再一个层面上的。因为后台需要将电话，售票点，代售点，网络售票，退票这几个点的火车票全部进行管理。也就是需要为这2.4亿张火车票做一个中心数据库系统。而且这个系统需要满足： 高并发：几百万人在一个时间点同时买票。 高可用性：不能done机 高响应：读写的时间不能太长 恐怖的一致性：是的，这个一致性很恐怖。因为所有的订票请求，都需要在一个地方去拿，不能出现两个人订到了同一张票的情况。虽然电话，售票点，代售点，退票这几个点可以提前分配好资源。网络售票在一个时间点保持几百万个资源的一致性是非常恐怖的操作。 ###改进方案： 陈皓在去年提出了几点解决方案：数据镜像 ，数据分区 ，后端系统负载均衡 他的大致思路是一个数据负载均衡的思路。就是尽量不让用户去大量的访问一个点。实际上铁道部已经在去年开始就使用了分时间段买票的方法。这一方法就是一个负载均衡的思路。效果是有了，但是实际上只是消化了一部分数据，但还是有海量的数据存在。我倒是比较赞同他的另外一个思路，就是收集用户的订单，然后到了一定的时间与数量再提交到中数据库中。 我的思路： 既然要批量提交，为什么不把剩余票源提前从数据库里面挖出来做一个缓存，然后读写这块缓存，到最后在提交这块缓存到中心数据库。每个节点服务一批用户，缓存的节点不能太少，缓存应该在从中心数据里挖出来的那时候起就要保证将来数据库里一致性的问题。但难度在于如何将用户分配到适合的票源缓存点去？这就要按车次与席别还有乘车日期类型的不同来分配车票的类型。这个计算过程是独立，完全可以很轻松的做到并行计算。 ##小结 春运火车票这个问题基本上无解，因为 需要买票的人数 〉 票的总数。火车的载量也只有那么大，技术能解决的问题只能是让尽可能多人的人更顺利的买的票，不能产生更多的票。所以我想无论是叫阿里还是其他市场化的公司来做这个系统，没有买到票的人该骂的还是照样会骂。当然，上面的提出的一些方式也是比较理想化的。并没有过多的去考虑太多的细节问题。 <a class="read-more" href="http://www.leyafo.com/post/2014-01-07-i-think-12306-areas-for-improvement/">&raquo;</a></p>
-    </section>
     <footer class="post-meta">
         
         
 
         
-            <img class="author-thumb" src="http://www.leyafo.com/images/logo.jpeg" alt="Author image" nopin="nopin" />
         
         
-        
-        <time class="post-date" datetime="2014-01-07T10:10:00&#43;08:00">
-            7 Jan 2014
-        </time>
-    </footer>
-</article>
-
-    
-        
-<article class="post post">
-    <header class="post-header">
-        <h2 class="post-title"><a href="http://www.leyafo.com/post/2014-01-06-rails-ajax/">Rails 的 AJAX</a></h2>
-    </header>
-    <section class="post-excerpt">
-        <p>在 Rails 中只需要指定在 erb 模板中指定 remote=true 选项就可以将请求变为异步的了。request-handle-response-callback 这是一个 AJAX 请求的过程。rails 将这些步骤直接简化成了 request 和 handle 两步，让它看起来的像魔法一样而简洁神秘。在我初次接触 Rails 的 AJAX 时，我也随手去翻了下 wikipedia 关于 AJAX 的条目。AJAX 很好理解，但这并未让我更好的去完全理解 Rails 魔法般的 *AJAX*。主要被困惑的在 controller 的 handle 函数里面的 response 实现。 def handle @model = new some_model #do something if @model.save respond_to do |format| format.js end end 上面是一个典型的 Rails 应用场景，完全没有了那些简单粗暴原生的 html 与 javascript 的代码，更加别想看到 XMLHttpRequest 这种对象了。respond_to 是一个接收代码块的方法。而 format 表示 response 时使用的数据格式，format.js 会找到对应的 handle.js 并将里面的 js 代码 repond 到客户端。这仅仅只是客户端需要 <a class="read-more" href="http://www.leyafo.com/post/2014-01-06-rails-ajax/">&raquo;</a></p>
-    </section>
-    <footer class="post-meta">
-        
-        
-
-        
-            <img class="author-thumb" src="http://www.leyafo.com/images/logo.jpeg" alt="Author image" nopin="nopin" />
-        
-        
-        
-        <time class="post-date" datetime="2014-01-06T14:00:00&#43;08:00">
-            6 Jan 2014
-        </time>
-    </footer>
-</article>
-
-    
-        
-<article class="post post">
-    <header class="post-header">
-        <h2 class="post-title"><a href="http://www.leyafo.com/post/2013-11-26-the-best-practical-vim/">vim 最佳实践</a></h2>
-    </header>
-    <section class="post-excerpt">
-        <p>#重装你的vim 是的,重新安装你的 vim. 因为默认安装的 vim 是不带 python 和 lua,ruby,perl 这一系列脚本支持的.因此你需要加入这些脚本支持,然后重新编译安装.重新安装前请先备份好 ~/.vim 目录中的东西与 vimrc. ##源码编译安装: 以 OSX 系统为例,在 vim 源码目录的 src 目录下有一个 configure 文件.运行 ./configure &ndash;help 可以看到一些编译选项,从中添加你想要的编译选项.在添加 &ndash;enable-pythoninterp 请一定要带上 &ndash;with-python-config-dir 这个选项,用来指向你的 python config 目录.在 OSX 系统中这个值一般是: /Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config. 另外请勿使用 homebrew 安装的 python, 编译过程中会找不到 python frameworks. 如果配置有问题可以查看 src 目录中 auto/config.log 来看详细错误.编译成功后会在 src/macvim/build/release 目录生成好 dmg 安装包. ##从homebrew中安装: homebrew 也是下载好源码然后编译安装的.在 brew install macvim 前,可以使用 brew edit macvim 来编辑一些编译选项.只需要在 args = %w[] 这个中括号里面添加 configure 中的编译选项. 编译中产生的错误日志可以在 ~/Library/Logs/Homebrew/macvim 目录下查看. <a class="read-more" href="http://www.leyafo.com/post/2013-11-26-the-best-practical-vim/">&raquo;</a></p>
-    </section>
-    <footer class="post-meta">
-        
-        
-
-        
-            <img class="author-thumb" src="http://www.leyafo.com/images/logo.jpeg" alt="Author image" nopin="nopin" />
-        
-        
-        
-        <time class="post-date" datetime="2013-11-26T04:01:00&#43;08:00">
-            26 Nov 2013
+        <time class="post-date" datetime="2013-11-08T11:25:00&#43;08:00">
+            8 Nov 2013
         </time>
     </footer>
 </article>
@@ -313,9 +212,7 @@
 	
 	    <a class="newer-posts" href="http://www.leyafo.com/page/2/">&larr; Newer Posts</a>
 	
-	<span class="page-number">Page 3 of 4</span>
-	
-	    <a class="older-posts" href="http://www.leyafo.com/page/4/">Older Posts &rarr;</a>
+	<span class="page-number">Page 3 of 3</span>
 	
 </nav>
 
