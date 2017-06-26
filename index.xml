@@ -7,8 +7,26 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved by Leyafo</copyright>
-    <lastBuildDate>Mon, 19 Jun 2017 11:27:06 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 21 Jun 2017 14:10:54 +0800</lastBuildDate>
     <atom:link href="http://www.leyafo.com/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>我需要什么样的笔记软件？</title>
+      <link>http://www.leyafo.com/post/2017-06-21-whats-notebook-we-need/</link>
+      <pubDate>Wed, 21 Jun 2017 14:10:54 +0800</pubDate>
+      
+      <guid>http://www.leyafo.com/post/2017-06-21-whats-notebook-we-need/</guid>
+      <description>&lt;p&gt;现在笔记软件这块领域已经成了一片红海。大厂的软件有 OneNote，Evernote，Wiznote，有道等。类似功能的软件小厂出的现在也数不胜数。连苹果这种并不以软件见长的大厂都把他自家的 notes 加上了云同步的功能开始进入这片领域，可见一个笔记软件对用户的重要性。&lt;/p&gt;
+
+&lt;p&gt;我使用过 Evernote 和 Onenote 这两个笔记软件。这两个软件都有同样的问题，就是臃肿，同步慢。数据存储格式不开放，无法自己去管理数据。弃用这两个软件后，我开始尝试去使用各种各样的笔记软件。由于之前受够了大厂软件的臃肿不堪，我后来使用的这些软件都是一些很轻量的软件。这些软件都能做到想用了快速打开就能用，用完了马上就走这一特点。我用 Apple Notes 随时随地纪录各种各样的文字和一些零碎的想法。用 Notational Velocity 来写加密的私人日记。用 Ulysses 保存我写的一些文字。用 DropBox 备份好我自己生产的文字。用 Typora  写 markdown 文档。由于这些软件都比较轻量，都在我使用的这些方面做得很好。&lt;/p&gt;
+
+&lt;p&gt;我现在的问题在于我至今没有找到一款顺手的笔记软件能满足我上面用的这几个软件的功能。甚至找一个能达到 80％ 需求的软件都没有。我需要的一款能按照主题，按 tag 组织好我的笔记的软件，组织信息是第一位的功能。像其它类似加密，Markdown 编辑，这些功能都不是那么重要。我希望能做到，每次我需要找一些以前纪录过的笔记就能快速的检索到。按主题按 tag 分类信息的目的也是为了能快速的检索。纪录的数据文件格式要足够开放，我希望有一天如果这个软件不维护了，我将这些数据可以很方便的导入导出。格式开放的另一个好处就是我能随意的把数据加密后放到任意的云上。因为这些数据是隐私数据，我不希望明文存到任何公司的云上面。这个软件必须要跨平台，甚至能很方便的在移动设备上访问。&lt;/p&gt;
+
+&lt;p&gt;写到这里问题已经很清晰了，就是我需要的是一款信息组织工具。这个工具能让我很快的查找到我以往纪录的内容。并且这些数据必须是要我完全私有控制的。至于其它的功能我觉得我现在用的这些工具已经解决的很好了。所以我觉得个人搭建一套私有 wiki 系统是比较靠谱的选择。这个 wiki 系统最好是 web 形式呈现的，这样跨平台与移动设备访问的问题也就解决了。&lt;/p&gt;
+
+&lt;p&gt;现在我找到了一个符合我的这些要求的开源软件，这个软件就是 &lt;a href=&#34;https://www.dokuwiki.org/&#34;&gt;DokuWiki&lt;/a&gt;。它是一个基于 web 访问的软件，所有的内容都是以 txt 文本形式存储在服务端。为了简便它连数据库了也省了，内建索引可以快速搜索。由于开源，社区有海量的插件支持，代码也可以随意修改。安装也比较方便，把 host 地址指向 127.0.0.1 就能做为私人的笔记本使用了。无限制的的笔记 tag 和 category 对于管理资料很方便。所有数据都 host 在本地，没有任何第三方可以拿到数据，这正是我最需要的功能。由于是 web 形式的呈现，我可以把它 host 任何地方，手机也能访问。 现在唯一的问题就是它的内部的 wiki 文件格式是他自己特有的，我的一些笔记转换过来需要花点时间。不过这无所谓，把以往的笔记转为纯文本存储问题也不大。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>避开这 35 个坏习惯让你的代码可维护</title>
@@ -997,67 +1015,6 @@ Capistrano 3 去掉了 current_path, shared_path 等一些公有变量，据说�
 &lt;h2 id=&#34;函数与闭包&#34;&gt;函数与闭包&lt;/h2&gt;
 
 &lt;p&gt;函数本身没啥好说的，每个语言最基本的单元。如果这玩意也实现不好那真的太糟了。但我要说的是 &lt;em&gt;PHP&lt;/em&gt; 从5.3以后引入的匿名函数。&lt;em&gt;PHP&lt;/em&gt; 的匿名函数看起来好像是可以在任意的地方定义它，这很符合匿名函数的特性。但问题是你如果要用到上下文变量需要显示的使用 &lt;em&gt;use&lt;/em&gt; 将变量引入。这看起来好像是没有什么问题，但是如果函数嵌套的层级一多，这完全是个枷锁。另外如果要判断一个变量是不是一个函数 &lt;em&gt;PHP&lt;/em&gt; 有一个 &lt;strong&gt;is_callable&lt;/strong&gt; 的方法,这个方法的奇怪之处在于你可以传入变量名或者以字符串形式传入函数名。但如果直接传入一个函数它返回的值是 &lt;strong&gt;false&lt;/strong&gt;。经过使用 &lt;strong&gt;is_callable&lt;/strong&gt; 函数的一些失败尝试后，我彻底放弃了 &lt;strong&gt;PHP&lt;/strong&gt; 的匿名函数与闭包。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>avl 树的实现</title>
-      <link>http://www.leyafo.com/post/2014-02-09-avl-tree-implementation/</link>
-      <pubDate>Sun, 09 Feb 2014 07:01:00 +0800</pubDate>
-      
-      <guid>http://www.leyafo.com/post/2014-02-09-avl-tree-implementation/</guid>
-      <description>&lt;p&gt;过年在家没事，找出了几年前把我折磨得死去活来的&lt;a href=&#34;http://book.douban.com/subject/1971825/&#34;&gt;&amp;lt;数据结构与算法分析&amp;gt;&lt;/a&gt;这本书。确切的说，这段时间这本书也在折磨我。上面的avl树的旋转说得不清不楚的，而且还是使用递归实现了avl树的插入与删除操作。让这本书上本身就已经不太清晰的描述变得更加的扑朔迷离，让我有一种想烧掉这本书的冲动。到最后我实在没法看懂书上描述的avl树的操作方式只好自己从网上找一些资料实现了avl树(&lt;a href=&#34;https://github.com/leyafo/practice-algorithm/blob/master/DataStruct/avl_tree.c&#34;&gt;代码在此&lt;/a&gt;)。另外&lt;a href=&#34;http://zh.wikipedia.org/wiki/AVL%E6%A0%91&#34;&gt;维基百科&lt;/a&gt;上有关于avl树基本性质的描述，我在这里也不过多介绍。但是请勿对照这篇文章去实现avl树，这篇描述的删除操作是有问题的。关于树的旋转，这篇文章也没有把最根本的问题说清楚。avl树最难的部分就是关于树的旋转，本文主要讨旋转的问题。&lt;/p&gt;
-
-&lt;p&gt;首先，旋转的作用是降低子树的高度。旋转的方式有两种，一种是用来降低左子树高度一般被称作右旋。一种是用来降低右子树高度一般被称为左旋。这两种旋转在物理上是对称的，在编码上也是无脑对称的。因此，在编码方面我们只需要实现出一种旋转后另一种旋转也可以依葫芦画瓢的实现出来。另外在每个节点中保存一个父节点可以让编码的复杂度大大降低。&lt;/p&gt;
-
-&lt;p&gt;下面是左旋的具体变化过程:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-C&#34;&gt;      A                            B  
-       \                          / \  
-        B         左旋 ==&amp;gt;        A   C   
-         \    
-          C   
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;下面是右旋的具体变化过程:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-C&#34;&gt;          A                      B   
-         /                      / \    
-        B         右旋 ==&amp;gt;      C   A    
-       /                            
-      C   
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;上面的这两种情况是比较理想的情况，在实际的使用情况下是没有这么理想的。不能处理下面这些情况。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-C&#34;&gt;                 A                          A
-                  \                        /
-                   B                      B
-                  /                        \
-                 C                          C
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;上面的这两种情况就是书上所说的关于双旋转的问题。解决这两种情况的方法就是先旋转B节点,先将C点与B点旋转到A点与B点相同的指向方向。然后在根据A点做对应方向的旋转。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-C&#34;&gt;     A                A                C            A              A               C
-      \                \              / \          /                \             / \
-       B      =&amp;gt;        C       =&amp;gt;   A   B        B       =&amp;gt;         C      =&amp;gt;   A   B
-      /                  \                         \                  \
-     C                    B                         C                  B
-     
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;写到这里貌似可以去开工写代码了，但是请等等。在实际的编码中碰到如下情况还是不知道到底该怎样旋转。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-C&#34;&gt;        A                                  A           
-         \                                /
-          B                              B
-         / \                            / \
-        C   D                          C   D
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;在这两种情况中一般书上给的答案是‘判断新插入的节点到底是在左子树，还是在右子树’。然后再做对应的调整，这样确实是能解决问题的。但是在删除一个节点时，是不可能使用这种方法进行判断的。但我们可以根据树旋转的性质去解决这个问题。从上面的问题可以看出，树旋转最根本的原因就是降低树的高度。根据这个性质我们可以做进一步的分析。对不平衡的子节点去做旋转。那就是&amp;rdquo;哪边更高我们就去将它旋转一下，将它将降低一层&amp;rdquo;。 如果子节点两边的高度是一样的，或者更高的子节点方向与父节点一致的，那么就直接去旋转父节点。
-   以上就是avl树基本的旋转过程，avl树和二叉树的插入与删除操作都是一样的。不同的是avl树在插入和删除后需要由下至上扫描并旋转整棵树以保持平衡。&lt;/p&gt;
 </description>
     </item>
     
