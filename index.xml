@@ -7,8 +7,35 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved by Leyafo</copyright>
-    <lastBuildDate>Mon, 26 Jun 2017 13:04:06 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 18 Jul 2017 20:27:13 +0800</lastBuildDate>
     <atom:link href="http://www.leyafo.com/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>GUI 跨平台解决方案－2017</title>
+      <link>http://www.leyafo.com/post/2017-07-18-cross-platform-gui-solution-2017/</link>
+      <pubDate>Tue, 18 Jul 2017 20:27:13 +0800</pubDate>
+      
+      <guid>http://www.leyafo.com/post/2017-07-18-cross-platform-gui-solution-2017/</guid>
+      <description>&lt;p&gt;这几天我想山寨一个 &lt;a href=&#34;http://notational.net/&#34;&gt;Notational Velocity&lt;/a&gt;。它的代码开源了，但年久失修。里面的 Objective-C 代码非常难读。Notational Velocity 我用起来非常舒服，我想让它能更通用一些，而不仅仅封闭在 Mac 平台。于是就打起了山寨它的主意。于是我便开始着手调研现在的跨平台 GUI 方案。&lt;/p&gt;
+
+&lt;p&gt;GUI 是客户端软件最基础，最必需的组件。现在 web 几乎统一了跨平台 GUI 解决方案。但如果你需要做与操作系统打交道的软件，你仍然无可避免的要去解决 GUI 跨平台的问题。
+GUI 是阻止客户端软件跨平台最大的问题之一。这也是为什么现在为什么这么多软件全部 web 化的原因之一。
+选择 web 做为 GUI 跨平台有如下好处：
+1.用户不用安装软件，需要的时候拿来就用，用完即走。
+2.开发者不用关心如何与不同操作系统交互的问题。
+3.web 前端的学习成本非常低，适用性广。&lt;/p&gt;
+
+&lt;p&gt;浏览器相当于做出了一层统一的 GUI 接口的包装，有点类似于直接虚拟出了一层操作系统。web 就相当于运行在浏览器这一操作系统之内。由于安全性的问题，基于网络的 web 无法直接与操作系统打交道。而 web 的适用性又非常广，开发成本非常低。所以现在就诞生了 &lt;a href=&#34;https://electron.atom.io/&#34;&gt;Electron&lt;/a&gt; 这种在客户端程序里面加入 webkit 做为引擎渲染存在本地 web 页面。使用这种解决方案典型的项目有 Atom, Github Desktop, Slack, visualstudio. 这些都是大公司的做出来的成果，目前看起来 &lt;a href=&#34;https://electron.atom.io/&#34;&gt;Electron&lt;/a&gt; 是解决 GUI 跨平台最流行的方案。&lt;/p&gt;
+
+&lt;p&gt;得益于于 V8 的高性能，这些年 nodejs 社区发展得如火如荼。nodejs 几乎快变成了适用于任意地方万金油一样的编程语言。可是在客户端潜入一个 webkit 无论如何都会非常笨重，也难以做到轻量。你可能写一个简单的 hello world 弹窗最后打包的程序都需要 100M。 &lt;a href=&#34;https://electron.atom.io/&#34;&gt;Electron&lt;/a&gt; 不适合轻量级的程序，也不是一个长期的 GUI 解决方案。它只适用于你只想做出一个凑合可用的跨平台应用。 &lt;a href=&#34;https://electron.atom.io/&#34;&gt;Electron&lt;/a&gt; 应用更像是简单的把 HTML/CSS/JS 搬到一个不需要输入网址的浏览器里面。&lt;/p&gt;
+
+&lt;p&gt;另一个解决方案就是适用 Qt，Qt 在不同的平台上面把 GUI 直接画出来。Qt 发展了这么多年，一直处于非常冷清的状态，也很少见着一些大型的客户端是用 Qt 做出来的。Qt 也非常庞大，并不比基于 webkit 的 &lt;a href=&#34;https://electron.atom.io/&#34;&gt;Electron&lt;/a&gt; 轻量。C++ 的使用和学习成本都非常高，做界面一致性远远也不如 web。除非不得已，现在几乎不会用 Qt 做为跨平台 GUI 的解决方案。C++ 自身跨平台代价也非常高。&lt;/p&gt;
+
+&lt;p&gt;我这几天仔细看了 &lt;a href=&#34;https://github.com/andlabs/libui&#34;&gt;libui&lt;/a&gt; 这个项目。本来考虑使用它来做为 GUI 实现，但随着我使用的过程中深入理解，才发现 &lt;a href=&#34;https://github.com/andlabs/libui&#34;&gt;libui&lt;/a&gt; 真的只是一个试验品，拿来做点可用的东西非常难。&lt;a href=&#34;https://github.com/andlabs/libui&#34;&gt;libui&lt;/a&gt; 它的实现方式就是使用 C 语言设计一层很薄的 API，底层调用的是不同平台的 native GUI。用 C 语言实现的好处是可以 binding 到不同的语言中去。&lt;a href=&#34;https://github.com/andlabs/libui&#34;&gt;libui&lt;/a&gt; 的问题在于它只针对一些基础的控件做了包装。虽然调用了操作系统原生的控件，但如果要使用一些稍微复杂一点的控件它却无法实现。由于不同的操作系统 GUI 交互式不一样的，它也无法很好在这方面做兼容去实现一些稍微复杂的交互。&lt;/p&gt;
+
+&lt;p&gt;综上所述，GUI 跨平台这个问题现在仍然没有太好的方案。如果要用户体验好，必需要考虑把代码的 GUI 相关部分单独剥离出来，然后为不同的平台单独写一份 GUI 相关的代码（也就是手动再做一遍像 &lt;a href=&#34;https://github.com/andlabs/libui&#34;&gt;libui&lt;/a&gt; 这样的封装）。就像 Photoshop 这种大型软件在 Windows 和 Mac 上做不同的实现一样，这是无可避免的。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>我是如何学习英语发音的</title>
@@ -967,58 +994,6 @@ Sedgewick 的 &lt;a href=&#34;http://www.cs.princeton.edu/~rs/talks/LLRB/RedBlac
 
 &lt;p&gt;&lt;em&gt;cookie&lt;/em&gt; 是存储在用户浏览器中的一段唯一标识，&lt;em&gt;http request&lt;/em&gt; 会将它传送到服务端。现在一般的 &lt;em&gt;web framework&lt;/em&gt; 会去检测用户的 &lt;em&gt;http request&lt;/em&gt; 是否带有 &lt;em&gt;cookie&lt;/em&gt;, 如果没有发现请求中没有 *cookie*，它会建立一个*session*。并且以 &lt;em&gt;cookie&lt;/em&gt; 作为 &lt;em&gt;key&lt;/em&gt; 来保存 *session*。这样如果用户下次同样 &lt;em&gt;cookie&lt;/em&gt; 的 &lt;em&gt;http request&lt;/em&gt; 进来了，就可以找到相同的 *session*。
 &lt;em&gt;session&lt;/em&gt; 和 &lt;em&gt;cookie&lt;/em&gt; 是实现记住用户的基石。&lt;em&gt;http&lt;/em&gt; 协议是无状态的协议。在用户登录某一个网站后，我们是需要记住登录状态的。这时候就要通过 &lt;em&gt;cookie&lt;/em&gt; 和 &lt;em&gt;session&lt;/em&gt; 来干这件事情。 &lt;em&gt;rails&lt;/em&gt; 默认是已经将 &lt;em&gt;session&lt;/em&gt; 建立好了。在 &lt;em&gt;controller&lt;/em&gt; 中可以很方便的拿到 &lt;em&gt;session&lt;/em&gt; 变量去存储一些信息。另外比较有意思的是 &lt;em&gt;rails&lt;/em&gt; 默认是将 &lt;em&gt;session&lt;/em&gt; 经过加密后存储在用户 &lt;em&gt;cookie&lt;/em&gt; 中的。当用户的 &lt;em&gt;cookie&lt;/em&gt; 传送到后端时会将 &lt;em&gt;cookie&lt;/em&gt; 进行解密得到相应的 *session*。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Capistrano 部署</title>
-      <link>http://www.leyafo.com/post/2014-06-19-capistrano-deployment/</link>
-      <pubDate>Thu, 19 Jun 2014 03:07:00 +0800</pubDate>
-      
-      <guid>http://www.leyafo.com/post/2014-06-19-capistrano-deployment/</guid>
-      <description>
-
-&lt;p&gt;这几天要部署自己做的一个小板凳，是用 sinatra 写的一个简单的 blog 程序。这个程序很简单，代码非常少，可以像 php 那样直接使用 async 将代码。但我想熟悉下 Ruby 关于部署方面的技术，因此找到了 Capistrano 这个东西。Rails 的 web 后台对环境非常挑剔，Capistrano 是 Ruby 写的， 虽然它可以部署各种语言的代码，但可以部署 Rails 的程序不会太简单。&lt;/p&gt;
-
-&lt;h2 id=&#34;配置项含义&#34;&gt;配置项含义&lt;/h2&gt;
-
-&lt;p&gt;Capistrano 这个东西产生的一大堆配置文件有点让人迷糊。Capfile 相当于一个 makefile 文件，里面设置了一些任务是如何运行的。config目录下有三个配置文件，其中 deploy 子目录是用于配置部署不同的环境。默认的是 production 和 staging 环境配置项分别对应两个同名的文件。deploy.rb 这个文件相当于一个总配置文件，里面的是一些公共的配置项。&lt;br /&gt;
-  Capistrano 非常依赖版本控制，在 deploy.rb 文件中 repo_url 是用于设置代码仓库的地址的，配置好这个参数后需要确认服务器有访问代码仓库的权限。 scm 是设置具体的版本控制软件的。Capistrano 支持最好的是 git 和 svn。 deploy_to 是一个非常重要的参数，它指示了代码上传到服务器的具体位置,另外需要确保这个目录与配置好的用户名有足够的访问权限。这几个参数设置好后，其他的参数可以使用默认的了。然后再配置对应环境的具体配置项。
-  在环境配置项中，role 参数指示的三项分别是 app，web 和 db。这个三项分开的好处是可以让他们部署到不同的服务器上做负载均衡。单台服务器不用太关心，三项指向同一个地址即可。然后配置服务器的访问权限，配置非常简单，设置好用户名和 ssh public key就可以了。到这里基本的配置已经完成了，运行cap deploy:check 可以检测配置是否成功。这个时候如果 check 成功的话使用 cap deploy 命令就可以成功上传代码了。&lt;/p&gt;
-
-&lt;h2 id=&#34;让代码运行&#34;&gt;让代码运行&lt;/h2&gt;
-
-&lt;p&gt;代码上传后部署的任务已经完成了一小部分了，接下来就是具体的程序的启动与 http request的转发了。我使用的是 nginx + unicorn 组合来干这件事情的。首先要确保代码在本地能正常的运行起来，然后再去服务器上做进一步的测试。实际上更好的方式是所有的软件在本地的机器上能完全正常运行后，再将同样的配置文件上传至服务器。能避免不少因为不同机器，不同环境而引起的问题。这样服务器只负责运行软件，不做任何测试。这也是我最近所理解的生产环境。
-首先来配置 unicorn 这个东西，一般的 web framework 都会自带 http 服务器用来做测试。自带的 http 服务器是不推荐直接跑在生产环境下的。nginx 更适合干这种事情，但 nginx 干的事情更加单一，它只负责将请求接收并转发。并不负责应用层的事情。unicorn就是这个应用层（php对应的是fastcgi），他负责将代码运行起来并与nginx进行通信。unicorn配置起来也非常的简单，在config.ru中配置好程序的入口点和unicorn.rb中配置好程序的pid，sock 和 log 文件路径。其中 pid 文件是用于启动与停止后台运行的 unicorn。sock 文件用于和 nginx 进行通信。
-现在可以配置 nginx 了，nginx 的配置非常简单。只要设置好 nginx 的 upstream 项，在此项里面设置好 unicorn sock 的具体路径，就可以顺利通过 nginx 访问到unicorn了。&lt;/p&gt;
-
-&lt;h2 id=&#34;capistrano-的-task&#34;&gt;Capistrano 的 task&lt;/h2&gt;
-
-&lt;p&gt;nginx 与 unicorn 部署好后，就可以借助 Capistrano 的 task 来进行一些必要的代码部署步奏。比如重启 http 服务器，更新数据库等一系列事情。这些事情使用 Capistrano 来完成的好处是，task写好好每次部署只需要一条命令就可以自动化完成一些繁琐的事情。这个才是 Capistrano 最核心要解决的问题。
-这里拿 unicorn 的重启为例来展示如何在远端服务器执行一些 shell 命令。unicorn 网上有一个控制它停止与重新启动的 &lt;a href=&#34;https://www.google.com/search?q=unicorn&amp;amp;oq=unicorn&amp;amp;aqs=chrome..69i57j69i59l3j69i60l2.926j0j1&amp;amp;sourceid=chrome&amp;amp;es_sm=119&amp;amp;ie=UTF-8#newwindow=1&amp;amp;q=unicorn_init&amp;amp;safe=off&#34;&gt;shell&lt;/a&gt; 脚本。下面是一个 task 的具体代码。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;%w[start stop restart].each do |command|
-  desc &amp;quot;#{command} unicorn server&amp;quot;
-  task command do
-    on roles(:app, :web) do
-      execute &amp;quot;sh #{fetch(:current_path)}/config/unicorn_init.sh #{command}&amp;quot;
-    end
-  end
-end
-before :deploy, &amp;quot;unicorn:stop&amp;quot;
-after  :deploy, &amp;quot;unicorn:start&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;其中 on roles 指定的是要执行命令具体的服务器，exexcute 是执行具体命令的函数。其中(:current_path)指定的是当前release 代码的路径。因为每次使用 cap deploy 命令后，都会产生一个新的 release，然后远端会切换版本到新的 release 目录。before 和 after 是 hook，它指示了每次某一项任务开始前和完成后所做的一些工作。&lt;/p&gt;
-
-&lt;h2 id=&#34;capistrano-2-与-capistrano-3&#34;&gt;Capistrano 2 与 Capistrano 3&lt;/h2&gt;
-
-&lt;p&gt;Capistrano 2 与 Capistrano 3 差别非常大，一些配置项完全是需要重写的。现在从网上的资料和 github 的 issue 来看 2 比 3 要多很多。可参考的教程2比3也要多出很多，我在使用的是Capistrano 3，在部署时遇到不少的问题。因此如果没有太高的要求，建议继续使用2。以下是我在部署的过程中碰到的一些差异。&lt;/p&gt;
-
-&lt;p&gt;Capistrano 2 可以使用 sudo 执行命令，Capistrano 3 却不行。据他们自己说是为了安全考量。
-Capistrano 3 的 task 必须要指定具体的 roles。
-Capistrano 2 可以直接调用 set 设置的属性，而 Capistrano 必须使用 fetch 函数去获取。
-Capistrano 3 去掉了 current_path, shared_path 等一些公有变量，据说是为了防止部署失败而设计的。&lt;/p&gt;
 </description>
     </item>
     
