@@ -7,8 +7,40 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved by Leyafo</copyright>
-    <lastBuildDate>Tue, 18 Jul 2017 20:27:13 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 30 Jul 2017 18:29:44 +0800</lastBuildDate>
     <atom:link href="http://www.leyafo.com/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>文档！文档！</title>
+      <link>http://www.leyafo.com/post/2017-07-30-development-document/</link>
+      <pubDate>Sun, 30 Jul 2017 18:29:44 +0800</pubDate>
+      
+      <guid>http://www.leyafo.com/post/2017-07-30-development-document/</guid>
+      <description>&lt;p&gt;这个世界上会写字的应该要比会写代码的人多得多。但写点思路清晰的代码和写一份让人完全能读懂的文档都不是那么容易的事情。文档和代码这两件事情是相互影响的，鲜有见到文档写的好代码却写不好的事情，反过来如果一个项目文档写的很烂，那里面的代码肯定不会好到哪里去。&lt;/p&gt;
+
+&lt;p&gt;我现在由于所在行业的特殊性，需要和外面各种提供 API 服务的公司对接服务。这些提供 API 服务 90％ 的公司文档都写得有问题，没问题的那 10％ 是在行业做到顶尖的公司。&lt;/p&gt;
+
+&lt;p&gt;那些文档写得差的公司，不会意识好文档的价值。一份好得文档不仅仅是把问题定义清楚，它还会让项目的设计变得优良、规范。对于用户来说好的文档可以节约不少的时间，也能节约用户碰到问题时跑过来问你的时间。&lt;/p&gt;
+
+&lt;p&gt;下面以现在业界通用的 HTTP 协议为例，一份好的文档需要具备哪些基本的要素。&lt;/p&gt;
+
+&lt;p&gt;首先开发者自己必须要对 HTTP 协议烂熟于心，要完全按照标准返回 Head, Body, Response 这三要素。至于要不要完全用 Restful 标准，可以不用太在意，这不在本文的讨论范围内。&lt;/p&gt;
+
+&lt;p&gt;文档里面需要为每一个接口提供示例代码，世界上这么多语言你无法去为每种语言提供一份示例代码，那么就写个 curl 的调用示例好了（这就是为什么你必须要熟悉 HTTP 协议）。如果碰到那种不懂 HTTP 的开发者需要你提供一份他使用的语言的示例代码，你就让他去百度学习一下 HTTP 好了。&lt;/p&gt;
+
+&lt;p&gt;你的 API 里面少需要提供一个用来测试账号是否访问正常的就接口，因为这一块是在最容易出问题的。有了这样一个接口用户可以快速的排除掉这样的错误。&lt;/p&gt;
+
+&lt;p&gt;现在还有不少使用基于 HTTP 的 SOAP 做为向外界提供的接口。SOAP 这样的东西能丢掉就尽量丢掉，SOAP 是 Java 社区糟糕的产物。而且 XML 无论是对人对机器解析都很不友好，现在业界通行的做法是用 json。一旦定好一种数据格式就不要使用其他的格式（json 传文件可以使用 base64）。以免给用户带来额外的困惑。&lt;/p&gt;
+
+&lt;p&gt;我看到现在不少的 API 会有一些需要做 MD5 校验的操作，这样做是为了防止中间人攻击。这会给使用者带来额外的成本，这也是时代遗留产物，使用 HTTPS 根本就不会存在这个问题。&lt;/p&gt;
+
+&lt;p&gt;很多给企业提供的 API 方习惯了先商务洽谈，然后再提供相应的文档和账户。这里面存在的问题就是会有一个沟通传递的过程，这个过程中有可能会把文档忘记或丢失掉，并且文档一旦发给别人就无法修改了。既然使用了 HTTP，为何不把文档做为 HTML 直接输出到浏览器展现呢？一旦文档在线化了，更新就不是问题了。&lt;/p&gt;
+
+&lt;p&gt;文档里面的错别字就像吃饭时突然嚼到了沙子一样，会硌应一下。我的解决方法是不停的读，看到了错别字就马上修改，连续读三遍以上还没找到错别字就可以发布了。如果还有就继续改吧（在线化的好处！）。&lt;/p&gt;
+
+&lt;p&gt;对外提供的文档可以看出一个公司的很多问题，可以看出这家公司是否有做好一件事情的基本能力，可以看出他们自己对产品的重视程度。好的开发文档一个简单的标准就是就可以完全按照文档去做开发，并且不会有太多文档解释不了的问题。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>GUI 跨平台解决方案－2017</title>
@@ -973,29 +1005,6 @@ next          ---&amp;gt; 000123000
 Sedgewick 的 &lt;a href=&#34;http://www.cs.princeton.edu/~rs/talks/LLRB/RedBlack.pdf&#34;&gt;PPT&lt;/a&gt; 里面有两个错误.
     1. 在 deleteMax方法中向下递归是 deleteMax(h.left) 应该是 deleteMax(h.right)。
     2. 在 delete 方法中需要添加当前节点是否为空的判断，否则递归到空节点时程序会挂掉。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>rails 注册登录</title>
-      <link>http://www.leyafo.com/post/2014-07-24-rails-log/</link>
-      <pubDate>Thu, 24 Jul 2014 08:53:00 +0800</pubDate>
-      
-      <guid>http://www.leyafo.com/post/2014-07-24-rails-log/</guid>
-      <description>
-
-&lt;p&gt;这几天在做一个小型的论坛，做到了注册登录这一块。之前没有完整做过注册登录这个东西，这次我打算从头写到尾去详细的了解里面的一些基本原理。所以这次并没有使用&lt;a href=&#34;https://github.com/plataformatec/devise&#34;&gt;devise&lt;/a&gt;这样的 *gem*。&lt;/p&gt;
-
-&lt;h2 id=&#34;密码存储&#34;&gt;密码存储&lt;/h2&gt;
-
-&lt;p&gt;用户密码安全存储是作为一个 &lt;em&gt;web&lt;/em&gt; 开发者的基本节操。好在现有的一些解决方案已经能比较好的解决这个问题了，做起来也比较容易。只需要了解一些基本的安全常识就可以保证90%的情况下是安全的。
-在数据库里面存储加密后的密文是为了防止被拖库，如果黑客拖下了整个用户表，加密后的密码他们拿着也是没有用的。即使是网站的管理员也是没法知道这个密码的真实原文。因为现在一般的密码 &lt;em&gt;hash&lt;/em&gt; 算法是不可逆的。所以现在的一些比较常用的密码明文获取方式是进行&lt;a href=&#34;http://blog.jobbole.com/61872/&#34;&gt;字典暴力破解&lt;/a&gt;。如果在密码原文 &lt;em&gt;hash&lt;/em&gt; 前给密码添加一些比较长的唯一的随机字符串，这会使攻击者的字典基本上失效(因为很长，枚举次数要上升很大一个数量级)。这就是密码加盐(salt)的基本作用。当然加盐的另外一个作用是让两个相同的密码产生不同的 &lt;em&gt;hash&lt;/em&gt; 值。这样即使知道加密算法和加密后的密文也无法通过比较密文来得到原文。
-在用户登录时我们会拿到用户的原始密码，这个原始密码相当于一把&lt;strong&gt;钥匙&lt;/strong&gt;。拿着这个密码通过加密算法和数据库里面的 &lt;em&gt;salt&lt;/em&gt;  得到加密后的密文。再用这串密文与数据库的密文进行比对，比对成功后则验证通过。在这样一个过程中，密码看起来就像打开箱子的钥匙一样，由用户携带，网站不进行存储。&lt;/p&gt;
-
-&lt;h2 id=&#34;session-和-cookie&#34;&gt;session 和 cookie&lt;/h2&gt;
-
-&lt;p&gt;&lt;em&gt;cookie&lt;/em&gt; 是存储在用户浏览器中的一段唯一标识，&lt;em&gt;http request&lt;/em&gt; 会将它传送到服务端。现在一般的 &lt;em&gt;web framework&lt;/em&gt; 会去检测用户的 &lt;em&gt;http request&lt;/em&gt; 是否带有 &lt;em&gt;cookie&lt;/em&gt;, 如果没有发现请求中没有 *cookie*，它会建立一个*session*。并且以 &lt;em&gt;cookie&lt;/em&gt; 作为 &lt;em&gt;key&lt;/em&gt; 来保存 *session*。这样如果用户下次同样 &lt;em&gt;cookie&lt;/em&gt; 的 &lt;em&gt;http request&lt;/em&gt; 进来了，就可以找到相同的 *session*。
-&lt;em&gt;session&lt;/em&gt; 和 &lt;em&gt;cookie&lt;/em&gt; 是实现记住用户的基石。&lt;em&gt;http&lt;/em&gt; 协议是无状态的协议。在用户登录某一个网站后，我们是需要记住登录状态的。这时候就要通过 &lt;em&gt;cookie&lt;/em&gt; 和 &lt;em&gt;session&lt;/em&gt; 来干这件事情。 &lt;em&gt;rails&lt;/em&gt; 默认是已经将 &lt;em&gt;session&lt;/em&gt; 建立好了。在 &lt;em&gt;controller&lt;/em&gt; 中可以很方便的拿到 &lt;em&gt;session&lt;/em&gt; 变量去存储一些信息。另外比较有意思的是 &lt;em&gt;rails&lt;/em&gt; 默认是将 &lt;em&gt;session&lt;/em&gt; 经过加密后存储在用户 &lt;em&gt;cookie&lt;/em&gt; 中的。当用户的 &lt;em&gt;cookie&lt;/em&gt; 传送到后端时会将 &lt;em&gt;cookie&lt;/em&gt; 进行解密得到相应的 *session*。&lt;/p&gt;
 </description>
     </item>
     
