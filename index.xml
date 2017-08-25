@@ -147,10 +147,10 @@ Rails 可以很快的解决各类繁琐的业务逻辑，这都是基于 ruby �
 Example 在被我忽悠 git 后你可能会偷偷的跑去网上找 git 相关的教程读。或者在看到我贱指如飞、神乎奇技地在键盘上狂按一通的时候你偷偷的拿笔在旁边记录我敲过的顺序。作为一个踏坑无数，身经百战的老司机有必要在这时告诉你一点儿人生经验，你这么做并没有什么卵用！！！因为你碰到的问题和网上那些教程说的是不一样的，老司机和你看到的世界也是不一样的（隔壁老王用的撩妹技能你直接拿去用会有什么后果？）。因此我们现在以平常工作中最简单的一个应用场景来解释 git 的基本用法。
 现在假设有两个农民工张大锤，王大锤，以下简称老张和老王。老张和老王每天搬砖太累了，他们决定写一部电影剧本来改变世界。但两个人在同一个剧情时间点上写同一件事情的时候总是会产生冲突。老张本来在 1970 年10月24日把男主角写挂了。但老王由于刚在淘宝买了块机械键盘，打字打得太爽了。在1970年10月24日这一天写成男主角正在吃着火锅唱着歌。这个时候冲突产生了，老王和老张为了这个事情从相亲相爱变成了砖角遇到爱。下面我们开始详细描述这一起恶性暴力的流血事件。
 Commit 张大锤和王大锤已经写好了一些剧情了。他们的最开始的共同成果如下：
-1	从前有个人，名字叫赵铁柱。他人长得帅，又多金，还会写代码。  最前面那个 1 表示第一行。
+ 1	从前有个人，名字叫赵铁柱。他人长得帅，又多金，还会写代码。  最前面那个 1 表示第一行。
 老张刚和前女友分手，伤心难过，悲痛欲绝，以致于影响了日常严肃文学创作。所以他把接下来的剧本改成了这样：
-1	从前有个人，名字叫赵铁柱。他人长得帅，又多金，还会写代码。 2	后来他死了。  写完后老张开始提交代码，他先输入 git status 查看 git 库给出的文件改动信息。(git status 是一个人畜无害的命令，你敲破桌子也不会有人理你)。
-[老张]$ git status On branch master Your branch is up-to-date with &#39;origin/master&#39;. Changes not staged for commit: (use &amp;quot;git add &amp;lt;file&amp;gt;...&amp;quot; to update what will be committed) (use &amp;quot;git checkout -- &amp;lt;file&amp;gt;.</description>
+ 1	从前有个人，名字叫赵铁柱。他人长得帅，又多金，还会写代码。 2	后来他死了。  写完后老张开始提交代码，他先输入 git status 查看 git 库给出的文件改动信息。(git status 是一个人畜无害的命令，你敲破桌子也不会有人理你)。
+[老张]$ git status On branch master Your branch is up-to-date with &amp;#39;origin/master&amp;#39;. Changes not staged for commit: (use &amp;quot;git add &amp;lt;file&amp;gt;...&amp;quot; to update what will be committed) (use &amp;quot;git checkout -- &amp;lt;file&amp;gt;.</description>
     </item>
     
     <item>
@@ -226,10 +226,10 @@ Rspec 的问题 Rspec 定义了测试的领域语言，他的目的是让非开�
       
       <guid>http://www.leyafo.com/post/2014-11-14-a-thorough-understanding-of-kmp/</guid>
       <description>KMP 算法是一种子串匹配算法。其特点在于匹配子串时利用已经匹配成功的部分子串来跳转到下一次能再次匹配的串。书上列举的一大堆公式看着很犯晕，网上各类码农博客里面用代码写的文章，让本来逻辑有点绕的 kmp 更加绕。就我最近看到的文章来说最清晰的就是阮一峰 和 详解KMP算法。这两辆篇文章解释的通俗易懂，也有一些不太明晰的地方。本文的目的是在于解释笔者本人在理解 kmp，及阅读这些资料时不明白的地方。 首先还是来看 kmp 匹配子串所使用的方法，下文中字符串“TEST ABCABCABCDEF” 表示要匹配的主串，字符串 &amp;ldquo;ABCABCDEF&amp;rdquo; 表示待匹配的子串。(用肉眼我们可以看到要匹配的子串的位置在最后的位置)。首先像暴力匹配一样我们把不匹配的字符串全部进行匹配并跳过。
-TEST ABCABCABCDEF ABCABCDEF | |-------- 进入下一个位置进行匹配 ------&amp;gt; TEST ABCABCABCDEF ABCABCDEF | &amp;lt;----- 还是不匹配,继续往前走 ------| | | ......前面三个还是不匹配.....  这个时候我们待匹配的子串走到了‘TEST ’后面一个位置
-TEST ABCABCABCDEF ABCABCDEF | |------ D 和 A 不匹配。  这个时候主串和子串出现了部分匹配的情况，这个时候我们的子串该如何前进继续匹配？目前能想到的方法就是按照暴力匹配的方式继续向前进一步。但本文的目的不在于讨论暴力匹配，所以这种方法被 Pass 掉。如果直接将子串移动到现在不匹配 D 的位置，这种方式会错过可能会匹配的子串。比如下面这种情况会错过可能会匹配的子串。
-ABCABCDEFGHIJK -----&amp;gt; ABCABCDEFG ABCDEFG ABCDEFG  因此上面的移动是不合法的，算法会出现错误。从这里我们可以观察到合法的移动是将子串移动到 ABC 。这样我们就能再次匹配到 ABC，这也就是本文前面说的那句话，利用已经匹配成功的部分子串来跳转到下一次能再次匹配的串。现在问题是我们该如何在程序中得到这个正确的移动位置？首先我们先来观察已经匹配的部分匹配子串。
-TEST ABCABCABCDEF ABCABCDEF | |---------&amp;gt;部分匹配子串 ABCABC  从这里我们可以看到 ABC 出现了两次，因此 ABC 是我们需要的再次匹配的串。但这个 ABC 是如何得到的？因此我们现在我们需要解决的问题有2个。 1.</description>
+ TEST ABCABCABCDEF ABCABCDEF | |-------- 进入下一个位置进行匹配 ------&amp;gt; TEST ABCABCABCDEF ABCABCDEF | &amp;lt;----- 还是不匹配,继续往前走 ------| | | ......前面三个还是不匹配.....  这个时候我们待匹配的子串走到了‘TEST ’后面一个位置
+ TEST ABCABCABCDEF ABCABCDEF | |------ D 和 A 不匹配。  这个时候主串和子串出现了部分匹配的情况，这个时候我们的子串该如何前进继续匹配？目前能想到的方法就是按照暴力匹配的方式继续向前进一步。但本文的目的不在于讨论暴力匹配，所以这种方法被 Pass 掉。如果直接将子串移动到现在不匹配 D 的位置，这种方式会错过可能会匹配的子串。比如下面这种情况会错过可能会匹配的子串。
+ ABCABCDEFGHIJK -----&amp;gt; ABCABCDEFG ABCDEFG ABCDEFG  因此上面的移动是不合法的，算法会出现错误。从这里我们可以观察到合法的移动是将子串移动到 ABC 。这样我们就能再次匹配到 ABC，这也就是本文前面说的那句话，利用已经匹配成功的部分子串来跳转到下一次能再次匹配的串。现在问题是我们该如何在程序中得到这个正确的移动位置？首先我们先来观察已经匹配的部分匹配子串。
+ TEST ABCABCABCDEF ABCABCDEF | |---------&amp;gt;部分匹配子串 ABCABC  从这里我们可以看到 ABC 出现了两次，因此 ABC 是我们需要的再次匹配的串。但这个 ABC 是如何得到的？因此我们现在我们需要解决的问题有2个。 1.</description>
     </item>
     
     <item>
@@ -240,7 +240,7 @@ TEST ABCABCABCDEF ABCABCDEF | |---------&amp;gt;部分匹配子串 ABCABC  从�
       <guid>http://www.leyafo.com/post/2014-10-27-a-red-black-tree-implementation/</guid>
       <description>红黑树是有序平衡 BST(binary search tree) 的一种，它于1978年由 Guibas 和 Sedgewick 发明。红黑树是2-3-4 树 的一种抽象表示。有趣的是现在大多数算法书关于红黑树都没有提到过 2-3-4 树。算法书上关于红黑树的讲解都是基于定理来实现红黑树。至于这些定理怎么来的，算法书却没有描述过。这就是为啥算法书上的红黑树难以理解，这是算法书的坑。所以要理解红黑树，理解 2-3-4树 是必不可少的一个过程。
 2-3-4树 2-3-4树的基本性质 2-3-4树也是一种有序的平衡树，所有从 leaf 到 root 的 path 的高度都是相等的。每个节点可以容纳1到3个节点，可以有2到4个子节点。下面就是 2-3-4 树的3种类型。
-B D F H K O / \ / | \ / \ / \ / \ A C B E G A I L Y 2树 3树 4树  类似于 BST，2-3-4对元素的排序是左小右大。不同的3树和4树的子节点会有中间大小的子节点。比如上图的3树中的 E 就比 D 大 比 F 小。4树中的 I 比 H 大，比 K 小。L 比 K 大，比 O 小。</description>
+ B D F H K O / \ / | \ / \ / \ / \ A C B E G A I L Y 2树 3树 4树  类似于 BST，2-3-4对元素的排序是左小右大。不同的3树和4树的子节点会有中间大小的子节点。比如上图的3树中的 E 就比 D 大 比 F 小。4树中的 I 比 H 大，比 K 小。L 比 K 大，比 O 小。</description>
     </item>
     
     <item>
@@ -287,10 +287,10 @@ namespace PHP 的 namespace 是我见过的所有语言最难用的 namespace，
       <description>过年在家没事，找出了几年前把我折磨得死去活来的&amp;lt;数据结构与算法分析&amp;gt;这本书。确切的说，这段时间这本书也在折磨我。上面的avl树的旋转说得不清不楚的，而且还是使用递归实现了avl树的插入与删除操作。让这本书上本身就已经不太清晰的描述变得更加的扑朔迷离，让我有一种想烧掉这本书的冲动。到最后我实在没法看懂书上描述的avl树的操作方式只好自己从网上找一些资料实现了avl树(代码在此)。另外维基百科上有关于avl树基本性质的描述，我在这里也不过多介绍。但是请勿对照这篇文章去实现avl树，这篇描述的删除操作是有问题的。关于树的旋转，这篇文章也没有把最根本的问题说清楚。avl树最难的部分就是关于树的旋转，本文主要讨旋转的问题。
 首先，旋转的作用是降低子树的高度。旋转的方式有两种，一种是用来降低左子树高度一般被称作右旋。一种是用来降低右子树高度一般被称为左旋。这两种旋转在物理上是对称的，在编码上也是无脑对称的。因此，在编码方面我们只需要实现出一种旋转后另一种旋转也可以依葫芦画瓢的实现出来。另外在每个节点中保存一个父节点可以让编码的复杂度大大降低。
 下面是左旋的具体变化过程:
-A B \ / \ B 左旋 ==&amp;gt; A C \ C  下面是右旋的具体变化过程:
-A B / / \ B 右旋 ==&amp;gt; C A / C  上面的这两种情况是比较理想的情况，在实际的使用情况下是没有这么理想的。不能处理下面这些情况。
-A A \ / B B / \ C C  上面的这两种情况就是书上所说的关于双旋转的问题。解决这两种情况的方法就是先旋转B节点,先将C点与B点旋转到A点与B点相同的指向方向。然后在根据A点做对应方向的旋转。
-A A C A A C \ \ / \ / \ / \ B =&amp;gt; C =&amp;gt; A B B =&amp;gt; C =&amp;gt; A B / \ \ \ C B C B  写到这里貌似可以去开工写代码了，但是请等等。在实际的编码中碰到如下情况还是不知道到底该怎样旋转。</description>
+ A B \ / \ B 左旋 ==&amp;gt; A C \ C  下面是右旋的具体变化过程:
+ A B / / \ B 右旋 ==&amp;gt; C A / C  上面的这两种情况是比较理想的情况，在实际的使用情况下是没有这么理想的。不能处理下面这些情况。
+ A A \ / B B / \ C C  上面的这两种情况就是书上所说的关于双旋转的问题。解决这两种情况的方法就是先旋转B节点,先将C点与B点旋转到A点与B点相同的指向方向。然后在根据A点做对应方向的旋转。
+ A A C A A C \ \ / \ / \ / \ B =&amp;gt; C =&amp;gt; A B B =&amp;gt; C =&amp;gt; A B / \ \ \ C B C B  写到这里貌似可以去开工写代码了，但是请等等。在实际的编码中碰到如下情况还是不知道到底该怎样旋转。</description>
     </item>
     
     <item>
@@ -321,7 +321,7 @@ A A C A A C \ \ / \ / \ / \ B =&amp;gt; C =&amp;gt; A B B =&amp;gt; C =&amp;gt; 
       
       <guid>http://www.leyafo.com/post/2014-01-06-rails-ajax/</guid>
       <description>在 Rails 中只需要指定在 erb 模板中指定 remote=true 选项就可以将请求变为异步的了。request-handle-response-callback 这是一个 AJAX 请求的过程。rails 将这些步骤直接简化成了 request 和 handle 两步，让它看起来的像魔法一样而简洁神秘。在我初次接触 Rails 的 AJAX 时，我也随手去翻了下 wikipedia 关于 AJAX 的条目。AJAX 很好理解，但这并未让我更好的去完全理解 Rails 魔法般的 *AJAX*。主要被困惑的在 controller 的 handle 函数里面的 response 实现。
-def handle @model = new some_model #do something if @model.save respond_to do |format| format.js end end  上面是一个典型的 Rails 应用场景，完全没有了那些简单粗暴原生的 html 与 javascript 的代码，更加别想看到 XMLHttpRequest 这种对象了。respond_to 是一个接收代码块的方法。而 format 表示 response 时使用的数据格式，format.js 会找到对应的 handle.js 并将里面的 js 代码 repond 到客户端。这仅仅只是客户端需要 js 类型回复的一个需求。如果客户端需要 json，XML，HTML 等不同类型的数据，只需要在 repondto 这个代码块使用 format 对象调用对应的方法即可。rails 会自动判断并回应对应的类型的数据到前台页面。 这样做的好处有： 1.</description>
+ def handle @model = new some_model #do something if @model.save respond_to do |format| format.js end end  上面是一个典型的 Rails 应用场景，完全没有了那些简单粗暴原生的 html 与 javascript 的代码，更加别想看到 XMLHttpRequest 这种对象了。respond_to 是一个接收代码块的方法。而 format 表示 response 时使用的数据格式，format.js 会找到对应的 handle.js 并将里面的 js 代码 repond 到客户端。这仅仅只是客户端需要 js 类型回复的一个需求。如果客户端需要 json，XML，HTML 等不同类型的数据，只需要在 repondto 这个代码块使用 format 对象调用对应的方法即可。rails 会自动判断并回应对应的类型的数据到前台页面。 这样做的好处有： 1.</description>
     </item>
     
     <item>
@@ -344,7 +344,7 @@ def handle @model = new some_model #do something if @model.save respond_to do |f
       <description>递归是一个奇特的玩意,能简洁的描述复杂的思考.
 一个简单的递归函数:
 def fibonacci(n): if n &amp;lt;= 1: return 1 return fibonacci(n-1) + fibonacci(n-2)  这个函数实现了一个裴波那契数列.非常简单,代码只有 3 行,但如果跟着函数运行的轨迹走.会发现这个函数背后的调用过程非常的复杂.每次递归都会依赖前面两次计算的结果.随着递归的层级上升,每次都会重新去调用前两次计算产生的结果.为了简化描述,下面是以 fibonacci(5) 模拟递归调用过程. 可以看到,每次递归都会重复前两次的调用过程.实际上这个递归数列并不需要每次都重复去求前两次的结果.如果用压栈的方法,一遍递归就可以搞定了.
-def fibonacci(n): L = fibonacci.L if n &amp;lt;= 2: return L[-1] #get top else: n2 = L.pop() n1 = L.pop() L.append(n2) #&#39;append&#39; is stack&#39;s push L.append(n1+n2) return fibonacci(n-1) fibonacci.L = [1,1]  上面的代码耍了一个小花招.首先先设定好两个初始的计算结果,然后开始递归迭代.与前一版本递归不同的是,前一个递归需要在进入到递归底部后,才开始跳出来计算每一步递归后的结果,直到返回.而后一个递归会在最开始递归进入时就开始计算,进入到递归底部后(也就是 n &amp;lt;= 2)最终的结果就已经计算出来了,直接一层一层返回这个结果就可以了. 为了便于说明下面代码是利用两个变量做中间结果的版本:
+def fibonacci(n): L = fibonacci.L if n &amp;lt;= 2: return L[-1] #get top else: n2 = L.pop() n1 = L.pop() L.append(n2) #&amp;#39;append&amp;#39; is stack&amp;#39;s push  L.append(n1+n2) return fibonacci(n-1) fibonacci.L = [1,1]  上面的代码耍了一个小花招.首先先设定好两个初始的计算结果,然后开始递归迭代.与前一版本递归不同的是,前一个递归需要在进入到递归底部后,才开始跳出来计算每一步递归后的结果,直到返回.而后一个递归会在最开始递归进入时就开始计算,进入到递归底部后(也就是 n &amp;lt;= 2)最终的结果就已经计算出来了,直接一层一层返回这个结果就可以了. 为了便于说明下面代码是利用两个变量做中间结果的版本:
 def fib(n, n1=1, n2=1): if n &amp;lt; 2: return n1 return fib(n-1, n2, n1+n2)  跟上面那个压栈的方式一样.</description>
     </item>
     

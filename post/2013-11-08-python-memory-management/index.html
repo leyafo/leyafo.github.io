@@ -53,8 +53,6 @@ PyObject_Malloc(3)  这里我们需要一块大小为3个字节的内存.它将�
     <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/screen.css" />
     <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/nav.css" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400|Inconsolata" />
-
-
     
       
           <link href="http://www.leyafo.com/index.xml" rel="alternate" type="application/rss+xml" title="Doing Right Things" />
@@ -154,19 +152,17 @@ PyObject_Malloc(3)  这里我们需要一块大小为3个字节的内存.它将�
 
 <p><img src="http://user-image.logdown.io/user/4793/blog/4808/post/159345/3Dm6gO5oSFS9uTPwvPrE_temp.png" alt="temp.png" />
 如上图所示,整个黑框格子代表内存池(usedpools).每个单元格存放一个双向链表,每个链表的节点是一个大小为4k的内存块.在这个池中,每个单元格负责管理不同的小块内存.为了便于管理,每个单元格管理的内存块总是以8的倍数为单位.以如下代码为例:</p>
-
-<pre><code class="language-C">PyObject_Malloc(3)
-</code></pre>
+<div class="highlight" style="background: #eeeedd"><pre style="line-height: 125%"><span></span>PyObject_Malloc(<span style="color: #B452CD">3</span>)
+</pre></div>
 
 <p>这里我们需要一块大小为3个字节的内存.它将定位到管理大小为8字节的单元格.然后返回大小8字节的内存.在这里 usedpools 有一个令人蛋疼的 ticky. usedpools 在初始化时用了如下代码:</p>
-
-<pre><code class="language-C">#define PTA(x)  ((poolp )((uchar *)&amp;(usedpools[2*(x)]) - 2*sizeof(block *)))
-#define PT(x)   PTA(x), PTA(x)
-static poolp usedpools[2 * ((NB_SMALL_SIZE_CLASSES + 7) / 8) * 8] = {
-    PT(0), PT(1), PT(2), PT(3), PT(4), PT(5), PT(6), PT(7)
+<div class="highlight" style="background: #eeeedd"><pre style="line-height: 125%"><span></span><span style="color: #1e889b">#define PTA(x)  ((poolp )((uchar *)&amp;(usedpools[2*(x)]) - 2*sizeof(block *)))</span>
+<span style="color: #1e889b">#define PT(x)   PTA(x), PTA(x)</span>
+<span style="color: #8B008B; font-weight: bold">static</span> poolp usedpools[<span style="color: #B452CD">2</span> * ((NB_SMALL_SIZE_CLASSES + <span style="color: #B452CD">7</span>) / <span style="color: #B452CD">8</span>) * <span style="color: #B452CD">8</span>] = {
+    PT(<span style="color: #B452CD">0</span>), PT(<span style="color: #B452CD">1</span>), PT(<span style="color: #B452CD">2</span>), PT(<span style="color: #B452CD">3</span>), PT(<span style="color: #B452CD">4</span>), PT(<span style="color: #B452CD">5</span>), PT(<span style="color: #B452CD">6</span>), PT(<span style="color: #B452CD">7</span>)
     ......
 };
-</code></pre>
+</pre></div>
 
 <p>如上面所示使用了两个一组的指针来初始化 usedpools, 每次定位到单元格他使用的是 usedpools[idx+idx] 这样来定位的.我也不知道它为什么会使用这么蛋疼且令人费解的设计,连注释都这样写着:
 &gt;It&rsquo;s unclear why the usedpools setup is so convoluted.</p>
@@ -176,13 +172,12 @@ static poolp usedpools[2 * ((NB_SMALL_SIZE_CLASSES + 7) / 8) * 8] = {
 <p>PyObject_Malloc 函数首先会判断进来申请分配的字节数是否在 1&lt;x&lt;256 bytes 这个范围内.然后再从 usedpools  中的管理对应大小的 pool 拿到一块 block, 每个 pool 的大小是4k.每当使用完 pool 中的最后一个 block 时,它会将这个 pool 从 usedpools 剥离出去.
 在调用 malloc 获取内存时,这里做了一层缓存(arenas).每次调用 malloc 会分配一块大小为256k的内存,然后将这块内存分解为一块一块大小为4k的 pool,每当 pool 中 block 用完后,就会重新从 arenas 拿一块 pool 并放入到 usedpools.<br />
 在获取空闲 block 时,这里使用了一个 ticky. pool 中的 freeblock 成员是指向一块空闲的 block. 但这个 freeblock 在空闲时,它里面存了一个地址这个地址指向下一块空闲的 block. 下一块空闲的 block 里同样也存放了一个空闲 block 的地址,以此往下推.直到最后的 block 指向 NULL 为止.</p>
-
-<pre><code class="language-C">bp = pool-&gt;freeblock;
-if ((pool-&gt;freeblock = *(block **)bp) != NULL) {
+<div class="highlight" style="background: #eeeedd"><pre style="line-height: 125%"><span></span>bp = pool-&gt;freeblock;
+<span style="color: #8B008B; font-weight: bold">if</span> ((pool-&gt;freeblock = *(block **)bp) != <span style="color: #658b00">NULL</span>) {
     UNLOCK();
-    return (void *)bp;
+    <span style="color: #8B008B; font-weight: bold">return</span> (<span style="color: #00688B; font-weight: bold">void</span> *)bp;
 }
-</code></pre>
+</pre></div>
 
 <p>如上面所示,拿到一块 block 后,直接获取 freeblock 里面存的地址,并指向它.</p>
 

@@ -51,8 +51,6 @@ a := make(chan int) go func(){ a &lt;- 1 }() println(&lt;-a) //do another things
     <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/screen.css" />
     <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/nav.css" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400|Inconsolata" />
-
-
     
       
           <link href="http://www.leyafo.com/index.xml" rel="alternate" type="application/rss+xml" title="Doing Right Things" />
@@ -128,11 +126,10 @@ a := make(chan int) go func(){ a &lt;- 1 }() println(&lt;-a) //do another things
 
     <section class="post-content">
       <p>go 语言的并发非常简洁，只要写一个 goroutine 就可以了。</p>
-
-<pre><code class="language-go">go func(){
-  println(&quot;foo&quot;)
+<div class="highlight" style="background: #eeeedd"><pre style="line-height: 125%"><span></span><span style="color: #8B008B; font-weight: bold">go</span> <span style="color: #8B008B; font-weight: bold">func</span>(){
+  <span style="color: #658b00">println</span>(<span style="color: #CD5555">&quot;foo&quot;</span>)
 }()
-</code></pre>
+</pre></div>
 
 <p>goroutine 会立即返回，这个匿名函数会并发执行。</p>
 
@@ -141,111 +138,106 @@ a := make(chan int) go func(){ a &lt;- 1 }() println(&lt;-a) //do another things
 <p>从 channels 的属性角度来说，go channels 的类型分为两种：1.buffered channel. 2.Unbufered channel. 从字面上理解这两者的关系就是 buffer 和非 buffer，这个 buffer 可以理解为数组。如果只需要传递单个变量使用 unbuffered channel 就行了。</p>
 
 <p>下面的代码是 unbufered channels 的传递</p>
-
-<pre><code class="language-go">a := make(chan int)
-go func(){
-  a &lt;- 1
+<div class="highlight" style="background: #eeeedd"><pre style="line-height: 125%"><span></span>a := <span style="color: #658b00">make</span>(<span style="color: #8B008B; font-weight: bold">chan</span> <span style="color: #00688B; font-weight: bold">int</span>)
+<span style="color: #8B008B; font-weight: bold">go</span> <span style="color: #8B008B; font-weight: bold">func</span>(){
+  a &lt;- <span style="color: #B452CD">1</span>
 }()
-println(&lt;-a)
-//do another things
-</code></pre>
+<span style="color: #658b00">println</span>(&lt;-a)
+<span style="color: #228B22">//do another things</span>
+</pre></div>
 
 <p>unbufered channels 一个重要特点就是它是同步的，上面代码中 channel a 会一直等待到数据 1 发送过来才会继续往下执行。</p>
 
 <p>channels 也可以像 Linux 管道一样，作为输入输出在不同的 goroutine 之间传递。</p>
-
-<pre><code class="language-go">a := make(chan int)
-b := make(chan int)
-go func() {
-	a &lt;- 1
+<div class="highlight" style="background: #eeeedd"><pre style="line-height: 125%"><span></span>a := <span style="color: #658b00">make</span>(<span style="color: #8B008B; font-weight: bold">chan</span> <span style="color: #00688B; font-weight: bold">int</span>)
+b := <span style="color: #658b00">make</span>(<span style="color: #8B008B; font-weight: bold">chan</span> <span style="color: #00688B; font-weight: bold">int</span>)
+<span style="color: #8B008B; font-weight: bold">go</span> <span style="color: #8B008B; font-weight: bold">func</span>() {
+	a &lt;- <span style="color: #B452CD">1</span>
 }()
 
-go func() {
+<span style="color: #8B008B; font-weight: bold">go</span> <span style="color: #8B008B; font-weight: bold">func</span>() {
 	a1 := &lt;-a
-	b &lt;- a1 + 1
+	b &lt;- a1 + <span style="color: #B452CD">1</span>
 }()
-println(&lt;-b)
-</code></pre>
+<span style="color: #658b00">println</span>(&lt;-b)
+</pre></div>
 
 <p>bufered channels 是一个序列，大小是预先分配好的。每当这个序列有空余空间的时候，发送端的 goroutine 可以往里面发送数据。而接收端从序列里面拿掉一个数据，这个时候会空出一个空间出来。作为发送端如果 buffer 占满，程序会 block 住，直到有剩余空间为止。而接收端会在 buffer 为空的时候 block 住，直到有数据进入到 buffer 为止。</p>
-
-<pre><code class="language-go">package main
-import &quot;time&quot;
-func main() {
-	buf := make(chan int, 3)
-	go func() {
-		for i := 0; ; i++ {
+<div class="highlight" style="background: #eeeedd"><pre style="line-height: 125%"><span></span><span style="color: #8B008B; font-weight: bold">package</span> main
+<span style="color: #8B008B; font-weight: bold">import</span> <span style="color: #CD5555">&quot;time&quot;</span>
+<span style="color: #8B008B; font-weight: bold">func</span> main() {
+	buf := <span style="color: #658b00">make</span>(<span style="color: #8B008B; font-weight: bold">chan</span> <span style="color: #00688B; font-weight: bold">int</span>, <span style="color: #B452CD">3</span>)
+	<span style="color: #8B008B; font-weight: bold">go</span> <span style="color: #8B008B; font-weight: bold">func</span>() {
+		<span style="color: #8B008B; font-weight: bold">for</span> i := <span style="color: #B452CD">0</span>; ; i++ {
 			buf &lt;- i
-			time.Sleep(100 * time.Millisecond)
+			time.Sleep(<span style="color: #B452CD">100</span> * time.Millisecond)
 		}
 	}()
-	go func() {
-		for {
-			println(&lt;-buf)
+	<span style="color: #8B008B; font-weight: bold">go</span> <span style="color: #8B008B; font-weight: bold">func</span>() {
+		<span style="color: #8B008B; font-weight: bold">for</span> {
+			<span style="color: #658b00">println</span>(&lt;-buf)
 		}
 	}()
-	time.Sleep(10 * time.Second)
+	time.Sleep(<span style="color: #B452CD">10</span> * time.Second)
 }
-</code></pre>
+</pre></div>
 
 <p>上面的代码两个 goroutine 会同步一直跑，每当 buf 里面有数据就会直接 print 出来。</p>
 
 <p>channels buffer 和普通的 slice 是有很大的区别的。channels 内部会和 goroutine 的 schedule 相连，如果 channels 在同一个 goroutine 里面做 receive 和 send，会互相等待的从而产生死锁。所以 go channel 一定只能作为 goroutine 间的信息传递，不要拿去做普通的变量或 buffer 用。</p>
 
 <p>我们有时候需要在一个 goroutine 里面响应多个 channel 事件，对于不同的 channel 需要有不同的操作。这时候我们可以使用 select 来对 channel 做类似多路复用的事情。</p>
+<div class="highlight" style="background: #eeeedd"><pre style="line-height: 125%"><span></span><span style="color: #8B008B; font-weight: bold">package</span> main
 
-<pre><code class="language-go">package main
-
-import (
-	&quot;fmt&quot;
-	&quot;time&quot;
+<span style="color: #8B008B; font-weight: bold">import</span> (
+	<span style="color: #CD5555">&quot;fmt&quot;</span>
+	<span style="color: #CD5555">&quot;time&quot;</span>
 )
 
-func main() {
-	ch := make(chan int, 1)
-	go func() {
-		for i := 0; i &lt; 10; i++ {
+<span style="color: #8B008B; font-weight: bold">func</span> main() {
+	ch := <span style="color: #658b00">make</span>(<span style="color: #8B008B; font-weight: bold">chan</span> <span style="color: #00688B; font-weight: bold">int</span>, <span style="color: #B452CD">1</span>)
+	<span style="color: #8B008B; font-weight: bold">go</span> <span style="color: #8B008B; font-weight: bold">func</span>() {
+		<span style="color: #8B008B; font-weight: bold">for</span> i := <span style="color: #B452CD">0</span>; i &lt; <span style="color: #B452CD">10</span>; i++ {
 			ch &lt;- i
-			fmt.Printf(&quot;send value %d to channel\n&quot;, i)
+			fmt.Printf(<span style="color: #CD5555">&quot;send value %d to channel\n&quot;</span>, i)
 		}
 	}()
 
-	break_timing := time.After(5 * time.Second)
+	break_timing := time.After(<span style="color: #B452CD">5</span> * time.Second)
 loop:
-	for {
-		select {
-		case x := &lt;-ch:
-			fmt.Printf(&quot;received value %d\n&quot;, x)
-		case &lt;-break_timing:
-			fmt.Println(&quot;break now!&quot;)
-			break loop
-		default:
-			fmt.Println(&quot;main goroutine are sleeping&quot;)
-			time.Sleep(500 * time.Millisecond)
+	<span style="color: #8B008B; font-weight: bold">for</span> {
+		<span style="color: #8B008B; font-weight: bold">select</span> {
+		<span style="color: #8B008B; font-weight: bold">case</span> x := &lt;-ch:
+			fmt.Printf(<span style="color: #CD5555">&quot;received value %d\n&quot;</span>, x)
+		<span style="color: #8B008B; font-weight: bold">case</span> &lt;-break_timing:
+			fmt.Println(<span style="color: #CD5555">&quot;break now!&quot;</span>)
+			<span style="color: #8B008B; font-weight: bold">break</span> loop
+		<span style="color: #8B008B; font-weight: bold">default</span>:
+			fmt.Println(<span style="color: #CD5555">&quot;main goroutine are sleeping&quot;</span>)
+			time.Sleep(<span style="color: #B452CD">500</span> * time.Millisecond)
 		}
 	}
 }
-</code></pre>
+</pre></div>
 
 <p>如上所示，select 会随机选一个被触发的事件执行。default 是当没有任何的事件需要响应的时候执行。select 的行为很像 switch case 子句。select 还有另外的一个作用就是可以防止被 channel block 住。上面的代码不会一直等 channel 过来的值，它只会在 channel 有响应的时候才会执行对应的 case。</p>
 
 <p>由于 goroutine 是异步的，创建完成后会立即返回。我们没法非常准确的知道 goroutine 是什么时候执行完成的，尤其是在创建多个 goroutine 的情况下。这个时候我们就需要用到 sync 的 waitgroup 来判断 gouroutine 何时执行完成。</p>
-
-<pre><code class="language-go">package main
-import &quot;sync&quot;
-func main() {
-  var wg sync.WaitGroup 
-  for i:=0; i&lt;10; i++{
-    wg.Add(1)
-    go func() {
-	   defer wg.Done()
-      //do something
+<div class="highlight" style="background: #eeeedd"><pre style="line-height: 125%"><span></span><span style="color: #8B008B; font-weight: bold">package</span> main
+<span style="color: #8B008B; font-weight: bold">import</span> <span style="color: #CD5555">&quot;sync&quot;</span>
+<span style="color: #8B008B; font-weight: bold">func</span> main() {
+  <span style="color: #8B008B; font-weight: bold">var</span> wg sync.WaitGroup 
+  <span style="color: #8B008B; font-weight: bold">for</span> i:=<span style="color: #B452CD">0</span>; i&lt;<span style="color: #B452CD">10</span>; i++{
+    wg.Add(<span style="color: #B452CD">1</span>)
+    <span style="color: #8B008B; font-weight: bold">go</span> <span style="color: #8B008B; font-weight: bold">func</span>() {
+	   <span style="color: #8B008B; font-weight: bold">defer</span> wg.Done()
+      <span style="color: #228B22">//do something</span>
 	}()
   }
   wg.Wait();
-  println(&quot;all goroutine are finshed.&quot;)
+  <span style="color: #658b00">println</span>(<span style="color: #CD5555">&quot;all goroutine are finshed.&quot;</span>)
 }
-</code></pre>
+</pre></div>
 
 <p>如上面代码所示，waitgroup 在 goroutine 创建前会增加一个计数，在完成时会调用 Done 减少一个计数。Wait() 会一直等到计数为零为止。Add 函数传入的是一个 int 值，也就是说可以为负数，这个细节可以忽略掉。因为 Done 函数内部调用的就是 Add(-1)。所以不要随意的往 Add 函数里面传参，配对使用 Add(1), Done() 就好。</p>
 
