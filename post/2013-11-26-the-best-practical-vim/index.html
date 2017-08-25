@@ -15,7 +15,9 @@
 
 
 <meta name="twitter:title" content="vim 最佳实践"/>
-<meta name="twitter:description" content="#重装你的vim 是的,重新安装你的 vim. 因为默认安装的 vim 是不带 python 和 lua,ruby,perl 这一系列脚本支持的.因此你需要加入这些脚本支持,然后重新编译安装.重新安装前请先备份好 ~/.vim 目录中的东西与 vimrc. ##源码编译安装: 以 OSX 系统为例,在 vim 源码目录的 src 目录下有一个 configure 文件.运行 ./configure &ndash;help 可以看到一些编译选项,从中添加你想要的编译选项.在添加 &ndash;enable-pythoninterp 请一定要带上 &ndash;with-python-config-dir 这个选项,用来指向你的 python config 目录.在 OSX 系统中这个值一般是: /Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config. 另外请勿使用 homebrew 安装的 python, 编译过程中会找不到 python frameworks. 如果配置有问题可以查看 src 目录中 auto/config.log 来看详细错误.编译成功后会在 src/macvim/build/release 目录生成好 dmg 安装包. ##从homebrew中安装: homebrew 也是下载好源码然后编译安装的.在 brew install macvim 前,可以使用 brew edit macvim 来编辑一些编译选项.只需要在 args = %w[] 这个中括号里面添加 configure 中的编译选项. 编译中产生的错误日志可以在 ~/Library/Logs/Homebrew/macvim 目录下查看."/>
+<meta name="twitter:description" content="#重装你的vim 是的,重新安装你的 vim. 因为默认安装的 vim 是不带 python 和 lua,ruby,perl 这一系列脚本支持的.因此你需要加入这些脚本支持,然后重新编译安装.重新安装前请先备份好 ~/.vim 目录中的东西与 vimrc.
+##源码编译安装: 以 OSX 系统为例,在 vim 源码目录的 src 目录下有一个 configure 文件.运行 ./configure &ndash;help 可以看到一些编译选项,从中添加你想要的编译选项.在添加 &ndash;enable-pythoninterp 请一定要带上 &ndash;with-python-config-dir 这个选项,用来指向你的 python config 目录.在 OSX 系统中这个值一般是: /Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config. 另外请勿使用 homebrew 安装的 python, 编译过程中会找不到 python frameworks. 如果配置有问题可以查看 src 目录中 auto/config.log 来看详细错误.编译成功后会在 src/macvim/build/release 目录生成好 dmg 安装包.
+##从homebrew中安装: homebrew 也是下载好源码然后编译安装的.在 brew install macvim 前,可以使用 brew edit macvim 来编辑一些编译选项.只需要在 args = %w[] 这个中括号里面添加 configure 中的编译选项. 编译中产生的错误日志可以在 ~/Library/Logs/Homebrew/macvim 目录下查看."/>
 
 
 
@@ -54,7 +56,7 @@
       
       
     
-    <meta name="generator" content="Hugo 0.16" />
+    <meta name="generator" content="Hugo 0.25.1" />
 
     <link rel="canonical" href="http://www.leyafo.com/post/2013-11-26-the-best-practical-vim/" />
 

@@ -15,7 +15,14 @@
 
 
 <meta name="twitter:title" content="Python内存管理"/>
-<meta name="twitter:description" content="本文基于Python2.7.5源码中的obmalloc.c模块 在 Python 的内部系统中，它的内存管理结构是以金子塔结构呈现的.如下图所示: - 其中-1和-2这两层是跟操作系统来负责的,这里我们略过不表. - 第0层就是我们平常在 C 中使用的 malloc, Python 不会直接使用它,而是会在此基础上做一个内存池. - 第1层是 Python 自己在基于 malloc 的基础上构造的一个内存池. - 第2和第3层是基于第1层的.每当 Python 内部需要使用内存时,会使用第1层做好的分配器来分配内存. 因此第1层是 Python 内部管理内存的主要地方. 作用 在 C 中如果频繁的调用 malloc 与 free 时,是会产生性能问题的.再加上频繁的分配与释放小块的内存会产生内存碎片. Python 在这里主要干的工作有: 1. 如果请求分配的内存在1~256字节之间就使用自己的内存管理系统,否则直接使用 malloc. 2. 这里还是会调用 malloc 分配内存,但每次会分配一块大小为256k的大块内存. 3. 经由内存池登记的内存到最后还是会回收到内存池,并不会调用 C 的 free 释放掉.以便下次使用. 内存池结构 如上图所示,整个黑框格子代表内存池(usedpools).每个单元格存放一个双向链表,每个链表的节点是一个大小为4k的内存块.在这个池中,每个单元格负责管理不同的小块内存.为了便于管理,每个单元格管理的内存块总是以8的倍数为单位.以如下代码为例: PyObject_Malloc(3) 这里我们需要一块大小为3个字节的内存.它将定位到管理大小为8字节的单元格.然后返回大小8字节的内存.在这里 usedpools 有一个令人蛋疼的 ticky. usedpools 在初始化时用了如下代码: #define PTA(x) ((poolp )((uchar *)&amp;(usedpools[2*(x)]) - 2*sizeof(block *))) #define PT(x) PTA(x), PTA(x) static poolp usedpools[2 * ((NB_SMALL_SIZE_CLASSES &#43; 7) / 8) * 8] = { PT(0), PT(1), PT(2), PT(3), PT(4), PT(5), PT(6), PT(7) ......"/>
+<meta name="twitter:description" content="本文基于Python2.7.5源码中的obmalloc.c模块
+ 在 Python 的内部系统中，它的内存管理结构是以金子塔结构呈现的.如下图所示:
+- 其中-1和-2这两层是跟操作系统来负责的,这里我们略过不表.
+- 第0层就是我们平常在 C 中使用的 malloc, Python 不会直接使用它,而是会在此基础上做一个内存池. - 第1层是 Python 自己在基于 malloc 的基础上构造的一个内存池. - 第2和第3层是基于第1层的.每当 Python 内部需要使用内存时,会使用第1层做好的分配器来分配内存. 因此第1层是 Python 内部管理内存的主要地方.
+作用 在 C 中如果频繁的调用 malloc 与 free 时,是会产生性能问题的.再加上频繁的分配与释放小块的内存会产生内存碎片. Python 在这里主要干的工作有: 1. 如果请求分配的内存在1~256字节之间就使用自己的内存管理系统,否则直接使用 malloc. 2. 这里还是会调用 malloc 分配内存,但每次会分配一块大小为256k的大块内存. 3. 经由内存池登记的内存到最后还是会回收到内存池,并不会调用 C 的 free 释放掉.以便下次使用.
+内存池结构 如上图所示,整个黑框格子代表内存池(usedpools).每个单元格存放一个双向链表,每个链表的节点是一个大小为4k的内存块.在这个池中,每个单元格负责管理不同的小块内存.为了便于管理,每个单元格管理的内存块总是以8的倍数为单位.以如下代码为例:
+PyObject_Malloc(3)  这里我们需要一块大小为3个字节的内存.它将定位到管理大小为8字节的单元格.然后返回大小8字节的内存.在这里 usedpools 有一个令人蛋疼的 ticky. usedpools 在初始化时用了如下代码:
+#define PTA(x) ((poolp )((uchar *)&amp;(usedpools[2*(x)]) - 2*sizeof(block *))) #define PT(x) PTA(x), PTA(x) static poolp usedpools[2 * ((NB_SMALL_SIZE_CLASSES &#43; 7) / 8) * 8] = { PT(0), PT(1), PT(2), PT(3), PT(4), PT(5), PT(6), PT(7) ."/>
 
 
 
@@ -54,7 +61,7 @@
       
       
     
-    <meta name="generator" content="Hugo 0.16" />
+    <meta name="generator" content="Hugo 0.25.1" />
 
     <link rel="canonical" href="http://www.leyafo.com/post/2013-11-08-python-memory-management/" />
 

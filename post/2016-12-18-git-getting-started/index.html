@@ -15,7 +15,14 @@
 
 
 <meta name="twitter:title" content="git 初级教程"/>
-<meta name="twitter:description" content="Introduce git 不是一个对新手友好的工具，大多数新手第一次面对 git 总会有点手无足措。这时当你开始怀疑是不是一个蠢货时请不要停止，继续保持怀疑。面对一大堆命令和魔法般的黑色 terminal 大多数新手都会手无足措，不知道该怎么去用 git 去提交自己的代码。更可怕的事情是，如果搞砸了还会导致你旁边的豹子头同事把你给撕了的危险。本文档的主要作用是就是可以让你顺利的把代码提交到 git 库，避免产生意外的人身伤害。 Example 在被我忽悠 git 后你可能会偷偷的跑去网上找 git 相关的教程读。或者在看到我贱指如飞、神乎奇技地在键盘上狂按一通的时候你偷偷的拿笔在旁边记录我敲过的顺序。作为一个踏坑无数，身经百战的老司机有必要在这时告诉你一点儿人生经验，你这么做并没有什么卵用！！！因为你碰到的问题和网上那些教程说的是不一样的，老司机和你看到的世界也是不一样的（隔壁老王用的撩妹技能你直接拿去用会有什么后果？）。因此我们现在以平常工作中最简单的一个应用场景来解释 git 的基本用法。 现在假设有两个农民工张大锤，王大锤，以下简称老张和老王。老张和老王每天搬砖太累了，他们决定写一部电影剧本来改变世界。但两个人在同一个剧情时间点上写同一件事情的时候总是会产生冲突。老张本来在 1970 年10月24日把男主角写挂了。但老王由于刚在淘宝买了块机械键盘，打字打得太爽了。在1970年10月24日这一天写成男主角正在吃着火锅唱着歌。这个时候冲突产生了，老王和老张为了这个事情从相亲相爱变成了砖角遇到爱。下面我们开始详细描述这一起恶性暴力的流血事件。 Commit 张大锤和王大锤已经写好了一些剧情了。他们的最开始的共同成果如下： 1 从前有个人，名字叫赵铁柱。他人长得帅，又多金，还会写代码。 最前面那个 1 表示第一行。 老张刚和前女友分手，伤心难过，悲痛欲绝，以致于影响了日常严肃文学创作。所以他把接下来的剧本改成了这样： 1 从前有个人，名字叫赵铁柱。他人长得帅，又多金，还会写代码。 2 后来他死了。 写完后老张开始提交代码，他先输入 git status 查看 git 库给出的文件改动信息。(git status 是一个人畜无害的命令，你敲破桌子也不会有人理你)。 [老张]$ git status On branch master Your branch is up-to-date with &#39;origin/master&#39;. Changes not staged for commit: (use &quot;git add &lt;file&gt;...&quot; to update what will be committed) (use &quot;git checkout -- &lt;file&gt;...&quot; to discard changes in working directory) modified: scenario no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;) 这里给出的信息我们可以得到如下信息： 1.现在所在的分支在 master 上。（你可以先不用管什么是分支） 2.改动的文件是 scenario。 3.提示显示如果你要提交这个改动先使用 git add 和 git commit -a。 这里解释下 git add 和 git commit 这两个命令，这两个命令是要合用的。git add 是添加改动，git commit 是提交改动。git commit -a 表示的是添加并提交。现在看不懂 git commit -a 这个命令没关系，只要使用按照流程先用 git add 再用 git commit 就可以了。 老张按照流程输入了如下的命令进行 commit。 [老张]$ git add scenario [老张]$ git commit -m &quot;自古空情多余恨，此恨绵绵无绝期。&quot; 其中 -m 后面双引号括起来的那一串表示你对提交的改动信息说明，主要为了让别人能快速理解你的修改。 老张输入了 git status 查看 git 库给出的信息。 [老张]$ git status On branch master Your branch is ahead of &#39;origin/master&#39; by 1 commit."/>
+<meta name="twitter:description" content="Introduce git 不是一个对新手友好的工具，大多数新手第一次面对 git 总会有点手无足措。这时当你开始怀疑是不是一个蠢货时请不要停止，继续保持怀疑。面对一大堆命令和魔法般的黑色 terminal 大多数新手都会手无足措，不知道该怎么去用 git 去提交自己的代码。更可怕的事情是，如果搞砸了还会导致你旁边的豹子头同事把你给撕了的危险。本文档的主要作用是就是可以让你顺利的把代码提交到 git 库，避免产生意外的人身伤害。
+Example 在被我忽悠 git 后你可能会偷偷的跑去网上找 git 相关的教程读。或者在看到我贱指如飞、神乎奇技地在键盘上狂按一通的时候你偷偷的拿笔在旁边记录我敲过的顺序。作为一个踏坑无数，身经百战的老司机有必要在这时告诉你一点儿人生经验，你这么做并没有什么卵用！！！因为你碰到的问题和网上那些教程说的是不一样的，老司机和你看到的世界也是不一样的（隔壁老王用的撩妹技能你直接拿去用会有什么后果？）。因此我们现在以平常工作中最简单的一个应用场景来解释 git 的基本用法。
+现在假设有两个农民工张大锤，王大锤，以下简称老张和老王。老张和老王每天搬砖太累了，他们决定写一部电影剧本来改变世界。但两个人在同一个剧情时间点上写同一件事情的时候总是会产生冲突。老张本来在 1970 年10月24日把男主角写挂了。但老王由于刚在淘宝买了块机械键盘，打字打得太爽了。在1970年10月24日这一天写成男主角正在吃着火锅唱着歌。这个时候冲突产生了，老王和老张为了这个事情从相亲相爱变成了砖角遇到爱。下面我们开始详细描述这一起恶性暴力的流血事件。
+Commit 张大锤和王大锤已经写好了一些剧情了。他们的最开始的共同成果如下：
+1	从前有个人，名字叫赵铁柱。他人长得帅，又多金，还会写代码。  最前面那个 1 表示第一行。
+老张刚和前女友分手，伤心难过，悲痛欲绝，以致于影响了日常严肃文学创作。所以他把接下来的剧本改成了这样：
+1	从前有个人，名字叫赵铁柱。他人长得帅，又多金，还会写代码。 2	后来他死了。  写完后老张开始提交代码，他先输入 git status 查看 git 库给出的文件改动信息。(git status 是一个人畜无害的命令，你敲破桌子也不会有人理你)。
+[老张]$ git status On branch master Your branch is up-to-date with &#39;origin/master&#39;. Changes not staged for commit: (use &quot;git add &lt;file&gt;...&quot; to update what will be committed) (use &quot;git checkout -- &lt;file&gt;."/>
 
 
 
@@ -54,7 +61,7 @@
       
       
     
-    <meta name="generator" content="Hugo 0.16" />
+    <meta name="generator" content="Hugo 0.25.1" />
 
     <link rel="canonical" href="http://www.leyafo.com/post/2016-12-18-git-getting-started/" />
 

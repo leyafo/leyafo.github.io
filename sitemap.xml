@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>http://www.leyafo.com/</loc>
-    <lastmod>2017-07-30T18:29:44+08:00</lastmod>
+    <loc>http://www.leyafo.com/post/2017-08-04-go-currency/</loc>
+    <lastmod>2017-08-04T16:59:46+08:00</lastmod>
   </url>
   
   <url>
@@ -17,7 +18,7 @@
   </url>
   
   <url>
-    <loc>http://www.leyafo.com/post/2017-06-26-how-I-learning-english-pronunciation/</loc>
+    <loc>http://www.leyafo.com/post/2017-06-26-how-i-learning-english-pronunciation/</loc>
     <lastmod>2017-06-26T13:04:06+08:00</lastmod>
   </url>
   
@@ -47,7 +48,7 @@
   </url>
   
   <url>
-    <loc>http://www.leyafo.com/post/2016-08-14-olympics-I-say/</loc>
+    <loc>http://www.leyafo.com/post/2016-08-14-olympics-i-say/</loc>
     <lastmod>2016-08-14T12:10:03+08:00</lastmod>
   </url>
   
@@ -129,6 +130,28 @@
   <url>
     <loc>http://www.leyafo.com/post/2013-11-08-python-memory-management/</loc>
     <lastmod>2013-11-08T11:25:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.leyafo.com/categories/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.leyafo.com/</loc>
+    <lastmod>2017-08-04T16:59:46+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.leyafo.com/post/</loc>
+    <lastmod>2017-08-04T16:59:46+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.leyafo.com/tags/</loc>
+    <priority>0</priority>
   </url>
   
 </urlset>

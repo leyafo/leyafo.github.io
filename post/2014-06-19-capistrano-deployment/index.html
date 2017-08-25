@@ -15,7 +15,10 @@
 
 
 <meta name="twitter:title" content="Capistrano 部署"/>
-<meta name="twitter:description" content="这几天要部署自己做的一个小板凳，是用 sinatra 写的一个简单的 blog 程序。这个程序很简单，代码非常少，可以像 php 那样直接使用 async 将代码。但我想熟悉下 Ruby 关于部署方面的技术，因此找到了 Capistrano 这个东西。Rails 的 web 后台对环境非常挑剔，Capistrano 是 Ruby 写的， 虽然它可以部署各种语言的代码，但可以部署 Rails 的程序不会太简单。 配置项含义 Capistrano 这个东西产生的一大堆配置文件有点让人迷糊。Capfile 相当于一个 makefile 文件，里面设置了一些任务是如何运行的。config目录下有三个配置文件，其中 deploy 子目录是用于配置部署不同的环境。默认的是 production 和 staging 环境配置项分别对应两个同名的文件。deploy.rb 这个文件相当于一个总配置文件，里面的是一些公共的配置项。 Capistrano 非常依赖版本控制，在 deploy.rb 文件中 repo_url 是用于设置代码仓库的地址的，配置好这个参数后需要确认服务器有访问代码仓库的权限。 scm 是设置具体的版本控制软件的。Capistrano 支持最好的是 git 和 svn。 deploy_to 是一个非常重要的参数，它指示了代码上传到服务器的具体位置,另外需要确保这个目录与配置好的用户名有足够的访问权限。这几个参数设置好后，其他的参数可以使用默认的了。然后再配置对应环境的具体配置项。 在环境配置项中，role 参数指示的三项分别是 app，web 和 db。这个三项分开的好处是可以让他们部署到不同的服务器上做负载均衡。单台服务器不用太关心，三项指向同一个地址即可。然后配置服务器的访问权限，配置非常简单，设置好用户名和 ssh public key就可以了。到这里基本的配置已经完成了，运行cap deploy:check 可以检测配置是否成功。这个时候如果 check 成功的话使用 cap deploy 命令就可以成功上传代码了。 让代码运行 代码上传后部署的任务已经完成了一小部分了，接下来就是具体的程序的启动与 http request的转发了。我使用的是 nginx &#43;"/>
+<meta name="twitter:description" content="这几天要部署自己做的一个小板凳，是用 sinatra 写的一个简单的 blog 程序。这个程序很简单，代码非常少，可以像 php 那样直接使用 async 将代码。但我想熟悉下 Ruby 关于部署方面的技术，因此找到了 Capistrano 这个东西。Rails 的 web 后台对环境非常挑剔，Capistrano 是 Ruby 写的， 虽然它可以部署各种语言的代码，但可以部署 Rails 的程序不会太简单。
+配置项含义 Capistrano 这个东西产生的一大堆配置文件有点让人迷糊。Capfile 相当于一个 makefile 文件，里面设置了一些任务是如何运行的。config目录下有三个配置文件，其中 deploy 子目录是用于配置部署不同的环境。默认的是 production 和 staging 环境配置项分别对应两个同名的文件。deploy.rb 这个文件相当于一个总配置文件，里面的是一些公共的配置项。
+Capistrano 非常依赖版本控制，在 deploy.rb 文件中 repo_url 是用于设置代码仓库的地址的，配置好这个参数后需要确认服务器有访问代码仓库的权限。 scm 是设置具体的版本控制软件的。Capistrano 支持最好的是 git 和 svn。 deploy_to 是一个非常重要的参数，它指示了代码上传到服务器的具体位置,另外需要确保这个目录与配置好的用户名有足够的访问权限。这几个参数设置好后，其他的参数可以使用默认的了。然后再配置对应环境的具体配置项。 在环境配置项中，role 参数指示的三项分别是 app，web 和 db。这个三项分开的好处是可以让他们部署到不同的服务器上做负载均衡。单台服务器不用太关心，三项指向同一个地址即可。然后配置服务器的访问权限，配置非常简单，设置好用户名和 ssh public key就可以了。到这里基本的配置已经完成了，运行cap deploy:check 可以检测配置是否成功。这个时候如果 check 成功的话使用 cap deploy 命令就可以成功上传代码了。
+让代码运行 代码上传后部署的任务已经完成了一小部分了，接下来就是具体的程序的启动与 http request的转发了。我使用的是 nginx &#43; unicorn 组合来干这件事情的。首先要确保代码在本地能正常的运行起来，然后再去服务器上做进一步的测试。实际上更好的方式是所有的软件在本地的机器上能完全正常运行后，再将同样的配置文件上传至服务器。能避免不少因为不同机器，不同环境而引起的问题。这样服务器只负责运行软件，不做任何测试。这也是我最近所理解的生产环境。 首先来配置 unicorn 这个东西，一般的 web framework 都会自带 http 服务器用来做测试。自带的 http 服务器是不推荐直接跑在生产环境下的。nginx 更适合干这种事情，但 nginx 干的事情更加单一，它只负责将请求接收并转发。并不负责应用层的事情。unicorn就是这个应用层（php对应的是fastcgi），他负责将代码运行起来并与nginx进行通信。unicorn配置起来也非常的简单，在config."/>
 
 
 
@@ -54,7 +57,7 @@
       
       
     
-    <meta name="generator" content="Hugo 0.16" />
+    <meta name="generator" content="Hugo 0.25.1" />
 
     <link rel="canonical" href="http://www.leyafo.com/post/2014-06-19-capistrano-deployment/" />
 

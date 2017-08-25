@@ -15,7 +15,13 @@
 
 
 <meta name="twitter:title" content="技术平民化"/>
-<meta name="twitter:description" content="Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away. Antoine deSaint-Exupéry 这些年作后端开发的日子从来没有像现在这么好过，市面上流行的编程语言无法做到开发和运行效率兼得， golang 的出现改变了这一切。golang 这门语言的所有特性都非常简单，它的最大的特性就是简单，写代码的方式一致。学习曲线非常平缓，稍微有经验的开发者很快就能写出不错的程序员在线上跑。语言本身的简单让程序员毋需担心语言特性所带来的额外负担。 golang 是一门把 KISS (Keep It Simple, Stupid) 原则贯彻到了极致的语言。以下的这些特性是 KISS 原则最好的体现了。 简单 golang 的核心特性就是简单，关键字非常少。它的语言特性在现代其他所有语言都出现过，没有发明新的特性，也没有难以理解的特性。 OO 做得都比其他所有语言来得简单，无须再关注继承，多态，has_one, is_a 这些面相对象的抽象方法。golang 非常注重简单元素的组合，golang 里我们到处可以看到各种各样简单元素的组合，struct 与 function 的组合，struct 与 interface 的组合，goroutine 与 chan 的组合。所有的这些组合拆开都很简单，简单组合一下就能解决非常复杂的问题。 一致性好 一个软件项目总会有一份与其开发语言相匹配的规范，所有人遵循同一个规范开发软件可以极大的减少协作与维护资源。golang 直接在编译器层面去实现了这一点，你几乎看不到 golang 里面一个功能有两种写法。也不会出现一些团队协作时禁止使用的一些语言特性（比如动态语言的 eval）。甚至官方的工具还帮助你自动 format 代码。所有人遵循一种写法保证了投入无需太多资源进行培训，也不用担心新加入项目的人代码质量不佳影响整个工程的质量。新人也不会看到那些天书一样难以理解的“优雅”代码。这是非常务实的语言特性。 并发廉价 廉价的 Goroutine 让一般开发人员可以非常容易的构造高并发的应用。High Performance, Low Latency 这些东西不再属于只有“高级”程序员才能做出来的专利。goroutine"/>
+<meta name="twitter:description" content="Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.
+Antoine deSaint-Exupéry
+ 这些年作后端开发的日子从来没有像现在这么好过，市面上流行的编程语言无法做到开发和运行效率兼得， golang 的出现改变了这一切。golang 这门语言的所有特性都非常简单，它的最大的特性就是简单，写代码的方式一致。学习曲线非常平缓，稍微有经验的开发者很快就能写出不错的程序员在线上跑。语言本身的简单让程序员毋需担心语言特性所带来的额外负担。
+golang 是一门把 KISS (Keep It Simple, Stupid) 原则贯彻到了极致的语言。以下的这些特性是 KISS 原则最好的体现了。
+简单 golang 的核心特性就是简单，关键字非常少。它的语言特性在现代其他所有语言都出现过，没有发明新的特性，也没有难以理解的特性。 OO 做得都比其他所有语言来得简单，无须再关注继承，多态，has_one, is_a 这些面相对象的抽象方法。golang 非常注重简单元素的组合，golang 里我们到处可以看到各种各样简单元素的组合，struct 与 function 的组合，struct 与 interface 的组合，goroutine 与 chan 的组合。所有的这些组合拆开都很简单，简单组合一下就能解决非常复杂的问题。
+一致性好 一个软件项目总会有一份与其开发语言相匹配的规范，所有人遵循同一个规范开发软件可以极大的减少协作与维护资源。golang 直接在编译器层面去实现了这一点，你几乎看不到 golang 里面一个功能有两种写法。也不会出现一些团队协作时禁止使用的一些语言特性（比如动态语言的 eval）。甚至官方的工具还帮助你自动 format 代码。所有人遵循一种写法保证了投入无需太多资源进行培训，也不用担心新加入项目的人代码质量不佳影响整个工程的质量。新人也不会看到那些天书一样难以理解的“优雅”代码。这是非常务实的语言特性。
+并发廉价 廉价的 Goroutine 让一般开发人员可以非常容易的构造高并发的应用。High Performance, Low Latency 这些东西不再属于只有“高级”程序员才能做出来的专利。goroutine 可以做到像写一个函数那样简单，线程间的通信就是 unix 非常常见的管道概念。只需要关注业务层面的任务分片就能很快的利用 cpu 的多核去写并发非常好的程序了。"/>
 
 
 
@@ -54,7 +60,7 @@
       
       
     
-    <meta name="generator" content="Hugo 0.16" />
+    <meta name="generator" content="Hugo 0.25.1" />
 
     <link rel="canonical" href="http://www.leyafo.com/post/2017-04-16-technology-as-civilianization/" />
 
