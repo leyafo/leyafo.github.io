@@ -7,10 +7,22 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved by Leyafo</copyright>
-    <lastBuildDate>Fri, 04 Aug 2017 16:59:46 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 07 Sep 2017 15:37:42 +0800</lastBuildDate>
     
 	<atom:link href="http://www.leyafo.com/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>go 语言操作数据库 CRUD</title>
+      <link>http://www.leyafo.com/post/2017-09-07-go-db-crud/</link>
+      <pubDate>Thu, 07 Sep 2017 15:37:42 +0800</pubDate>
+      
+      <guid>http://www.leyafo.com/post/2017-09-07-go-db-crud/</guid>
+      <description>go 语言标准库已经提供数据库访问通用接口，不同数据库需搭配相应连接 Driver。标准库里面 database/sql 实现基本数据类型 Scan, 基本的 Transaction 以及 sql 参数化。用这些东西去操作数据库完全够用，只是随着项目代码增长，sql string 会蔓延到项目的各个角落。若要修改数据库表结构，这些 sql string 就是噩梦一般存在。流行做法是使用 ORM(Object Relational Mapping) 去解决这个问题。ORM 封装好一些 CRUD 基本操作，可以避免大量手写 sql string.
+go 编译型语言，无法做到像 Ruby 里面的 Method Missing 这样动态特性，可以为一个复合类型的 struct 随时添加一个 field. go 社区使用的 ORM 还是需要事先手动添加好 Field. 这样做需要对数据库和 struct 的成员做很多约定，写好对应的访问 tag。这些仍然无法避免修改数据库表时要一齐修改 go 代码。
+我们可以仔细想想 ORM 真的是唯一的选择吗？ORM 实际上无法完美操作数据库，它做的事情无非就是这些事情：
+ 参数化 sql string。 封装一些简单的 CRUD 操作。 序列化 sql 查询结果。  对于一些复杂的数据库查询语句，任何强大的 ORM 库，灵活的动态语言特性都无法解决。况且 ORM 也未必是好东西，它简化了操作，却间接隐藏了数据库的一些功能。如果不脱离 ORM 依赖我们无法去更好的操作数据库，去自己优化查询语句。以 go 语言目前的特性来看，这个社区永远也不可能会做出能像动态语言那样灵活的 ORM。关于 ORM 与 go 语言更详细的吐槽请见这里。</description>
+    </item>
     
     <item>
       <title>go 并发</title>
