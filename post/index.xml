@@ -7,10 +7,28 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved by Leyafo</copyright>
-    <lastBuildDate>Sun, 24 Dec 2017 11:56:17 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 17 Jan 2018 17:48:31 +0800</lastBuildDate>
     
 	<atom:link href="http://www.leyafo.com/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>简单逻辑学</title>
+      <link>http://www.leyafo.com/post/2018-01-17-simple-logical/</link>
+      <pubDate>Wed, 17 Jan 2018 17:48:31 +0800</pubDate>
+      
+      <guid>http://www.leyafo.com/post/2018-01-17-simple-logical/</guid>
+      <description>There are two ways of thinking. One is to draw conclusions from your observations, and the other is proceed solely on the basis of logic.
+​ Jim Rogers &amp;lt;A Gift to My Children&amp;gt;
+ 逻辑学是一门让思考变得清晰的学科，它是用来探寻事情的真相和本质。逻辑学在现代科学里面几乎无处不在，在国内外学术交流中，逻辑是交流双方的基本共识。逻辑还存在于语言的各个角落，语言本身就是使用逻辑构造的。我们用语言把大脑中的思考描绘出来，用逻辑在组织好这些语言，最后变成文章。本文就是使用逻辑来介绍逻辑学。
+逻辑学的基本概念 第一性原则 (First Principles) First Principles 是一种思考方式，首先提出这个问题的是古时期哲学家亚里士多德。这种思维方式是从事物的本质出发，从最基础的地方衍生万千变化。古希腊不朽名著《几何原本》，从最基本五条定理出发推出一整个几何系统。现代物理学领域从世界上最小单位、不可再分的原子基础上构建整个科学体系。几乎所有科学领域都是从最本质的第一性原则(Frist Principles)出发构建整个科学体系。逻辑学也不例外。
+我们来看看逻辑学的第一性原则
+事物本质是什么？ 事物有存在和不存在两种状态，没有混合其中两者的可能性。 所有存在的事物，都有具体的原因。  以上三条我们归纳起来，逻辑的本质就是探寻事物的真相。
+在生活中我们大脑容易过度关注事物的外在表现，而不是本质的东西。行李箱的发明是我们大脑关注错位的一个绝好的例子。在古罗马时期人们就需要携带食物做长途旅行，人们把食物放在箱子里由马车来运载移动。在后来的 1000 多年里，人们在箱子表面和材质上做各种改进，却没人想过把轮子和箱子结合起来。直到 1970 年一个叫 Bernard Sadow 的人在机场看到工人用一块镶嵌着轮子的木板在驼东西，带轮子的行李箱才在将近 1000 后，在偶然中发明。
+First Principles 也是 Elon Musk 推崇的思考方式。去掉事物所有外在表现，从最本质的问题出发。在逻辑学里面推崇也是去掉事物的表面，关注事物本质。
+三段论 古希腊时期亚里士多德提出著名的三段论，这是逻辑推理的基本过程。它是由证据(Evidence)间相互链接(Establish)，最终构成一个基本的论点(Argument)。以下是基本的三段论式的推理过程。
+所有人都会死。 男人是人。 男人都会死。  我可以把它看成是法官断案，在综合(Establish)所有证据(Evidence)后，最终形成一个有效判定(Argument)。</description>
+    </item>
     
     <item>
       <title>如何利用互联网学习？</title>
