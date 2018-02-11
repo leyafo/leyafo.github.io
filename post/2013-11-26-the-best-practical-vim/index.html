@@ -150,11 +150,10 @@
 <p>#一些你应该知道的高级tips
 ##tag 跳转与缓冲区跳转
 <em>vim</em> 默认是集成了 <em>ctags</em> 的接口,使用 <em>ctags</em> 产生 <em>tag</em> 文件后. <strong>ctrl+[</strong> 可跳转到函数的定义与声明.使用 <strong>ctrl+o</strong> 可以跳回上一个缓冲区, <strong>ctrl+i</strong> 可以跳到下一个缓冲区.这三个快捷键基本上可以满足你到处跳来跳去了.
-<!------ mark功能不能在文件之间跳转
 ##mark
-上面的跳转实际上功能比较弱,属于盲跳. *vim* 自带的 *mark* 可以让你有目的性的跳转.在命令模式下,使用 **m**再加一个命名的字母标记就增加了一个类似书签的东西.添加好后,可以是用 **'(单引号)**加上你个刚刚命令的标记就可以跳到指定的地方去了,并且这种跳转还可以跨文件的.比如:使用 **ma** 添加一个标记, 然后使用 **'a** 就可以跳到刚才的那个标记.另外使用命令 **:marks** 可以看到你设置的标记.其中 *0~9* 是最近编辑的文件.
---->
-##register
+上面的跳转实际上功能比较弱,属于盲跳. <em>vim</em> 自带的 <em>mark</em> 可以让你有目的性的跳转.在命令模式下,使用 <strong>m</strong>再加一个命名的字母标记就增加了一个类似书签的东西.添加好后,可以是用 <strong>&rsquo;(单引号)</strong>加上你个刚刚命令的标记就可以跳到指定的地方去了,并且这种跳转还可以跨文件的.比如:使用 <strong>ma</strong> 添加一个标记, 然后使用 <strong>&lsquo;a</strong> 就可以跳到刚才的那个标记.另外使用命令 <strong>:marks</strong> 可以看到你设置的标记.其中 <em>0~9</em> 是最近编辑的文件.</p>
+
+<p>##register
 <em>vim</em> 的 <em>register</em> 功能类似于 <em>mark</em> 但他记录了你最近删除与复制的文字.你可以将一段文字复制到特定 <em>register</em> 中去.然后再从 <em>register</em> 中复制出来.
 使用 <em>visual</em> 模式选择好一段文字,在命令模式下使用 <strong>&ldquo;ay</strong> 便将这段文字复制到了名字为 <strong>a</strong> 的 <em>register</em> 中.需要使用 <strong>a</strong> 中的文字,来使用 <strong>&ldquo;ap</strong> 命令即可.使用 <strong>:reg</strong> 命令可以看到所有的 <em>register</em>, 其中 <em>0~9</em> 显示了最近删除与复制的一些文字.</p>
 
