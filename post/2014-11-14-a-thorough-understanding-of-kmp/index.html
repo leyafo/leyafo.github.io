@@ -16,12 +16,10 @@
 
 <meta name="twitter:title" content="彻底理解 KMP算法"/>
 <meta name="twitter:description" content="KMP 算法是一种子串匹配算法。其特点在于匹配子串时利用已经匹配成功的部分子串来跳转到下一次能再次匹配的串。书上列举的一大堆公式看着很犯晕，网上各类码农博客里面用代码写的文章，让本来逻辑有点绕的 kmp 更加绕。就我最近看到的文章来说最清晰的就是阮一峰 和 详解KMP算法。这两辆篇文章解释的通俗易懂，也有一些不太明晰的地方。本文的目的是在于解释笔者本人在理解 kmp，及阅读这些资料时不明白的地方。 首先还是来看 kmp 匹配子串所使用的方法，下文中字符串“TEST ABCABCABCDEF” 表示要匹配的主串，字符串 &ldquo;ABCABCDEF&rdquo; 表示待匹配的子串。(用肉眼我们可以看到要匹配的子串的位置在最后的位置)。首先像暴力匹配一样我们把不匹配的字符串全部进行匹配并跳过。
-TEST ABCABCABCDEF ABCABCDEF | |-------- 进入下一个位置进行匹配 ------ TEST ABCABCABCDEF ABCABCDEF | 这个时候我们待匹配的子串走到了‘TEST ’后面一个位置
+TEST ABCABCABCDEF ABCABCDEF | |-------- 进入下一个位置进行匹配 ------&gt; TEST ABCABCABCDEF ABCABCDEF | &lt;----- 还是不匹配,继续往前走 ------| | | ......前面三个还是不匹配..... 这个时候我们待匹配的子串走到了‘TEST ’后面一个位置
 TEST ABCABCABCDEF ABCABCDEF | |------ D 和 A 不匹配。 这个时候主串和子串出现了部分匹配的情况，这个时候我们的子串该如何前进继续匹配？目前能想到的方法就是按照暴力匹配的方式继续向前进一步。但本文的目的不在于讨论暴力匹配，所以这种方法被 Pass 掉。如果直接将子串移动到现在不匹配 D 的位置，这种方式会错过可能会匹配的子串。比如下面这种情况会错过可能会匹配的子串。
-ABCABCDEFGHIJK ----- ABCABCDEFG ABCDEFG ABCDEFG 因此上面的移动是不合法的，算法会出现错误。从这里我们可以观察到合法的移动是将子串移动到 ABC 。这样我们就能再次匹配到 ABC，这也就是本文前面说的那句话，利用已经匹配成功的部分子串来跳转到下一次能再次匹配的串。现在问题是我们该如何在程序中得到这个正确的移动位置？首先我们先来观察已经匹配的部分匹配子串。
-TEST ABCABCABCDEF ABCABCDEF | |---------部分匹配子串 ABCABC 从这里我们可以看到 ABC 出现了两次，因此 ABC 是我们需要的再次匹配的串。但这个 ABC 是如何得到的？因此我们现在我们需要解决的问题有2个。 1. 找到再次匹配串。 2. 确定这个再次匹配串需要移动的位置。
-这个时候我们要解决的问题跟主串已经没啥关系了，我们的问题变成了找子串中重合的子串。实际上还是找子串，不同的是这次我需要去分析部分匹配串里面的子串。这个问题比较好解决，我们只需要把部分匹配串全部分解为子串。就能找到出现两次或者两次以上的子串了。因此ABCABC 可以分解为如下子串：
-BCABC CABC ABC BC C 上面是从后面开始分解的子串，这并没有归纳出所有的子串，还需要从前面开始分解。所以还可以从前面分解如下子串："/>
+ABCABCDEFGHIJK -----&gt; ABCABCDEFG ABCDEFG ABCDEFG 因此上面的移动是不合法的，算法会出现错误。从这里我们可以观察到合法的移动是将子串移动到 ABC 。这样我们就能再次匹配到 ABC，这也就是本文前面说的那句话，利用已经匹配成功的部分子串来跳转到下一次能再次匹配的串。现在问题是我们该如何在程序中得到这个正确的移动位置？首先我们先来观察已经匹配的部分匹配子串。
+TEST ABCABCABCDEF ABCABCDEF | |---------&gt;部分匹配子串 ABCABC 从这里我们可以看到 ABC 出现了两次，因此 ABC 是我们需要的再次匹配的串。但这个 ABC 是如何得到的？因此我们现在我们需要解决的问题有2个。 1. 找到再次匹配串。 2."/>
 
 
 
@@ -58,7 +56,7 @@ BCABC CABC ABC BC C 上面是从后面开始分解的子串，这并没有归纳
       
       
     
-    <meta name="generator" content="Hugo 0.25.1" />
+    <meta name="generator" content="Hugo 0.37.1" />
 
     <link rel="canonical" href="http://www.leyafo.com/post/2014-11-14-a-thorough-understanding-of-kmp/" />
 
@@ -128,44 +126,39 @@ BCABC CABC ABC BC C 上面是从后面开始分解的子串，这并没有归纳
     <section class="post-content">
       <p><a href="http://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm">KMP</a> 算法是一种子串匹配算法。其特点在于匹配子串时<strong>利用已经匹配成功的部分子串来跳转到下一次能再次匹配的串</strong>。书上列举的一大堆公式看着很犯晕，网上各类码农博客里面用代码写的文章，让本来逻辑有点绕的 kmp 更加绕。就我最近看到的文章来说最清晰的就是<a href="http://www.ruanyifeng.com/blog/2013/05/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm.html">阮一峰</a> 和 <a href="http://www.cnblogs.com/yjiyjige/p/3263858.html">详解KMP算法</a>。这两辆篇文章解释的通俗易懂，也有一些不太明晰的地方。本文的目的是在于解释笔者本人在理解 kmp，及阅读这些资料时不明白的地方。
 首先还是来看 kmp 匹配子串所使用的方法，下文中字符串“TEST ABCABCABCDEF” 表示要匹配的主串，字符串 &ldquo;ABCABCDEF&rdquo; 表示待匹配的子串。(用肉眼我们可以看到要匹配的子串的位置在最后的位置)。首先像暴力匹配一样我们把不匹配的字符串全部进行匹配并跳过。</p>
-   TEST ABCABCABCDEF
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C">   TEST ABCABCABCDEF
      ABCABCDEF
    |
-   |-------- 进入下一个位置进行匹配 ------>  TEST ABCABCABCDEF
+   |-------- <span style="color:#a61717;background-color:#e3d2d2">进入下一个位置进行匹配</span> ------&gt;  TEST ABCABCABCDEF
                                           ABCABCDEF
                                           |
-          <----- 还是不匹配,继续往前走 ------|
+          &lt;----- <span style="color:#a61717;background-color:#e3d2d2">还是不匹配</span>,<span style="color:#a61717;background-color:#e3d2d2">继续往前走</span> ------|
           |
           |
-          ......前面三个还是不匹配.....
-
+          ......<span style="color:#a61717;background-color:#e3d2d2">前面三个还是不匹配</span>.....</code></pre></div>
 <p>这个时候我们待匹配的子串走到了‘TEST ’后面一个位置</p>
-         TEST ABCABCABCDEF
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C">         TEST ABCABCABCDEF
               ABCABCDEF
                     |
-                    |------ D 和 A 不匹配。
-
+                    |------ D <span style="color:#a61717;background-color:#e3d2d2">和</span> A <span style="color:#a61717;background-color:#e3d2d2">不匹配。</span></code></pre></div>
 <p>这个时候主串和子串出现了部分匹配的情况，这个时候我们的子串该如何前进继续匹配？目前能想到的方法就是按照暴力匹配的方式继续向前进一步。但本文的目的不在于讨论暴力匹配，所以这种方法被 Pass 掉。如果直接将子串移动到现在不匹配 D 的位置，这种方式会错过<strong>可能会匹配的子串</strong>。比如下面这种情况会错过<strong>可能会匹配的子串</strong>。</p>
-       ABCABCDEFGHIJK        ----->     ABCABCDEFG
-       ABCDEFG                                ABCDEFG
-
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C">       ABCABCDEFGHIJK        -----&gt;     ABCABCDEFG
+       ABCDEFG                                ABCDEFG</code></pre></div>
 <p>因此上面的移动是不合法的，算法会出现错误。从这里我们可以观察到合法的移动是将子串移动到 ABC 。这样我们就能再次匹配到 ABC，这也就是本文前面说的那句话，<strong>利用已经匹配成功的部分子串来跳转到下一次能再次匹配的串</strong>。现在问题是我们该如何在程序中得到这个正确的移动位置？首先我们先来观察已经匹配的部分匹配子串。</p>
-         TEST ABCABCABCDEF 
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C">         TEST ABCABCABCDEF 
               ABCABCDEF
                     |
-                    |--------->部分匹配子串 ABCABC
-
+                    |---------&gt;<span style="color:#a61717;background-color:#e3d2d2">部分匹配子串</span> ABCABC</code></pre></div>
 <p>从这里我们可以看到 ABC 出现了两次，因此 ABC 是我们需要的<strong>再次匹配的串</strong>。但这个 ABC 是如何得到的？因此我们现在我们需要解决的问题有2个。
 1. 找到<strong>再次匹配串</strong>。
 2. 确定这个<strong>再次匹配串</strong>需要移动的位置。</p>
 
 <p>这个时候我们要解决的问题跟主串已经没啥关系了，我们的问题变成了找子串中<strong>重合</strong>的子串。实际上还是找子串，不同的是这次我需要去<strong>分析部分匹配串里面的子串</strong>。这个问题比较好解决，我们只需要把<strong>部分匹配串</strong>全部分解为子串。就能找到出现两次或者两次以上的子串了。因此<em>ABCABC</em> 可以分解为如下子串：</p>
-BCABC
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C">BCABC
 CABC
 ABC
 BC
-C
-
+C</code></pre></div>
 <p>上面是从后面开始分解的子串，这并没有归纳出所有的子串，还需要从前面开始分解。所以还可以从前面分解如下子串：</p>
 
 <pre><code>ABCAB
@@ -182,17 +175,14 @@ A
 从上面的前缀和后缀我们可以知道，只需要把相同后缀移动到最前面就能和前缀匹配。因此可以得到下面的公式：
 要移动的位置 = 部分匹配的长度 - 出现2次以上的后缀长度。
 因此我们最后的结果要移动的结果为</p>
-         TEST ABCABCABCDEF 
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C">         TEST ABCABCABCDEF 
                  ABCABCDEF
                        |
-                       |--------->移动位 6 - len('abc')
-
+                       |---------&gt;<span style="color:#a61717;background-color:#e3d2d2">移动位</span> <span style="color:#b452cd">6</span> - len(<span style="color:#a61717;background-color:#e3d2d2">&#39;</span>abc<span style="color:#a61717;background-color:#e3d2d2">&#39;</span>)</code></pre></div>
 <p>kmp 会把这些部分匹配的子串信息存到一个 next 数组里面。<em>ABCABCDEF</em> 对应的 next 的数组如下：</p>
-
-                   ABCABCDEF
-index         ---> 012345678
-next          ---> 000123000
-
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C">                   ABCABCDEF
+index         ---&gt; <span style="color:#b452cd">01234567</span><span style="color:#b452cd">8</span>
+next          ---&gt; <span style="color:#b452cd">000123000</span></code></pre></div>
     </section>
 
 

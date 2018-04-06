@@ -66,7 +66,7 @@ Documents: 多个 key-value 结构的数据合为一条数据,每一条数据称
       
       
     
-    <meta name="generator" content="Hugo 0.25.1" />
+    <meta name="generator" content="Hugo 0.37.1" />
 
     <link rel="canonical" href="http://www.leyafo.com/post/2013-11-14-on-nosql/" />
 
@@ -136,7 +136,7 @@ Documents: 多个 key-value 结构的数据合为一条数据,每一条数据称
     <section class="post-content">
       
 
-<p>传统关系型数据库,将数据以表结构的方式存储起来.并且所有的数据是基于 <em>ACID</em><sup class="footnote-ref" id="fnref:ACID"><a rel="footnote" href="#fn:ACID">1</a></sup> 原则.这种方式存储数据有很明显的缺点.首先,为了保证一致性,基于 <em>ACID<sup class="footnote-ref" id="fnref:ACID"><a rel="footnote" href="#fn:ACID">1</a></sup></em> 类型的数据库都是使用事物来保持数据的一致性.也就是说同时只能有一个 <em>client</em> 提交数据.然后,以表结构存储的数据库架构是死的,一个表的列基本上是固定的.如果变化的话会带来很多问题.<br />
+<p>传统关系型数据库,将数据以表结构的方式存储起来.并且所有的数据是基于 <em>ACID</em><sup class="footnote-ref" id="fnref:ACID"><a href="#fn:ACID">1</a></sup> 原则.这种方式存储数据有很明显的缺点.首先,为了保证一致性,基于 <em>ACID<sup class="footnote-ref" id="fnref:ACID"><a href="#fn:ACID">1</a></sup></em> 类型的数据库都是使用事物来保持数据的一致性.也就是说同时只能有一个 <em>client</em> 提交数据.然后,以表结构存储的数据库架构是死的,一个表的列基本上是固定的.如果变化的话会带来很多问题.<br />
 比如:<br />
 1.我有一种数据,这些数据都是一些 <em>Excle</em> 表格.每个表格的列都不相同.但实际上他们都是一种数据.该如何存储?<br />
 2.一个表有 10 列,我想再加一个字段,但这个字段并不是所有数据都需要的.<br />
@@ -154,7 +154,7 @@ Documents: 多个 key-value 结构的数据合为一条数据,每一条数据称
 
 <p><strong>Key-Value</strong>: 类似于 <em>json</em> 的 <em>key-value</em> 的方式进行数据存储</p>
 
-<p><strong>BigTable</strong>:  多维度的 <em>key-value</em> 结构,并且存储方式是分布式,稀疏的<sup class="footnote-ref" id="fnref:-"><a rel="footnote" href="#fn:-">2</a></sup>,严格排序的. <em>Google</em> 很多产品都在用,具有高压缩,高性能,易于查询的特点.</p>
+<p><strong>BigTable</strong>:  多维度的 <em>key-value</em> 结构,并且存储方式是分布式,稀疏的<sup class="footnote-ref" id="fnref:-"><a href="#fn:-">2</a></sup>,严格排序的. <em>Google</em> 很多产品都在用,具有高压缩,高性能,易于查询的特点.</p>
 
 <p><strong>Documents</strong>:
 多个 <em>key-value</em> 结构的数据合为一条数据,每一条数据称为为一个 <em>docment</em>. 并且每个 <em>docment</em> 的 <em>key-value</em> 个数和 <em>key</em> 都可以不同.并且在搜索时,可以以 <em>value</em> 做为关键字来搜索.</p>
