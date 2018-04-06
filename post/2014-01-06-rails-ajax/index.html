@@ -16,7 +16,7 @@
 
 <meta name="twitter:title" content="Rails 的 AJAX"/>
 <meta name="twitter:description" content="在 Rails 中只需要指定在 erb 模板中指定 remote=true 选项就可以将请求变为异步的了。request-handle-response-callback 这是一个 AJAX 请求的过程。rails 将这些步骤直接简化成了 request 和 handle 两步，让它看起来的像魔法一样而简洁神秘。在我初次接触 Rails 的 AJAX 时，我也随手去翻了下 wikipedia 关于 AJAX 的条目。AJAX 很好理解，但这并未让我更好的去完全理解 Rails 魔法般的 *AJAX*。主要被困惑的在 controller 的 handle 函数里面的 response 实现。
- def handle @model = new some_model #do something if @model.save respond_to do |format| format.js end end  上面是一个典型的 Rails 应用场景，完全没有了那些简单粗暴原生的 html 与 javascript 的代码，更加别想看到 XMLHttpRequest 这种对象了。respond_to 是一个接收代码块的方法。而 format 表示 response 时使用的数据格式，format.js 会找到对应的 handle.js 并将里面的 js 代码 repond 到客户端。这仅仅只是客户端需要 js 类型回复的一个需求。如果客户端需要 json，XML，HTML 等不同类型的数据，只需要在 repondto 这个代码块使用 format 对象调用对应的方法即可。rails 会自动判断并回应对应的类型的数据到前台页面。 这样做的好处有： 1."/>
+def handle @model = new some_model #do something if @model.save respond_to do |format| format.js end end 上面是一个典型的 Rails 应用场景，完全没有了那些简单粗暴原生的 html 与 javascript 的代码，更加别想看到 XMLHttpRequest 这种对象了。respond_to 是一个接收代码块的方法。而 format 表示 response 时使用的数据格式，format.js 会找到对应的 handle.js 并将里面的 js 代码 repond 到客户端。这仅仅只是客户端需要 js 类型回复的一个需求。如果客户端需要 json，XML，HTML 等不同类型的数据，只需要在 repondto 这个代码块使用 format 对象调用对应的方法即可。rails 会自动判断并回应对应的类型的数据到前台页面。 这样做的好处有： 1."/>
 
 
 
@@ -122,17 +122,16 @@
 
     <section class="post-content">
       <p>在 <em>Rails</em> 中只需要指定在 <em>erb</em> 模板中指定 <em>remote=true</em> 选项就可以将请求变为异步的了。<strong>request-handle-response-callback</strong> 这是一个 <em>AJAX</em> 请求的过程。<em>rails</em> 将这些步骤直接简化成了 <em>request</em> 和 <em>handle</em> 两步，让它看起来的像魔法一样而简洁神秘。在我初次接触 <em>Rails</em> 的 <em>AJAX</em> 时，我也随手去翻了下 <em>wikipedia</em> 关于 <em>AJAX</em> 的条目。<em>AJAX</em> 很好理解，但这并未让我更好的去完全理解 <em>Rails</em> 魔法般的 *AJAX*。主要被困惑的在 <em>controller</em> 的 <em>handle</em> 函数里面的 <em>response</em> 实现。</p>
-<div class="highlight" style="background: #eeeedd"><pre style="line-height: 125%"><span></span>        <span style="color: #8B008B; font-weight: bold">def</span> <span style="color: #008b45">handle</span>
-        <span style="color: #00688B">@model</span> = <span style="color: #8B008B; font-weight: bold">new</span> some_model
+        def handle
+        @model = new some_model
               
-        <span style="color: #228B22">#do something</span>
+        #do something
         
-                <span style="color: #8B008B; font-weight: bold">if</span> <span style="color: #00688B">@model</span>.save
-            respond_to <span style="color: #8B008B; font-weight: bold">do</span> |<span style="color: #658b00">format</span>|
-                <span style="color: #658b00">format</span>.js
-            <span style="color: #8B008B; font-weight: bold">end</span>
-        <span style="color: #8B008B; font-weight: bold">end</span>  
-</pre></div>
+                if @model.save
+            respond_to do |format|
+                format.js
+            end
+        end  
 
 <p>上面是一个典型的 <em>Rails</em> 应用场景，完全没有了那些简单粗暴原生的 <em>html</em> 与 <em>javascript</em> 的代码，更加别想看到 <strong>XMLHttpRequest</strong> 这种对象了。<em>respond_to</em> 是一个接收代码块的方法。而 <em>format</em> 表示 <em>response</em> 时使用的数据格式，<em>format.js</em> 会找到对应的 <em>handle.js</em> 并将里面的 <em>js</em> 代码 <em>repond</em> 到客户端。这仅仅只是客户端需要 <em>js</em> 类型回复的一个需求。如果客户端需要 <em>json，XML，HTML</em> 等不同类型的数据，只需要在 <em>repondto</em> 这个代码块使用 <em>format</em> 对象调用对应的方法即可。<em>rails</em> 会自动判断并回应对应的类型的数据到前台页面。
   这样做的好处有：

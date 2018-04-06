@@ -143,17 +143,16 @@ Capistrano 非常依赖版本控制，在 deploy.rb 文件中 repo_url 是用于
 
 <p>nginx 与 unicorn 部署好后，就可以借助 Capistrano 的 task 来进行一些必要的代码部署步奏。比如重启 http 服务器，更新数据库等一系列事情。这些事情使用 Capistrano 来完成的好处是，task写好好每次部署只需要一条命令就可以自动化完成一些繁琐的事情。这个才是 Capistrano 最核心要解决的问题。
 这里拿 unicorn 的重启为例来展示如何在远端服务器执行一些 shell 命令。unicorn 网上有一个控制它停止与重新启动的 <a href="https://www.google.com/search?q=unicorn&amp;oq=unicorn&amp;aqs=chrome..69i57j69i59l3j69i60l2.926j0j1&amp;sourceid=chrome&amp;es_sm=119&amp;ie=UTF-8#newwindow=1&amp;q=unicorn_init&amp;safe=off">shell</a> 脚本。下面是一个 task 的具体代码。</p>
-<div class="highlight" style="background: #eeeedd"><pre style="line-height: 125%"><span></span><span style="color: #cb6c20">%w[start stop restart]</span>.each <span style="color: #8B008B; font-weight: bold">do</span> |command|
-  desc <span style="color: #CD5555">&quot;#{</span>command<span style="color: #CD5555">} unicorn server&quot;</span>
-  task command <span style="color: #8B008B; font-weight: bold">do</span>
-    on roles(<span style="color: #CD5555">:app</span>, <span style="color: #CD5555">:web</span>) <span style="color: #8B008B; font-weight: bold">do</span>
-      execute <span style="color: #CD5555">&quot;sh #{</span>fetch(<span style="color: #CD5555">:current_path</span>)<span style="color: #CD5555">}/config/unicorn_init.sh #{</span>command<span style="color: #CD5555">}&quot;</span>
-    <span style="color: #8B008B; font-weight: bold">end</span>
-  <span style="color: #8B008B; font-weight: bold">end</span>
-<span style="color: #8B008B; font-weight: bold">end</span>
-before <span style="color: #CD5555">:deploy</span>, <span style="color: #CD5555">&quot;unicorn:stop&quot;</span>
-after  <span style="color: #CD5555">:deploy</span>, <span style="color: #CD5555">&quot;unicorn:start&quot;</span>
-</pre></div>
+%w[start stop restart].each do |command|
+  desc "#{command} unicorn server"
+  task command do
+    on roles(:app, :web) do
+      execute "sh #{fetch(:current_path)}/config/unicorn_init.sh #{command}"
+    end
+  end
+end
+before :deploy, "unicorn:stop"
+after  :deploy, "unicorn:start"
 
 <p>其中 on roles 指定的是要执行命令具体的服务器，exexcute 是执行具体命令的函数。其中(:current_path)指定的是当前release 代码的路径。因为每次使用 cap deploy 命令后，都会产生一个新的 release，然后远端会切换版本到新的 release 目录。before 和 after 是 hook，它指示了每次某一项任务开始前和完成后所做的一些工作。</p>
 
