@@ -173,14 +173,14 @@ article span.post-stamp {
 	color:#888;     
 }
 h1.post-title {
-	margin-top:0.35em;
-	margin-bottom: 0.6em;
+	margin-top:0.12em;
+	margin-bottom: 0.5em;
 }
 h3.post-title {
 	margin-top:0.4em;
-	padding-bottom:0.9em;
+	padding-bottom:0.7em;
 	border-bottom: 1px solid #eee;
-	font-size: 1.2em;
+	font-size: 0.9em;
 	color: #444;
 }
 .post-title .feature-star {
