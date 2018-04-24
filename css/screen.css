@@ -1512,7 +1512,7 @@ body:not(.post-template) .post-title {
     }
 
     body:not(.post-template) .post-title {
-        font-size: 3.2rem;
+        font-size: 2.6rem;
     }
 
     hr {
@@ -1529,7 +1529,7 @@ body:not(.post-template) .post-title {
     }
 
     h2 {
-        font-size: 3.6rem;
+        font-size: 2.6rem;
     }
 
     h3 {
@@ -1748,7 +1748,7 @@ body:not(.post-template) .post-title {
     }
 
     body:not(.post-template) .post-title {
-        font-size: 2.5rem;
+        font-size: 2.6rem;
     }
 
     .post-template .post {
