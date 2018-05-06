@@ -34,7 +34,8 @@ audio, canvas, video { display: inline-block; }
 audio:not([controls]) { display: none; height: 0; }
 [hidden], template { display: none; }
 html {
-   font-family: sans-serif;
+   /*font-family: sans-serif;*/
+   font-family: "Microsoft YaHei" ! important;
    -ms-text-size-adjust: 100%;
    -webkit-text-size-adjust: 100%;
 }
@@ -191,7 +192,8 @@ html {
 body {
     height: 100%;
     max-height: 100%;
-    font-family: "Merriweather", serif;
+    /*font-family: "Merriweather", serif;*/
+    font-family: "Microsoft YaHei" ! important;
     letter-spacing: 0.01rem;
     font-size: 1.8rem;
     line-height: 1.75em;
@@ -218,7 +220,8 @@ h4, h5, h6 {
     color: #2E2E2E;
     line-height: 1.15em;
     margin: 0 0 0.4em 0;
-    font-family: "Open Sans", sans-serif;
+    /*font-family: "Open Sans", sans-serif;*/
+    font-family: "Microsoft YaHei" ! important;
     text-rendering: geometricPrecision;
 }
 
@@ -262,7 +265,7 @@ p, ul, ol, dl {
     -webkit-font-feature-settings: 'liga' 1, 'onum' 1, 'kern' 1;
     -moz-font-feature-settings: 'liga' 1, 'onum' 1, 'kern' 1;
     -o-font-feature-settings: 'liga' 1, 'onum' 1, 'kern' 1;
-    margin: 0 0 1.75em 0;
+    margin: 0 0 0.8em 0;
     text-rendering: geometricPrecision;
 }
 
@@ -310,33 +313,109 @@ hr {
     padding: 0;
 }
 
-blockquote {
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    margin: 1.75em 0 1.75em -2.2em;
-    padding: 0 0 0 1.75em;
-    border-left: #4A4A4A 0.4em solid;
+/*blockquote {*/
+    /*-moz-box-sizing: border-box;*/
+    /*box-sizing: border-box;*/
+    /*margin: 1.75em 0 1.75em -2.2em;*/
+    /*padding: 0 0 0 1.75em;*/
+    /*border-left: #4A4A4A 0.4em solid;*/
+/*}*/
+
+/*blockquote p {*/
+    /*margin: 0.8em 0;*/
+    /*font-style: italic;*/
+/*}*/
+
+/*blockquote small {*/
+    /*display: inline-block;*/
+    /*margin: 0.8em 0 0.8em 1.5em;*/
+    /*font-size: 0.9em;*/
+    /*color: #CCC;*/
+/*}*/
+
+/*blockquote small:before { content: "\2014 \00A0"; }*/
+
+/*blockquote cite {*/
+    /*font-weight: 700;*/
+/*}*/
+
+/*blockquote cite a { font-weight: normal; }*/
+
+/***********blockquote style 2***********/
+/*blockquote {*/
+  /*background: #f9f9f9;*/
+  /*border-left: 10px solid #ccc;*/
+  /*margin: 1.5em 10px;*/
+  /*padding: 0.5em 10px;*/
+  /*quotes: "\201C""\201D""\2018""\2019";*/
+  /*font-style: italic;*/
+  /*color: gray;*/
+/*}*/
+/*blockquote:before {*/
+  /*color: #ccc;*/
+  /*content: open-quote;*/
+  /*font-size: 4em;*/
+  /*line-height: 0.1em;*/
+  /*margin-right: 0.25em;*/
+  /*vertical-align: -0.4em;*/
+/*}*/
+/*blockquote p {*/
+  /*display: inline;*/
+/*}*/
+
+/*blockquote:after {*/
+  /*color: #ccc;*/
+  /*content: close-quote;*/
+  /*font-size: 4em;*/
+  /*line-height: 0.1em;*/
+  /*margin-left: 0.25em;*/
+  /*margin-top: 1.25em;*/
+  /*vertical-align: -0.6em;*/
+/*}*/
+/***********blockquote style 2***********/
+
+/***********blockquote style 3***********/
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400italic);
+blockquote{
+  /*font-size: 1.4em;*/
+  /*width:60%;*/
+  margin:20px auto;
+  font-family:Open Sans;
+  font-style:italic;
+  color: #555555;
+  padding:1.2em 30px 1.2em 75px;
+  border-left:8px solid #78C0A8 ;
+  line-height:1.6;
+  position: relative;
+  background:#EDEDED;
 }
 
-blockquote p {
-    margin: 0.8em 0;
-    font-style: italic;
+blockquote::before{
+  font-family:Arial;
+  content: "\201C";
+  color:#78C0A8;
+  font-size:4em;
+  position: absolute;
+  left: 10px;
+  top:-10px;
 }
 
-blockquote small {
-    display: inline-block;
-    margin: 0.8em 0 0.8em 1.5em;
-    font-size: 0.9em;
-    color: #CCC;
+blockquote::after{
+  content: '';
 }
 
-blockquote small:before { content: "\2014 \00A0"; }
-
-blockquote cite {
-    font-weight: 700;
+blockquote span{
+  display:block;
+  color:#333333;
+  font-style: normal;
+  font-weight: bold;
+  margin-top:1em;
 }
+/*blockquote p {*/
+  /*display: inline;*/
+/*}*/
 
-blockquote cite a { font-weight: normal; }
+/***********blockquote style 3***********/
 
 mark {
     background-color: #FFC336;
@@ -533,7 +612,8 @@ body.nav-opened .site-wrapper {
 
 .main-nav a {
     text-decoration: none;
-    font-family: 'Open Sans', sans-serif;
+    /*font-family: 'Open Sans', sans-serif;*/
+    font-family: "Microsoft YaHei" ! important;
 }
 
 /* Navigation */
@@ -927,7 +1007,7 @@ body.nav-opened .menu-button .word {
 .post {
     position: relative;
     width: 80%;
-    max-width: 710px;
+    /*max-width: 710px;*/
     margin: 4rem auto;
     padding-bottom: 4rem;
     border-bottom: #EBF2F6 1px solid;

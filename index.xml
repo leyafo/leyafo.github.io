@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved by Leyafo</copyright>
-    <lastBuildDate>Wed, 02 May 2018 18:10:17 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 05 May 2018 18:05:17 +0800</lastBuildDate>
     
 	<atom:link href="http://www.leyafo.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>nsq client 源码剖析</title>
+      <link>http://www.leyafo.com/post/2018-05-05-nsq_client_code_reading/</link>
+      <pubDate>Sat, 05 May 2018 18:05:17 +0800</pubDate>
+      
+      <guid>http://www.leyafo.com/post/2018-05-05-nsq_client_code_reading/</guid>
+      <description>NSQ 客户端实现与编程语言无关，它通过 TCP 与 nsq 连接。主要实现的功能分为 5 大块，分别是：connection 管理, message 处理，producer, resumer, 并发控制。由于 producer 的流程比较简单，只是单纯的发把消息发送到 nsq，在这里不做描述。本文基于 go-nsq 源码分析除 producer 外其他 4 大块的主要代码流程。
+Connection 模块 nsq 客户端主要分为两块：producer, resumer. 它们都使用 connection 模块与 nsq 连接。以下是 NewConn 初始化的主要结构。
+return &amp;amp;Conn{ addr: addr, //服务器地址  config: config, //基本的服务端配置 	delegate: delegate, //producer 与 resumer 用来处理消息回调的接口。  maxRdyCount: 2500, //并发控制数量 	lastMsgTimestamp: time.Now().UnixNano(), //上一条消息抵达的时间  cmdChan: make(chan *Command),	//与服务器的 cmd 管道 	msgResponseChan: make(chan *msgResponse), //消息回应管道 	exitChan: make(chan int),	//退出信号 	drainReady: make(chan int),	//中断信号 	} 以上并不是完整 Conn 结构体字段，为了简便，我们现在只需要关注这几个字段。producer 和 resumer 会调用 Connect() 函数与 nsq 建立连接。以下是建立连接的过程，为了便于理解，本文截取的代码都忽略了一些无关紧要的细节。</description>
+    </item>
     
     <item>
       <title>NSQ 简介</title>
