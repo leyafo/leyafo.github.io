@@ -1035,9 +1035,9 @@ body.nav-opened .menu-button .word {
     box-shadow: #FFF 0 0 0 5px;
 }
 
-body:not(.post-template) .post-title {
-    font-size: 2.6rem;
-}
+/*body:not(.post-template) .post-title {*/
+    /*font-size: 3.6rem;*/
+/*}*/
 
 .post-title a {
     text-decoration: none;
@@ -1591,9 +1591,9 @@ body:not(.post-template) .post-title {
         font-size: 0.95em
     }
 
-    body:not(.post-template) .post-title {
-        font-size: 2.6rem;
-    }
+    /*body:not(.post-template) .post-title {*/
+        /*font-size: 2.6rem;*/
+    /*}*/
 
     hr {
         margin: 2.4em 0;
@@ -1604,6 +1604,10 @@ body:not(.post-template) .post-title {
     }
 
     h1 {
+        font-size: 4.5rem;
+        text-indent: -2px;
+    }
+    .post-title h1{
         font-size: 4.5rem;
         text-indent: -2px;
     }
