@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>http://www.leyafo.com/post/2018-05-26-how-to-seek-a-job/</loc>
+    <lastmod>2018-05-26T21:54:22+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>http://www.leyafo.com/post/2018-05-07-nsq_server_code_reading/</loc>
     <lastmod>2018-05-07T20:51:18+08:00</lastmod>
   </url>
@@ -174,13 +179,13 @@
   
   <url>
     <loc>http://www.leyafo.com/</loc>
-    <lastmod>2018-05-07T20:51:18+08:00</lastmod>
+    <lastmod>2018-05-26T21:54:22+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>http://www.leyafo.com/post/</loc>
-    <lastmod>2018-05-07T20:51:18+08:00</lastmod>
+    <lastmod>2018-05-26T21:54:22+08:00</lastmod>
     <priority>0</priority>
   </url>
   

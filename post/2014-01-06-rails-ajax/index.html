@@ -53,7 +53,7 @@ def handle @model = new some_model #do something if @model.save respond_to do |f
       
       
     
-    <meta name="generator" content="Hugo 0.37.1" />
+    <meta name="generator" content="Hugo 0.40.2" />
 
     <link rel="canonical" href="http://www.leyafo.com/post/2014-01-06-rails-ajax/" />
 
@@ -122,7 +122,7 @@ def handle @model = new some_model #do something if @model.save respond_to do |f
 
     <section class="post-content">
       <p>在 <em>Rails</em> 中只需要指定在 <em>erb</em> 模板中指定 <em>remote=true</em> 选项就可以将请求变为异步的了。<strong>request-handle-response-callback</strong> 这是一个 <em>AJAX</em> 请求的过程。<em>rails</em> 将这些步骤直接简化成了 <em>request</em> 和 <em>handle</em> 两步，让它看起来的像魔法一样而简洁神秘。在我初次接触 <em>Rails</em> 的 <em>AJAX</em> 时，我也随手去翻了下 <em>wikipedia</em> 关于 <em>AJAX</em> 的条目。<em>AJAX</em> 很好理解，但这并未让我更好的去完全理解 <em>Rails</em> 魔法般的 *AJAX*。主要被困惑的在 <em>controller</em> 的 <em>handle</em> 函数里面的 <em>response</em> 实现。</p>
-<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">        <span style="color:#8b008b;font-weight:bold">def</span> <span style="color:#008b45;font-weight:bold"></span><span style="color:#008b45">handle</span>
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">        <span style="color:#8b008b;font-weight:bold">def</span> <span style="color:#008b45">handle</span>
         @model = <span style="color:#8b008b;font-weight:bold">new</span> some_model
               
         <span style="color:#228b22">#do something</span>
