@@ -534,7 +534,7 @@ HTTP 头是否允许有下划线。</p>
 <p><strong>server_tokens</strong> on/off;
 返回错误页是否注明 <strong>nginx</strong> 版本。</p>
 
-<h3 id="upstream">Upstream</h3>
+<h3 id="upstream-反向代理">Upstream（反向代理）</h3>
 
 <p>upstream 定义了一个上游服务器集群，便于反向代理中的 proxy_pass 使用。</p>
 
@@ -591,8 +591,6 @@ Nginx会将上游服务器的响应转发给客户端，但默认不会转发以
 *invalid_header*：上游服务器发送的响应是不合法的。<br />
 <em>http_5xx</em>: 上游服务器返回的 HTTP 响应码是 5xx。<br />
 *off*：关闭 proxy_next_upstream 功能—出错就选择另一台上游服务器再次转发。</p>
-
-<p>==== 反向代理配置 ====</p>
 
     </section>
 
