@@ -20,8 +20,8 @@
       <guid>http://www.leyafo.com/post/2018-07-16-nginx-configuration/</guid>
       <description>Nginx 的配置很多，最常见的配置就是做一个反向代理服务器。一般作为新手配置 Nginx 最常见的做法是去网上搜索关于 反向代理的配置，实际上里面配置的项并不是特别清楚。本文的作用就是详细介绍这些配置项的作用，可以让你在配置的时候不再依靠搜索引擎去找具体配置项的含义，最好能做看一眼 nginx 配置文件就能知道问题在那里。
 Nginx 进程关系 Nginx 使用 Master-Worker 多进程模式来进行并发处理网络连接。其中 worker 进程处理具体的事物，master 进程负责监督 worker 进程的工作状态。worker 进程之间通过共享内存，原子操作等一些进程间通信机制来实现负载均衡。
-这中多进程的方式有如下好处：
- Master 进程可以监控 Worker 进程，并在其 crash 的时候重启。 Master 可以在运行时重载配置文件，可以做到平滑升级。 Worker 数量对应 CPU 数可以减少内核切换，没有同步锁的限制。  进程相关的块配置 Nginx 块配置由一对大括号组成，每个块都有它对应支持的变量，以下是进程相关的块配置选项及说明。
+这中多进程的方式有如下好处： 1. Master 进程可以监控 Worker 进程，并在其 crash 的时候重启。 2. Master 可以在运行时重载配置文件，可以做到平滑升级。 3. Worker 数量对应 CPU 数可以减少内核切换，没有同步锁的限制。
+进程相关的块配置 Nginx 块配置由一对大括号组成，每个块都有它对应支持的变量，以下是进程相关的块配置选项及说明。
    配置项 值(value) 说明 类别     daemon on/off 是否以 daemon 模式运行 调试   master_process on/off 是否以 master／worker 多进程的方式运行 调试   error_log pathfile level((从小到大依次是 debug、info、notice、warn、error、crit、alert、emerg)) log 的路径和级别 调试   debug_connection((使用前，需确保在编译执行configure时已经加入了&amp;ndash;with-debug参数，否则不会生效。)) IP/CIDR((10.</description>
     </item>
     
