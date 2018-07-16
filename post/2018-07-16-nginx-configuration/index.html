@@ -586,11 +586,11 @@ Nginx会将上游服务器的响应转发给客户端，但默认不会转发以
 
 <p><strong>proxy_next_upstream</strong> [error|timeout|invalid_header|http_500|http_502|http_503|http_504|http_404|off];
 向一台上游服务器转发请求出现错误时，继续换一台上游服务器处理这个请求。这个配置来说明在哪些情况下会继续选择下一台上游服务器转发请求。
-* error *：当向上游服务器发起连接、发送请求、读取响应时出错。<br />
-* timeout*：发送请求或读取响应时发生超时。<br />
-* invalid_header*：上游服务器发送的响应是不合法的。<br />
-* http_5xx*: 上游服务器返回的 HTTP 响应码是 5xx。<br />
-* off*：关闭 proxy_next_upstream 功能—出错就选择另一台上游服务器再次转发。</p>
+*error *：当向上游服务器发起连接、发送请求、读取响应时出错。<br />
+*timeout*：发送请求或读取响应时发生超时。<br />
+*invalid_header*：上游服务器发送的响应是不合法的。<br />
+<em>http_5xx</em>: 上游服务器返回的 HTTP 响应码是 5xx。<br />
+*off*：关闭 proxy_next_upstream 功能—出错就选择另一台上游服务器再次转发。</p>
 
     </section>
 
