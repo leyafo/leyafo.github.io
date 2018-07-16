@@ -361,17 +361,17 @@ deferred：在设置该参数后，若用户发起建立连接请求，并且完
 
 <h3 id="文件路径定义">文件路径定义</h3>
 
-<p>** root path** 位于 http sever location if 块中。  以 root 方式定义资源 HTTP 请求的根目录。http path 的相对路径就是以 root 为准的。</p>
+<p><strong>root path</strong> 位于 http sever location if 块中。  以 root 方式定义资源 HTTP 请求的根目录。http path 的相对路径就是以 root 为准的。</p>
 
-<p>** alias path** 位于配置块 location中，如果有一个文件的请求 URI 是 /conf/nginx.conf  实际访问的文件在 /usr/local/nginx/conf/nginx.conf  则可以采用如下方式：</p>
+<p><strong>alias path</strong> 位于配置块 location中，如果有一个文件的请求 URI 是 /conf/nginx.conf  实际访问的文件在 /usr/local/nginx/conf/nginx.conf  则可以采用如下方式：</p>
 
 <p>location conf{
    alias usr/local/nginx/conf/
 }</p>
 
-<p>** index file **  URI 是 / ，返回网站的首页。如：index index.html html/index.php /index.php；接收到请求后会依次从左到右进行匹配。</p>
+<p>**index file **  URI 是 / ，返回网站的首页。如：index index.html html/index.php /index.php；接收到请求后会依次从左到右进行匹配。</p>
 
-<p>** error_page ** 根据具体的错误码匹配到具体的页面。如：error_page 404 404.html。也可以像下面一样转发到上游的服务。</p>
+<p>**error_page ** 根据具体的错误码匹配到具体的页面。如：error_page 404 404.html。也可以像下面一样转发到上游的服务。</p>
 
 <p>location / (
     error_page 404 @fallback;
@@ -382,7 +382,7 @@ deferred：在设置该参数后，若用户发起建立连接请求，并且完
 
 <p>另外还有一个选项就是是否允许递归使用 error_page. recursive_error_pages on\off。</p>
 
-<p>** try_files ** 后面要跟若干路径，最后必须要有 uri 参数。它的意义是尝试按照顺序访问每一个 path，如果可以有效读取就直接向用户返回这个 path 对应的文件结束请求，否则继续向下访问。示例：</p>
+<p>**try_files ** 后面要跟若干路径，最后必须要有 uri 参数。它的意义是尝试按照顺序访问每一个 path，如果可以有效读取就直接向用户返回这个 path 对应的文件结束请求，否则继续向下访问。示例：</p>
 
 <p>try_files system/maintenance.html \$uri/index.html \$uri.html @other;</p>
 
@@ -394,66 +394,66 @@ deferred：在设置该参数后，若用户发起建立连接请求，并且完
 
 <h3 id="内存及磁盘资源的分配">内存及磁盘资源的分配</h3>
 
-<p>** client_body_in_file_only** on/clean/off;
+<p><strong>client_body_in_file_only</strong> on/clean/off;
 on 表示 HTTP body 存储到磁盘上，off 表示不存，clean 表示请求结束后删除磁盘文件。（这个选项一般用于调试）。</p>
 
-<p>** client_body_in_single_buffer** on/off（http，server，location块）;</p>
+<p><strong>client_body_in_single_buffer</strong> on/off（http，server，location块）;</p>
 
-<p>** client_header_buffer_size** size; (http，server块)</p>
+<p><strong>client_header_buffer_size</strong> size; (http，server块)</p>
 
 <p>用户请求的包一律存到内存 buffer 中，如果超过 size 就存到磁盘里。</p>
 
-<p>** client_body_temp_path** dir-path[level1[level2[level3]]]<br />
+<p><strong>client_body_temp_path</strong> dir-path[level1[level2[level3]]]<br />
 设置包体临时存放目录，为防止文件数量太多导致性能下降，额外加了 3 层目录结构。</p>
 
-<p>** connection_pool_size**
+<p><strong>connection_pool_size</strong>
 对于每个连接会预先分配一个内存池，如果大了会非常占内存，小了会引发更多的内存分配次数。</p>
 
-<p>** request_pool_size**
+<p><strong>request_pool_size</strong>
 Nginx 开始处理 HTTP 请求时，将会为每个请求都分配一个内存池，size 配置项将指定这个内存池的初始大小。</p>
 
 <h3 id="网络连接的设置">网络连接的设置</h3>
 
-<p>** 以下配置所在的块都是 http、server、location。 **
-** client_header_timeout** time(默认单位：秒)。<br />
+<p>**以下配置所在的块都是 http、server、location。 **
+<strong>client_header_timeout</strong> time(默认单位：秒)。<br />
 客户端与服务端建立连接后将开始接受 HTTP 头，如果超过这个时间就返回 408。</p>
 
-<p>** client_body_timeout** time（默认单位：秒）<br />
+<p><strong>client_body_timeout</strong> time（默认单位：秒）<br />
 读取 HTTP body 的超时时间。</p>
 
-<p>** send_timeout** time（默认单位：秒）<br />
+<p><strong>send_timeout</strong> time（默认单位：秒）<br />
 发送响应的超时时间。</p>
 
-<p>** reset_timeout_connection** on/off<br />
+<p><strong>reset_timeout_connection</strong> on/off<br />
 连接超时后通过向客户端发送 RST 包来直接重置连接，这个选项打开后 nginx 会在某个连接超时后，不是使用正常情况下的四次分手关闭连接，而是直接向用户发送 RST 重置包。相比正常的关闭方式，它使得服务器避免产生许多处于FIN_WAIT_1、FIN_WAIT_2、TIME_WAIT状态的TCP连接。</p>
 
-<p>** lingering_close** off/on/always<br />
+<p><strong>lingering_close</strong> off/on/always<br />
 控制 Nginx 关闭用户连接的方式。always 表示关闭用户连接前必须无条件地处理连接上所有用户发送的数据。off 表示关闭连接时完全不管连接上是否已经有准备就绪的来自用户的数据。on 是中间值，一般情况下在关闭连接前都会处理连接上的用户发送的数据，除了有些情况下在业务上认定这之后的数据是不必要的。</p>
 
-<p>** lingering_time** time（默认单位：秒）<br />
+<p><strong>lingering_time</strong> time（默认单位：秒）<br />
 Content-Length 大于 max_client_body_size 配置时，Nginx 服务会立刻向用户发送 413（Requestentity too large）响应。经过了 lingering_time 时间后，nginx 不管用户是否仍在上传都会关闭连接。</p>
 
-<p>** lingering_timeout** time（默认单位：秒）<br />
+<p><strong>lingering_timeout</strong> time（默认单位：秒）<br />
 在关闭连接前，会检测是否有用户发送的数据到达服务器，如果超过 lingering_timeout 时间后还没有数据可读，就直接关闭连接。否则，必须读完缓冲区上的数据病丢弃掉才关闭。</p>
 
-<p>** keepalive_disable** [msie6|safari|none]<br />
+<p><strong>keepalive_disable</strong> [msie6|safari|none]<br />
 对特定浏览器禁用 keepalive。</p>
 
-<p>** keepalive_timeout** time（默认单位：秒）<br />
+<p><strong>keepalive_timeout</strong> time（默认单位：秒）<br />
 一个连接在闲置超过一定的时间后，服务器和浏览器都会关闭这个连接。</p>
 
-<p>** keepalive_requests** number;<br />
+<p><strong>keepalive_requests</strong> number;<br />
 keepalive 长连接允许承载的请求最大数。</p>
 
-<p>** tcp_nodelay** on/off;<br />
+<p><strong>tcp_nodelay</strong> on/off;<br />
 确定对 keepalive 连接是否使用 TCP_NODELAY 选项。</p>
 
-<p>** tcp_nopush** on/off;<br />
+<p><strong>tcp_nopush</strong> on/off;<br />
 确定是否开启 FreeBSD 系统上的 TCP_NOPUSH 或 Linux 系统上的 TCP_CORK 功能。</p>
 
 <h4 id="mime-类型设置">MIME 类型设置</h4>
 
-<p>** type** {&hellip;};<br />
+<p><strong>type</strong> {&hellip;};<br />
 定义文件到扩展名的映射。如：<br />
    types {
     text/html html;
@@ -462,50 +462,50 @@ keepalive 长连接允许承载的请求最大数。</p>
     image/jpeg jpg;
   }</p>
 
-<p>** default_type** MIME-type;<br />
+<p><strong>default_type</strong> MIME-type;<br />
 当找不到对应的 MIME 使用这个配置里的 MIME-type;</p>
 
-<p>** types_hash_bucket_size** <strong>types_hash_max_size</strong><br />
+<p><strong>types_hash_bucket_size</strong> <strong>types_hash_max_size</strong>
 为快速匹配 MIME nginx 使用散列表来存储 MIME type 与文件扩展名。max_size 为最大大小设置。</p>
 
 <h4 id="对客户端请求的限制">对客户端请求的限制</h4>
 
-<p>** limit_except** method
+<p><strong>limit_except</strong> method
 限制客户端指定的 http method。</p>
 
-<p>** client_max_body_size** size;<br />
+<p><strong>client_max_body_size</strong> size;<br />
 client body 允许的最大值。</p>
 
-<p>** limit_rate** speed;<br />
+<p><strong>limit_rate</strong> speed;<br />
 对客户端请求进行限速。</p>
 
-<p>** limit_rate_after** size<br />
+<p><strong>limit_rate_after</strong> size<br />
 当请求超过一定的长度，limit_rate 才生效。</p>
 
 <h4 id="文件操作">文件操作</h4>
 
-<p>** sendfile** on/off;<br />
+<p><strong>sendfile</strong> on/off;<br />
 启用 linux 上的 sendfile 来发送文件，减少内核与用户态直接的交互。</p>
 
-<p>** aio** on/off<br />
+<p><strong>aio</strong> on/off<br />
 启用内核级别的异步文件 I/O 功能，与 sendfile 互斥。</p>
 
-<p>** directio** size/off<br />
+<p><strong>directio</strong> size/off<br />
 使用 O_DIRECT 选项去读取文件，通常对大文件有优化作用，与 sendfile 功能互斥。</p>
 
-<p>** directio_alignment**<br />
+<p><strong>directio_alignment</strong><br />
 与 directio 配合使用，指定以 directio 方式读取文件时的对齐方式.一般情况下，512B 已经足够了。</p>
 
-<p>** open_file_cache** max=N[inactive=time]|off;<br />
+<p><strong>open_file_cache</strong> max=N[inactive=time]|off;<br />
 打开文件缓存，减少对磁盘操作。max：表示在内存中存储元素的最大个数。inactive：表示在指定的时间段内没有被访问过的元素将会被淘汰。off 表示关闭缓存功能。</p>
 
-<p>** open_file_cache_errors** on/off;<br />
+<p><strong>open_file_cache_errors</strong> on/off;<br />
 是否缓存打开文件错误的信息。</p>
 
-<p>** open_file_cache_min_uses** number<br />
+<p><strong>open_file_cache_min_uses</strong> number<br />
 不被淘汰的最小访问次数。与 open_file_cache 中的 inactive 参数配合使用。</p>
 
-<p>** open_file_cache_valid** time
+<p><strong>open_file_cache_valid</strong> time
 检验缓存中元素的有效性，默认为 60s。</p>
 
 <h4 id="对客户端请求的特殊处理">对客户端请求的特殊处理</h4>
@@ -516,29 +516,29 @@ client body 允许的最大值。</p>
 <p>underscores_in_headers on/off;<br />
 HTTP 头是否允许有下划线。</p>
 
-<p>** if_modified_since** off/exact/before]
+<p><strong>if_modified_since</strong> off/exact/before]
 对 if_modified_since 进行处理。参数详解如下：
-** off**：表示忽略用户请求中的If-Modified-Since头部。<br />
-** exact**：将If-Modified-Since头部包含的时间与将要返回的文件上次修改的时间做精确比较，如果没有匹配上，则返回200和文件的实际内容，如果匹配上，则表示浏览器缓存的文件内容已经是最新的了，没有必要再返回文件从而浪费时间与带宽了，这时会返回304 Not Modified，浏览器收到后会直接读取自己的本地缓存。<br />
-** before**：是比exact更宽松的比较。只要文件的上次修改时间等于或者早于用户请求中的If-Modified-Since头部的时间，就会向客户端返回304 Not Modified。</p>
+<strong>off</strong>：表示忽略用户请求中的If-Modified-Since头部。<br />
+<strong>exact</strong>：将If-Modified-Since头部包含的时间与将要返回的文件上次修改的时间做精确比较，如果没有匹配上，则返回200和文件的实际内容，如果匹配上，则表示浏览器缓存的文件内容已经是最新的了，没有必要再返回文件从而浪费时间与带宽了，这时会返回304 Not Modified，浏览器收到后会直接读取自己的本地缓存。<br />
+<strong>before</strong>：是比exact更宽松的比较。只要文件的上次修改时间等于或者早于用户请求中的If-Modified-Since头部的时间，就会向客户端返回304 Not Modified。</p>
 
-<p>** log_not_found** on／off<br />
+<p><strong>log_not_found</strong> on／off<br />
 文件未找到是否记录到 error 日志。</p>
 
-<p>** merge_slashes** on／off<br />
+<p><strong>merge_slashes</strong> on／off<br />
 是否合并相邻的斜杠。</p>
 
-<p>** resolver** address；<strong>resolver_timeout</strong> time;<br />
+<p><strong>resolver</strong> address；<strong>resolver_timeout</strong> time;<br />
 设置 DNS 解析服务器的地址以及 DNS 解析超时时间。</p>
 
-<p>** server_tokens** on/off;
+<p><strong>server_tokens</strong> on/off;
 返回错误页是否注明 <strong>nginx</strong> 版本。</p>
 
 <h3 id="upstream-反向代理">Upstream（反向代理）</h3>
 
 <p>upstream 定义了一个上游服务器集群，便于反向代理中的 proxy_pass 使用。</p>
 
-<p>** server** name[parameters]<br />
+<p><strong>server</strong> name[parameters]<br />
 server 配置项指定了一台上游服务器的名字，这个名字可以是域名，IP 地址端口，UNIX 句柄等，在其后还可以跟下列参数：<br />
 <em>weight = number</em>;  设置这台上游服务器的转发权重，默认为1。
 <em>max_fails=number;</em><br />
