@@ -530,12 +530,12 @@ server 配置项指定了一台上游服务器的名字，这个名字可以是�
 <p><em>ip_hash</em>
 把客户端 IP 地址计算出一个 key，将 key 按照 upstream 集群里的上游服务器数量进行取模，然后以取模的结果把请求转发到相应的上游服务器。主要解决一个客户端 IP 地址始终往一个上游服务器上发。它与 weight 配置不能同时使用。</p>
 
-<p>upstream 日志支持的变量：
-\$upstream_addr  处理请求的上游服务器地址。<br />
-\$upstream_cache_status  表示是否命中缓存，取值范围：MISS, EXPIRED, UPDATING, STATE, HIT<br />
-\$upstream_status  上游服务器返回的相应码。<br />
-\$upstream_response_time  上游服务器的相应时间，精确到毫秒。<br />
-\$upstream_http_HEADER   HTTP 的头部。</p>
+<p>upstream 日志支持的变量：<br />
+$upstream_addr  处理请求的上游服务器地址。<br />
+$upstream_cache_status  表示是否命中缓存，取值范围：MISS, EXPIRED, UPDATING, STATE, HIT<br />
+$upstream_status  上游服务器返回的相应码。<br />
+$upstream_response_time  上游服务器的相应时间，精确到毫秒。<br />
+$upstream_http_HEADER   HTTP 的头部。</p>
 
 <p>默认情况下反向代理是不会转发请求中的 Host 头部，如果需要必须加上：<br />
 <strong>proxy_set_header</strong> Host $host;</p>
