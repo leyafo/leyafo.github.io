@@ -155,22 +155,19 @@
     }</code></pre></div>
 <p>这就需要让接收参数的 API server 需要单独为每一个 API 的参数单独设定一个数据结构。那么问题就来了，我们在不知道 Action 的情况下，如何知道里面到底要拿哪一个数据结构去序列化？这里比较 trick 的方式就是先不管三七二十一，直接先把 action 序列化出来，再把 body 丢到具体的 API 去再次序列化。很明显，这是非常丑陋且低效的做法，并且你还没有别的方式可选。这就是设计带来的问题，即使代码再漂亮性能也会非常糟糕。<br />
 到这里我们再回过头来看头提到 RESTFul 如何完美的解决这个问题。如果我们拿以上两个 API 用 RESTful 来实现就是如下效果：</p>
-
-<pre><code>POST http://cn.bing.com/user
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#a61717;background-color:#e3d2d2">POST</span> <span style="color:#a61717;background-color:#e3d2d2">http://cn.bing.com/user</span>
 {
-    &quot;Name&quot;:&quot;John&quot;,
-    &quot;Email&quot;:&quot;John@example.com&quot;,
-    ....
+    <span style="color:#8b008b;font-weight:bold">&#34;Name&#34;</span>:<span style="color:#cd5555">&#34;John&#34;</span>,
+    <span style="color:#8b008b;font-weight:bold">&#34;Email&#34;</span>:<span style="color:#cd5555">&#34;John@example.com&#34;</span>,
+    <span style="color:#a61717;background-color:#e3d2d2">....</span>
 }
 
-POST http://cn.bing.com/foo
+<span style="color:#a61717;background-color:#e3d2d2">POST</span> <span style="color:#a61717;background-color:#e3d2d2">http://cn.bing.com/foo</span>
 {
-    &quot;FooName&quot;:&quot;John&quot;,
-    &quot;FooEmail&quot;:&quot;John@example.com&quot;,
-    ....
-}
-</code></pre>
-
+    <span style="color:#8b008b;font-weight:bold">&#34;FooName&#34;</span>:<span style="color:#cd5555">&#34;John&#34;</span>,
+    <span style="color:#8b008b;font-weight:bold">&#34;FooEmail&#34;</span>:<span style="color:#cd5555">&#34;John@example.com&#34;</span>,
+    <span style="color:#a61717;background-color:#e3d2d2">....</span>
+}</code></pre></div>
 <p>这样我们通过 method 和 HTTP path 就能指定到对应的 API，也不会存在二次解析这样的问题。在我们不知道一个东西为什么会有各种各样的条条框框和标准时我们最好按照标准去做，否则就最终做出来的东西就非常丑陋。<br />
 接下来请您思考一个问题：为什么 API Server 的返回码应该和 HTTP 保持语义上的一致（如：200 成功，201 创建成功，404 资源不存在），而不要全部 API 统一使用 200 返回或者自己在 body 里定义一套返回码？</p>
 
