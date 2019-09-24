@@ -3,6 +3,16 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>http://www.leyafo.com/post/2019-09-24-why-paas-are-anti-requirements/</loc>
+    <lastmod>2019-09-24T17:19:17+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.leyafo.com/post/2019-09-24-how-to-use-golang-interface/</loc>
+    <lastmod>2019-09-24T17:17:18+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>http://www.leyafo.com/post/2019-09-03-an-api-problem-myth/</loc>
     <lastmod>2019-09-03T10:34:50+08:00</lastmod>
   </url>
@@ -194,13 +204,13 @@
   
   <url>
     <loc>http://www.leyafo.com/</loc>
-    <lastmod>2019-09-03T10:34:50+08:00</lastmod>
+    <lastmod>2019-09-24T17:19:17+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>http://www.leyafo.com/post/</loc>
-    <lastmod>2019-09-03T10:34:50+08:00</lastmod>
+    <lastmod>2019-09-24T17:19:17+08:00</lastmod>
     <priority>0</priority>
   </url>
   

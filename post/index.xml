@@ -7,10 +7,40 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved by Leyafo</copyright>
-    <lastBuildDate>Tue, 03 Sep 2019 10:34:50 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 24 Sep 2019 17:19:17 +0800</lastBuildDate>
     
 	<atom:link href="http://www.leyafo.com/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>为什么 PAAS (paltform as a service) 是伪需求？</title>
+      <link>http://www.leyafo.com/post/2019-09-24-why-paas-are-anti-requirements/</link>
+      <pubDate>Tue, 24 Sep 2019 17:19:17 +0800</pubDate>
+      
+      <guid>http://www.leyafo.com/post/2019-09-24-why-paas-are-anti-requirements/</guid>
+      <description>试想一下你的开发团队需要一款 MQ(message queue) 服务，你是去买现成的云计算厂商的 MQ 服务还是自己买个 VPS(Virtual Private Server) 去安装一个 MQ 的服务呢？如果是买一个 MQ 的服务你如何确定这个 MQ 的服务是你现在团队需要的 MQ 服务？你如何确保从云计算厂家那里买过来的 MQ 服务是可靠的？
+如果你选择自己搭建一个 MQ 服务，在 2019 年你还会选择从头安装一个 MQ 服务吗？你会选用 docker 还是 k8s 去 setup 你的服务吗？
+你的开发环境，运行环境，测试环境，生产环境各自都有很多不一样的地方，如果和快速的把这几个测试环境 setup 起来？你是选用现有云计算提供的 paas 云服务，还是自己在公司内网的服务器搭建一套 k8s,线上再搭建一套。
+如果每个团队的成员都需要一个开发环境怎么办？怎么快速的 setup 起来？
+如果你购买的 paas 服务出问题了，你要怎么解决？是直接找云计算厂商解决起来比较靠谱，还是自己了解清楚每一个细节比较靠谱？关键的业务涉及到计费，公司收入，你会交给别人去管理吗？你的公司增长的速度和技术支出的速度以同样的速度增加，你是自己培养一支技术团队，还是把命根子交到别人手里？
+以上问题就是我们做一个互联网服务经常遇到的问题。在快和可靠之间我们必须要有所取舍。对于技术的选型关键不在技术，而是在业务。当你的业务增长过快或者过慢的时候用现成的 paas 服务无论如何都不是好的选择。如果你的业务复杂，研发的周期长，自己做一套简化部署和运维的 k8s 是非常有必要的。
+这就是现在的 paas 服务面临的尴尬境地，它的运维成本比 iaas 要低，扩容成本比 iaas 的服务要高，比 k8s 要更复杂。在关键的业务上（数据库，message queue） 你如果不吃透它，难道要把自己的命根子（收入）交到别人那里去？</description>
+    </item>
+    
+    <item>
+      <title>golang interface 要怎么用？</title>
+      <link>http://www.leyafo.com/post/2019-09-24-how-to-use-golang-interface/</link>
+      <pubDate>Tue, 24 Sep 2019 17:17:18 +0800</pubDate>
+      
+      <guid>http://www.leyafo.com/post/2019-09-24-how-to-use-golang-interface/</guid>
+      <description>golang 的抽象组件并不多，一个 interface 几乎囊括所有抽象所需的设计。interface 可以来实现 duck type，继承，泛型，抽象类这些在其他语言实现的常见抽象。interface 可以说是 golang 这门语言的抽象核心。
+面向对象的思考 我们学习面向对象经常讨论的三大毒瘤是：封装，继承，多态。我们先来分析和定义这三大特性，最后再来介绍为什么 golang 一个 interface 就能实现所有的这三大特性。
+封装 我们先来思考封装的本质是什么？封装的本质就是把你的代码做成一个可装卸的组件，组件暴露一些接口，用户使用组件时毋需关注内部的实现，只关心接口的输入输出就可以把这个组件集成到代码里面。为了把这一系列的过程更加便捷的描述出来，我们可以把它命名成一个具体的对象，对象里面包含一系列操作。
+继承，多态 golang 里面实际上没有继承这个概念。golang 里面把一个 struct 包含到另一个 struct 辅以一定的编译的语法糖看起来像继承一样的抽象实际上不是继承，它还是封装这个概念的升级版。在 golang 里面把这叫做组合式继承。
+继承和多态并不能各自分开独立的来看。多态如果脱离继承它将变成另一抽象的概念：duck type。
+在其他面向对象的语言里面我们继承一个实体，就拥有父类的所有方法。如果需要对父类同一方法进行覆盖，我们就实现一个同样的方法进行覆盖。这样的目的是让我们为两个不同的对象调用同一个方法。但实现这一点我们为什么需要继承？如果一个对象有一个我们需要的方法，那么我们并不需要关心这具体是个什么对象。这就是 duck type 的概念（如果一个物体会像鸭子一样叫，那么它就是一个鸭子）。 dock type 相对于继承式的多态要更加灵活。如下代码所示：
+import ( &amp;#34;fmt&amp;#34; ) type Speaker interface{ Speak() } type Bird struct{ } func (b *Bird)Speak(){ fmt.Println(&amp;#34;zzzzzzzz&amp;#34;) } type People struct{ } func (p *People)Speak(){ fmt.Println(&amp;#34;hello world&amp;#34;) } func main() { var speakers []Speaker speakers = append(speakers, new(Bird), new(People)) for _, s := range(speakers){ s.</description>
+    </item>
     
     <item>
       <title>一个 API 设计问题带来的思考</title>
@@ -19,8 +49,11 @@
       
       <guid>http://www.leyafo.com/post/2019-09-03-an-api-problem-myth/</guid>
       <description>这两天在使用公司其他部门设计的一个 API，在和同事交流的过程中发现 HTTP API 设计的一个很关键的问题点，所以把思考的一些东西记录在这里。
-我的 API server 是公司其他部门上游发送过来的请求，我的服务器接收请求，并响应数据。上游的 API 服务器设计时并未过多的考虑接入的问题，最开始的一个版本是把所有的数据全部放在 URL querystring 里面去给下游的 API server 去解析，不同的 API 通过里面的 ?Action=CreateUser 这样的参数形式去解析。参数全部放到 querystring 明显会带来以下问题： 1. 所有的参数都没有类型，全部是 string 类型，其他的数据类型需要再次做解析。
-2. HTTP 有长度限制，无法发送过多的数据。 3. URL 需要 base64 转义，这又为参数传递多带来一层解码。 基于这些我们看的见的 query string 问题，我们公司上游的 HTTP server 新做了一版接口。这次的做法是把所有的参数全部都放到 HTTP body 里面，这里看似已经解决了 querystring 所有的问题，但根本的问题并没有解决（咱们先不谈为什么不用 RESTful）。
+我的 API server 是公司其他部门上游发送过来的请求，我的服务器接收请求，并响应数据。上游的 API 服务器设计时并未过多的考虑接入的问题，最开始的一个版本是把所有的数据全部放在 URL querystring 里面去给下游的 API server 去解析，不同的 API 通过里面的 ?Action=CreateUser 这样的参数形式去解析。参数全部放到 querystring 明显会带来以下问题：
+1. 所有的参数都没有类型，全部是 string 类型，其他的数据类型需要再次做解析。
+2. HTTP 有长度限制，无法发送过多的数据。
+3. URL 需要 base64 转义，这又为参数传递多带来一层解码负担。
+基于这些我们看的见的 query string 问题，我们公司上游的 HTTP server 新做了一版接口。这次的做法是把所有的参数全部都放到 HTTP body 里面，这里看似已经解决了 querystring 所有的问题，但根本的问题并没有解决（咱们先不谈为什么不用 RESTful）。
 下面是这个新版本的 HTTP body 的参数形式。
 { &amp;#34;Action&amp;#34;:&amp;#34;CreateUser&amp;#34;, &amp;#34;Name&amp;#34;:&amp;#34;John&amp;#34;, &amp;#34;Email&amp;#34;:&amp;#34;John@example.com&amp;#34;, .... } 这里仍旧事把 Action 参数放到 body 里面，下游的 HTTP 服务器对于发送过来的信息需要首先去解码 body 里面的 Action 参数，然后再通过 Action 参数去判断这是具体属于哪一个 API 的服务。你需要通过一些手段把这个 Action map 到一个具体的入口点。这带来一个问题，就是我们的每个 API 需要的参数都是不一样的，当我们去序列化的时候我们无法为所有 API 都使用同一个数据结构去序列化数据。下面的两个 HTTP body 除了 Action 可以使用同样的方式去序列化以外，其他的的数据结构完全无法通用。</description>
     </item>
