@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved by Leyafo</copyright>
-    <lastBuildDate>Tue, 24 Sep 2019 17:19:17 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 25 Nov 2019 10:46:25 +0800</lastBuildDate>
     
 	<atom:link href="http://www.leyafo.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>go 语言错误处理</title>
+      <link>http://www.leyafo.com/post/2019-11-25-golang-errors/</link>
+      <pubDate>Mon, 25 Nov 2019 10:46:25 +0800</pubDate>
+      
+      <guid>http://www.leyafo.com/post/2019-11-25-golang-errors/</guid>
+      <description>go 语言错误处理非常简单清晰且有效。你只需要记住一个原则：“Whatever you do, always check your errors!”。这条原则很简单，我们只要在有 error 值返回的函数外处理所有的 error 即可。但这带来一个问题，我们的代码里面会大量充斥着如下代码：
+func Foo() (err error){ err = Bar() if err != nil{ return err } err = Bar() if err != nil{ return err } err = Bar() if err != nil{ return err } //.... } 对于这个问题，rob pike 在他的那篇 errors are values 文章里建议是写一个同样的接口去包装返回 error 的接口，然后每次重复调用时就不用再反复的检查 error 值。类似如下的方式
+func Foo() error{ var err error func newBar(){ if err != nil{ return } err = Bar() return } newBar() newBar() newBar() .</description>
+    </item>
     
     <item>
       <title>为什么 PAAS (paltform as a service) 是伪需求？</title>
