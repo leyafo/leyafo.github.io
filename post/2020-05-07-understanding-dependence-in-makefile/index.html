@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+
+
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="understanding dependence in Makefile"/>
+<meta name="twitter:description" content="Introduction make is a simple and useful tool that allows you building your own code projects. It can be used in any programming language. It&rsquo;s also used in coding for repetitive computer tasks. For example, if you have multiple shell tasks that listed one by one. You can use make to organize your work flow.
+If you&rsquo;ve downloaded some open source or joined a new project as a developer. To run the entire project, you have to start building it first."/>
+
+
+
+  	<meta property="og:title" content=" understanding dependence in Makefile &middot;  Do The Right Things" />
+  	<meta property="og:site_name" content="Do The Right Things" />
+  	<meta property="og:url" content="http://www.leyafo.com/post/2020-05-07-understanding-dependence-in-makefile/" />
+
+    
+  	<meta property="og:type" content="article" />
+
+    <meta property="og:article:published_time" content="2020-05-07T16:29:06&#43;08:00" />
+
+    
+    
+
+    <title>
+       understanding dependence in Makefile &middot;  Do The Right Things
+    </title>
+
+    <meta name="description" content="Just Write Some Minds" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="http://www.leyafo.com/images/favicon.ico">
+	  <link rel="apple-touch-icon" href="http://www.leyafo.com/images/apple-touch-icon.png" />
+
+    <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400|Inconsolata" />
+    
+      
+          <link href="http://www.leyafo.com/index.xml" rel="alternate" type="application/rss+xml" title="Do The Right Things" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.40.2" />
+
+    <link rel="canonical" href="http://www.leyafo.com/post/2020-05-07-understanding-dependence-in-makefile/" />
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+    </ul>
+    
+    
+    <a class="subscribe-button icon-feed" href="http://www.leyafo.com/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+
+<header class="main-header post-head no-cover">
+  <nav class="main-nav clearfix">
+
+
+  
+  
+      <a class="menu-button icon-feed" href="http://www.leyafo.com/index.xml">&nbsp;&nbsp;Subscribe</a>
+  
+  </nav>
+</header>
+
+
+
+<main class="content" role="main">
+
+
+
+
+  <article class="post post">
+
+    <header class="post-header">
+        <h1 class="post-title">understanding dependence in Makefile</h1>
+        <small></small>
+
+        <section class="post-meta">
+        
+          <time class="post-date" datetime="2020-05-07T16:29:06&#43;08:00">
+            May 7, 2020
+          </time>
+        
+         
+        </section>
+    </header>
+
+    <section class="post-content">
+      
+
+<h2 id="introduction">Introduction</h2>
+
+<p><code>make</code> is a simple and useful tool that allows you building your own code projects. It can be used in any programming language. It&rsquo;s also used in coding for repetitive computer tasks. For example, if you have multiple shell tasks that listed one by one. You can use make to organize your work flow.</p>
+
+<p>If you&rsquo;ve downloaded some open source or joined a new project as a developer. To run the entire project, you have to start building it first. Nearly all open source projects have a <code>Makefile</code> for organizing code. The <code>Makefile</code> is not easy to understand, you can&rsquo;t modify the <code>Makefile</code> for your mind if you&rsquo;re a newbie. You can then Google the <code>Makefile</code> tutorial and copy&amp;paste some codes within your <code>Makefile</code>. but you don&rsquo;t know how <code>Makefile</code> works, just let your project run. The <code>Makefile</code> official manual is so long it&rsquo;s hard to understand.</p>
+
+<p>This post will take you 10 minutes to understand the <code>make</code> core concepts. Afterwards, you will create your own <code>Makefile</code> to do some basic tasks and figure out how <code>make</code> works.</p>
+
+<h2 id="core-conception">Core conception</h2>
+
+<p><strong>Dependence</strong> is the make&rsquo;s core. Understanding this is the most important principle in make. In the Makefile every task depends on another prerequisites that can be files, tasks, or some other form of rule. If you want to do a task, you must define your target and its prerequisites. We call this a dependence. A simple Makefile consists of &ldquo;dependencies&rdquo; with the following shape:</p>
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-makefile" data-lang="makefile"><span style="color:#008b45">foo</span>: bar
+</code></pre></div>
+<p>The above <code>Makefile</code> is do nothing, because you <code>bar</code> target is undefined. So, your target should depend on a defined prerequisite or just define how it works. The following shape is a complete set of rules.</p>
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-makefile" data-lang="makefile"><span style="color:#008b45">foo</span>:
+    <span style="color:#658b00">echo</span> <span style="color:#cd5555">&#34;hello world&#34;</span>  <span style="color:#228b22">#noticed: you must use &#39;tab&#39; to start this line.
+</span><span style="color:#228b22"></span></code></pre></div>
+<h2 id="a-realistic-example">A realistic example</h2>
+
+<p>Next, we will give you a realistic example. Suppose we have a simple C project, which contains the following files:</p>
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">.
+├── http.c
+├── http.h
+├── main.c
+├── socket.c
+├── socket.h</code></pre></div>
+<p>In our project, we have the following dependencies:<br />
+<code>http.c</code> include <code>http.h</code> and <code>socket.h</code><br />
+<code>socket.c</code> include <code>socket.h</code><br />
+<code>main.c</code> include <code>socket.h</code> and <code>http.h</code>.</p>
+
+<p>To build an executing file using <code>gcc</code>, we must compile the source to the object and then link them to the be an executing file. we must compile the object first. Here are our rules:</p>
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Makefile" data-lang="Makefile"><span style="color:#008b45">http.o</span>: http.c http.h socket.h
+    gcc -c http.c
+<span style="color:#008b45">socket.o</span>: socket.h
+    gcc -c socket.c
+<span style="color:#008b45">main.o</span>: main.c http.h socket.h
+    gcc -c main.c
+</code></pre></div>
+<p>link all object files to be a execute file:</p>
+
+<pre><code>exe: http.o socket.o main.o
+    gcc -o exe http.o socket.o main.o
+</code></pre>
+
+<p>Now, you can type <code>make exe</code> to build your own project.</p>
+
+    </section>
+
+
+  <footer class="post-footer">
+
+
+    
+
+    <section class="author">
+  <h4><a href="http://www.leyafo.com/">leyafo</a></h4>
+</section>
+
+
+    
+
+    
+
+  </footer>
+</article>
+
+</main>
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">Do The Right Things</a> All rights reserved by Leyafo</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="http://www.leyafo.com/js/jquery.js"></script>
+    <script type="text/javascript" src="http://www.leyafo.com/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="http://www.leyafo.com/js/index.js"></script>
+    <script id='nodebb-comments-script' ourl="https://v2mm.tech" ocid="49" blogger='leyafo' src="https://v2mm.tech/plugins/nodebb-plugin-blog-comments2/lib/simple-hugo.js"></script>
+    
+</body>
+</html>
+
