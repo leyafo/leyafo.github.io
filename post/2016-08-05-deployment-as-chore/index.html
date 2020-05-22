@@ -54,7 +54,7 @@
       
       
     
-    <meta name="generator" content="Hugo 0.40.2" />
+    <meta name="generator" content="Hugo 0.71.0" />
 
     <link rel="canonical" href="http://www.leyafo.com/post/2016-08-05-deployment-as-chore/" />
 
@@ -108,7 +108,7 @@
   <article class="post post">
 
     <header class="post-header">
-        <h1 class="post-title">开发笔记(2) － 部署遇到的麻烦事儿</h1>
+        <h3 class="post-title">开发笔记(2) － 部署遇到的麻烦事儿</h3>
         <small></small>
 
         <section class="post-meta">
@@ -122,22 +122,13 @@
     </header>
 
     <section class="post-content">
-      
-
-<p>我们现在用 Rails 做开发，线上的环境配置非常繁琐。到现在仍然没有找到一个可以快速 setup 一个 server 的解决方案。以下是我们在部署一个新的 server 时要做的一些麻烦事，我希望有一天能够在半小时内不用 ssh 登陆服务器就能把这些事情做好。</p>
-
-<h4 id="一-服务器-setup">一、服务器 setup</h4>
-
+      <p>我们现在用 Rails 做开发，线上的环境配置非常繁琐。到现在仍然没有找到一个可以快速 setup 一个 server 的解决方案。以下是我们在部署一个新的 server 时要做的一些麻烦事，我希望有一天能够在半小时内不用 ssh 登陆服务器就能把这些事情做好。</p>
+<h4 id="一服务器-setup">一、服务器 setup</h4>
 <p>我们现在全线使用阿里云来配置 qa, production, db, backup 这些环境。每次新拿到一个 vps，我们做的第一件事情就是配置 ssh，创建相关人员账户，设置 public key，关闭免密码登录。这一系列的动作我们使用了 <a href="https://www.chef.io/">chef</a> 来做这件事情，基本上做到了一键设置。还有像一些 bash，hosts 文件配置，安装一些常用软件等着一些比较简单的事情 chef 也做得很好。但 chef 能做好的事情也仅仅只有这一些而已。一旦我们需要安装类似于 rvm，ruby，postgresql 这样配置比较复杂的软件时 chef 就完全不能胜任了。其中有很大一方面的原因是 chef 配置非常之复杂、繁琐。里面各种各样的依赖，和每个 node 之间相互不同的 attributes 很让人焦头烂额。每次修改配置的时间超过了 setup 一个 server 的时间。如果长时间不去维护里面的 cookbook，过一段后又要重新去翻文档配置。这就是 chef 的问题，它带来的问题比要解决的问题更多。</p>
-
-<h4 id="二-ruby-环境-setup">二、ruby 环境 setup</h4>
-
+<h4 id="二ruby-环境-setup">二、ruby 环境 setup</h4>
 <p>我们现在用的是 rvm + ruby 的组合来运行我们的 app。rvm 主要的作用是管理不同的 ruby 版本，这几乎是所有解释型语言的通病，需要有一个版本管理工具来管理不同版本的解释器。静下心来想一想，我们其实并不需要多个ruby 版本。尤其是在服务器的环境里面很难会容许不同版本的 ruby 共存这样复杂的情况。因此 rvm 最主要的功能实际上我们是不需要的。我们尝试过在 server 自己手动编译一个指定的版本，但这样带来的问题是安装 gem 包需要 sudo 权限。也尝试过更改 gem 所在目录的权限，但一些 gem 有可执行文件，需要放在系统的 bin 目录下，这也需要 sudo 权限，这个再更改 bin 的目录权限就不那么适合了。我们现在的解决方案是使用 rbenv，这个工具和 rvm 做一样的事情，但安装配置比 rvm 要简单很多。到这时我才发现 rvm 和 rbenv 这样的工具更重要的是解决 gem 包的存放问题。</p>
-
-<h4 id="三-app-setup">三、app setup</h4>
-
+<h4 id="三app-setup">三、app setup</h4>
 <p>我们的 rails 应用现在使用的是 capistrano 这个工具来做一键化部署。这是一个很复杂的工具，每次部署时会输出一大堆不太容易看明白的 log。尽管如此，它还是可靠的。基本上做到了一键化部署，新增 server 不需要过多的配置。比较麻烦的是新增的 server 需要配置 db，有时候碰到网络不好的情况 bundler 还要花掉不少的时间。另外就是 passenger、nginx、log rotate 这些东西配置尽管不是太复杂，但非常繁琐。</p>
-
 <p>中国的网络问题是部署时非常大的一个问题，下载一些第三方依赖的 library 会花掉不少时间。甚至有时干脆访问不了一些服务镜像，甚至大部分 setup 浪费掉的时间都与网络有关。我想过 docker 可以很好的解决我以上碰到的一些问题。也花了一些时间去研究，但 docker 镜像在中国的下载速度让我非常失望。</p>
 
     </section>

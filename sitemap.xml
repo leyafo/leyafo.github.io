@@ -1,6 +1,21 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>http://www.leyafo.com/</loc>
+    <lastmod>2020-05-22T21:46:06+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.leyafo.com/post/2020-05-22-open-source-as-a-business-model/</loc>
+    <lastmod>2020-05-22T21:46:06+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.leyafo.com/post/</loc>
+    <lastmod>2020-05-22T21:46:06+08:00</lastmod>
+  </url>
   
   <url>
     <loc>http://www.leyafo.com/post/2020-05-07-understanding-dependence-in-makefile/</loc>
@@ -209,24 +224,10 @@
   
   <url>
     <loc>http://www.leyafo.com/categories/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.leyafo.com/</loc>
-    <lastmod>2020-05-07T16:29:06+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.leyafo.com/post/</loc>
-    <lastmod>2020-05-07T16:29:06+08:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
     <loc>http://www.leyafo.com/tags/</loc>
-    <priority>0</priority>
   </url>
   
 </urlset>

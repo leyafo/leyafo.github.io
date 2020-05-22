@@ -1,0 +1,15 @@
+Open source is a business model, not just free beer or software.
+We can freely use open source code in our products, but it's not paid for by the user.  There is a problem with this: what income do these open source project authors get? Some are side projects, but many are maintained as full-time jobs. 
+
+If you have created a popular project like redis or nginx, then many people will know what you can do in your professional field. The next step is to build a new server for your customers. Many people use your code, they will encounter new demands and you are an expert in this field, so you are the best key-man to solve the problem. Open sourcing your code and letting people try your code freely is the best marketing strategy for you. It's free and friendly.
+
+If many people use your code but no one will want to pay for it. You've just solved a little problem, not a business problem. Every programmer dreams of making software once and incoming forever, like an application still running on a server. This is insane, the real world doesn't work like this. Business problems always involve changes we make to adapt reality to the reality of not letting reality adapt to what we want.
+
+For example, if you built a json parser, it is the fastest parser in the world. You want people to pay for this parser (It's better paid for monthly). Ask yourself these questions about your own software:
+1. Why must your parser replace the other?
+2. If people encounter problems when using your software, what do you do? How can you receive this information?
+3. If no one uses json, what's your parser purpose for existence?
+4. Your parser is just a tool; Why people should pay your monthly?
+5. How do you continually meet new demands?
+
+Business problems are not like bugs; they are a series of problems. Suppose you want to make an APP like Uber, you have to let users run a mobile app with GPS, online payments, fast wireless networks, and a powerful battery. Before ten years ago, you couldn't build this app. Because you can't solve this series of problems. We call this is the industry chain. Your code only solves the one of the industry chains, and you must fully understand what you're solving and why it is important. Your code is a gun and your business knowledge is a guidance tool. Open source your code to meet the demands of the real world. It's a good marketing strategy because distributing your code is zero cost.

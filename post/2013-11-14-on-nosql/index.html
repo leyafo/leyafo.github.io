@@ -29,7 +29,8 @@ Partition-tolerance: 数据可以不限于分布在同一台机器上.
 一般 NoSQL 类数据库存储数据的模型有 4 种方式:
 Key-Value: 类似于 json 的 key-value 的方式进行数据存储
 BigTable: 多维度的 key-value 结构,并且存储方式是分布式,稀疏的2,严格排序的. Google 很多产品都在用,具有高压缩,高性能,易于查询的特点.
-Documents: 多个 key-value 结构的数据合为一条数据,每一条数据称为为一个 docment. 并且每个 docment 的 key-value 个数和 key 都可以不同.并且在搜索时,可以以 value 做为关键字来搜索."/>
+Documents: 多个 key-value 结构的数据合为一条数据,每一条数据称为为一个 docment. 并且每个 docment 的 key-value 个数和 key 都可以不同.并且在搜索时,可以以 value 做为关键字来搜索.
+Graph: 以网状方式将数据存储在一个 dataset 中."/>
 
 
 
@@ -66,7 +67,7 @@ Documents: 多个 key-value 结构的数据合为一条数据,每一条数据称
       
       
     
-    <meta name="generator" content="Hugo 0.40.2" />
+    <meta name="generator" content="Hugo 0.71.0" />
 
     <link rel="canonical" href="http://www.leyafo.com/post/2013-11-14-on-nosql/" />
 
@@ -120,7 +121,7 @@ Documents: 多个 key-value 结构的数据合为一条数据,每一条数据称
   <article class="post post">
 
     <header class="post-header">
-        <h1 class="post-title">关于NoSQL</h1>
+        <h3 class="post-title">关于NoSQL</h3>
         <small></small>
 
         <section class="post-meta">
@@ -134,52 +135,40 @@ Documents: 多个 key-value 结构的数据合为一条数据,每一条数据称
     </header>
 
     <section class="post-content">
-      
-
-<p>传统关系型数据库,将数据以表结构的方式存储起来.并且所有的数据是基于 <em>ACID</em><sup class="footnote-ref" id="fnref:ACID"><a href="#fn:ACID">1</a></sup> 原则.这种方式存储数据有很明显的缺点.首先,为了保证一致性,基于 <em>ACID<sup class="footnote-ref" id="fnref:ACID"><a href="#fn:ACID">1</a></sup></em> 类型的数据库都是使用事物来保持数据的一致性.也就是说同时只能有一个 <em>client</em> 提交数据.然后,以表结构存储的数据库架构是死的,一个表的列基本上是固定的.如果变化的话会带来很多问题.<br />
-比如:<br />
-1.我有一种数据,这些数据都是一些 <em>Excle</em> 表格.每个表格的列都不相同.但实际上他们都是一种数据.该如何存储?<br />
-2.一个表有 10 列,我想再加一个字段,但这个字段并不是所有数据都需要的.<br />
+      <p>传统关系型数据库,将数据以表结构的方式存储起来.并且所有的数据是基于 <em>ACID</em><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> 原则.这种方式存储数据有很明显的缺点.首先,为了保证一致性,基于 <em>ACID<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></em> 类型的数据库都是使用事物来保持数据的一致性.也就是说同时只能有一个 <em>client</em> 提交数据.然后,以表结构存储的数据库架构是死的,一个表的列基本上是固定的.如果变化的话会带来很多问题.<br>
+比如:<br>
+1.我有一种数据,这些数据都是一些 <em>Excle</em> 表格.每个表格的列都不相同.但实际上他们都是一种数据.该如何存储?<br>
+2.一个表有 10 列,我想再加一个字段,但这个字段并不是所有数据都需要的.<br>
 3.问题同上,如果加 20 个字段呢?再新建一个表?新建的表如何与现有的表关联?</p>
-
 <p>最后关联性数据库还有个不利于分布的弱点,如果数据分布在 <em>N</em> 台分布式的机器上,数据库该如何管理?</p>
-
-<p>为了弥补这些缺点, <em>NoSQL</em> 类数据库诞生了.首先 <em>NoSQL</em> 类数据库有以下特点:<br />
-<strong>schema-less</strong>: 数据没有字段的概念,并且数据仓库(关联型数据库的 <em>table</em> )可以随时变化字段.<br />
-<strong>Strong Consistency</strong>: 保证数据最终的一致性.<br />
-<strong>High Availability</strong>: 保证所有请求数据的客户端都能得到一份数据的 <em>copy</em>.<br />
+<p>为了弥补这些缺点, <em>NoSQL</em> 类数据库诞生了.首先 <em>NoSQL</em> 类数据库有以下特点:<br>
+<strong>schema-less</strong>: 数据没有字段的概念,并且数据仓库(关联型数据库的 <em>table</em> )可以随时变化字段.<br>
+<strong>Strong Consistency</strong>: 保证数据最终的一致性.<br>
+<strong>High Availability</strong>: 保证所有请求数据的客户端都能得到一份数据的 <em>copy</em>.<br>
 <strong>Partition-tolerance</strong>: 数据可以不限于分布在同一台机器上.</p>
-
 <p>一般 <em>NoSQL</em> 类数据库存储数据的模型有 4 种方式:</p>
-
 <p><strong>Key-Value</strong>: 类似于 <em>json</em> 的 <em>key-value</em> 的方式进行数据存储</p>
-
-<p><strong>BigTable</strong>:  多维度的 <em>key-value</em> 结构,并且存储方式是分布式,稀疏的<sup class="footnote-ref" id="fnref:-"><a href="#fn:-">2</a></sup>,严格排序的. <em>Google</em> 很多产品都在用,具有高压缩,高性能,易于查询的特点.</p>
-
+<p><strong>BigTable</strong>:  多维度的 <em>key-value</em> 结构,并且存储方式是分布式,稀疏的<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>,严格排序的. <em>Google</em> 很多产品都在用,具有高压缩,高性能,易于查询的特点.</p>
 <p><strong>Documents</strong>:
 多个 <em>key-value</em> 结构的数据合为一条数据,每一条数据称为为一个 <em>docment</em>. 并且每个 <em>docment</em> 的 <em>key-value</em> 个数和 <em>key</em> 都可以不同.并且在搜索时,可以以 <em>value</em> 做为关键字来搜索.</p>
-
 <p><strong>Graph</strong>:
 以网状方式将数据存储在一个 <em>dataset</em> 中.适合存储有关联的数据.</p>
-
 <p>从以上的特性可以看出, <em>NoSQL</em> 类数据库是一种将数据以 <em>OO(Object Oriented)</em> 方式存储起来.适合做社交网络的关联分析,尤其是 <em>Graph</em> 模型的 <em>NoSQL</em> 类数据库.同时 <em>NoSQL</em> 类数据库的分布式特点在海量数据和海量并发上有着传统关联型数据库无可比拟的优势.</p>
-
 <h2 id="参考资料">参考资料</h2>
-
-<p><a href="http://en.wikipedia.org/wiki/nosql">NoSQL at wikipedia</a><br />
-<a href="http://www.infoq.com/articles/graph-nosql-neo4j">Graph Databases, NoSQL and Neo4j</a><br />
+<p><a href="http://en.wikipedia.org/wiki/nosql">NoSQL at wikipedia</a><br>
+<a href="http://www.infoq.com/articles/graph-nosql-neo4j">Graph Databases, NoSQL and Neo4j</a><br>
 <a href="http://en.wikipedia.org/wiki/MongoDB">MongoDB</a></p>
-<div class="footnotes">
-
-<hr />
-
+<section class="footnotes" role="doc-endnotes">
+<hr>
 <ol>
-<li id="fn:ACID">即原子性(<em>atomicity</em>),一致性(<em>consistency</em>),持久性(<em>durability</em>),隔离性(<em>isolation</em>).
- <a class="footnote-return" href="#fnref:ACID"><sup>[return]</sup></a></li>
-<li id="fn:-">这里的稀疏指的并不是存储方式的稀疏,它指的是(<em>map</em> 结构中的 <em>key-Value</em> 可以是多维的.<a href="http://jimbojw.com/wiki/index.php?title=Understanding_Hbase_and_BigTable">参考链接</a> 
- <a class="footnote-return" href="#fnref:-"><sup>[return]</sup></a></li>
+<li id="fn:1" role="doc-endnote">
+<p>即原子性(<em>atomicity</em>),一致性(<em>consistency</em>),持久性(<em>durability</em>),隔离性(<em>isolation</em>). <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p>这里的稀疏指的并不是存储方式的稀疏,它指的是(<em>map</em> 结构中的 <em>key-Value</em> 可以是多维的.<a href="http://jimbojw.com/wiki/index.php?title=Understanding_Hbase_and_BigTable">参考链接</a> <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
 </ol>
-</div>
+</section>
 
     </section>
 

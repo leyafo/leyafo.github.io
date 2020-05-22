@@ -16,7 +16,7 @@
 
 <meta name="twitter:title" content="Understanding Dependence in Makefile"/>
 <meta name="twitter:description" content="Introduction make is a simple and useful tool that allows you building your own code projects. It can be used in any programming language. It&rsquo;s also used in coding for repetitive computer tasks. For example, if you have multiple shell tasks that listed one by one. You can use make to organize your work flow.
-If you&rsquo;ve downloaded some open source code or joined a new project as a developer."/>
+If you&rsquo;ve downloaded some open source code or joined a new project as a developer. To run the entire project, you have to start building it first."/>
 
 
 
@@ -53,7 +53,7 @@ If you&rsquo;ve downloaded some open source code or joined a new project as a de
       
       
     
-    <meta name="generator" content="Hugo 0.40.2" />
+    <meta name="generator" content="Hugo 0.71.0" />
 
     <link rel="canonical" href="http://www.leyafo.com/post/2020-05-07-understanding-dependence-in-makefile/" />
 
@@ -107,7 +107,7 @@ If you&rsquo;ve downloaded some open source code or joined a new project as a de
   <article class="post post">
 
     <header class="post-header">
-        <h1 class="post-title">Understanding Dependence in Makefile</h1>
+        <h3 class="post-title">Understanding Dependence in Makefile</h3>
         <small></small>
 
         <section class="post-meta">
@@ -121,39 +121,28 @@ If you&rsquo;ve downloaded some open source code or joined a new project as a de
     </header>
 
     <section class="post-content">
-      
-
-<h2 id="introduction">Introduction</h2>
-
+      <h2 id="introduction">Introduction</h2>
 <p><code>make</code> is a simple and useful tool that allows you building your own code projects. It can be used in any programming language. It&rsquo;s also used in coding for repetitive computer tasks. For example, if you have multiple shell tasks that listed one by one. You can use <code>make</code> to organize your work flow.</p>
-
 <p>If you&rsquo;ve downloaded some open source code or joined a new project as a developer. To run the entire project, you have to start building it first. Nearly all open source projects have a <code>Makefile</code> for organizing code. The <code>Makefile</code> is not easy to understand. The <code>Makefile</code> official manual is so long it&rsquo;s hard to understand. You can&rsquo;t modify the <code>Makefile</code> for your mind if you&rsquo;re a newbie. You can then Google the <code>Makefile</code> tutorial and copy&amp;paste some codes within your <code>Makefile</code>. But you don&rsquo;t know how <code>Makefile</code> works, you just let your code run.</p>
-
 <p>This post will take you 10 minutes to understand the <code>make</code> core concepts. Afterwards, you will create your own <code>Makefile</code> to do some basic tasks and figure out how <code>make</code> works.</p>
-
 <h2 id="core-conception">Core conception</h2>
-
-<p><strong>Dependence</strong> is the <code>make</code>&rsquo;s core. Understanding this is the most important principle in <code>make</code>. In the <code>Makefile</code> every task depends on another prerequisites that can be files, tasks, or some other form of rules. If you want to do a task, you must define your target and its prerequisites. We call this a dependence. A simple <code>Makefile</code> consists of &ldquo;dependencies&rdquo; with the following shape:</p>
+<p><strong>Dependence</strong> is the <code>make</code>'s core. Understanding this is the most important principle in <code>make</code>. In the <code>Makefile</code> every task depends on another prerequisites that can be files, tasks, or some other form of rules. If you want to do a task, you must define your target and its prerequisites. We call this a dependence. A simple <code>Makefile</code> consists of &ldquo;dependencies&rdquo; with the following shape:</p>
 <div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-makefile" data-lang="makefile"><span style="color:#008b45">foo</span>: bar
-</code></pre></div>
-<p>The above <code>Makefile</code> is do nothing, because you <code>bar</code> target is undefined. Target should depend on a defined prerequisite or just define how it works. The following target is a defined to run <code>echo</code> command.</p>
+</code></pre></div><p>The above <code>Makefile</code> is do nothing, because you <code>bar</code> target is undefined. Target should depend on a defined prerequisite or just define how it works. The following target is a defined to run <code>echo</code> command.</p>
 <div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-makefile" data-lang="makefile"><span style="color:#008b45">foo</span>:
-    <span style="color:#658b00">echo</span> <span style="color:#cd5555">&#34;hello world&#34;</span>  <span style="color:#228b22">#noticed: you must use &#39;tab&#39; to start this line.
-</span><span style="color:#228b22"></span></code></pre></div>
-<h2 id="a-realistic-example">A realistic example</h2>
-
+    <span style="color:#658b00">echo</span> <span style="color:#cd5555">&#34;hello world&#34;</span>  <span style="color:#228b22">#noticed: you must use &#39;tab&#39; to start this line.</span>
+</code></pre></div><h2 id="a-realistic-example">A realistic example</h2>
 <p>Next, we will give you a realistic example. Suppose we have a simple C project, which contains the following files:</p>
 <div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">.
 ├── http.c
 ├── http.h
 ├── main.c
 ├── socket.c
-├── socket.h</code></pre></div>
-<p>In our project, we have the following dependencies:<br />
-<code>http.c</code> include <code>http.h</code> and <code>socket.h</code><br />
-<code>socket.c</code> include <code>socket.h</code><br />
+├── socket.h
+</code></pre></div><p>In our project, we have the following dependencies:<br>
+<code>http.c</code> include <code>http.h</code> and <code>socket.h</code><br>
+<code>socket.c</code> include <code>socket.h</code><br>
 <code>main.c</code> include <code>socket.h</code> and <code>http.h</code>.</p>
-
 <p>To build an executing file using <code>gcc</code>, we must compile the source to the object and then link them to the be an executing file. we must compile the object first. Here are our rules:</p>
 <div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Makefile" data-lang="Makefile"><span style="color:#008b45">http.o</span>: http.c http.h socket.h
     gcc -c http.c
@@ -161,14 +150,10 @@ If you&rsquo;ve downloaded some open source code or joined a new project as a de
     gcc -c socket.c
 <span style="color:#008b45">main.o</span>: main.c http.h socket.h
     gcc -c main.c
-</code></pre></div>
-<p>Link all object files to be a execute file:</p>
-
+</code></pre></div><p>Link all object files to be a execute file:</p>
 <pre><code>exe: http.o socket.o main.o
     gcc -o exe http.o socket.o main.o
-</code></pre>
-
-<p>Now, you can type <code>make exe</code> to build your own project.</p>
+</code></pre><p>Now, you can type <code>make exe</code> to build your own project.</p>
 
     </section>
 
