@@ -1,133 +1,143 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
+<!doctype html>
+<html lang="en">
+
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <meta name="generator" content="Hugo 0.71.0" />
 
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  
 
-    
+  
+  <link rel="manifest" href="http://www.leyafo.com/site.webmanifest">
+
+  
+  <link rel="stylesheet" href="http://www.leyafo.com/css/bootstrap.min.css" />
+
+  
+  <title>git 初级教程 | Do The Right Things</title>
+  
+
+  <style>
+body {
+  color: #000000;
+  line-height: 1.6em;
+  padding: 1em;
+  margin: auto;
+  max-width: 72em;
+  background: #fefefe;
+}
+
+nav {
+    margin-bottom: 20px;
+}
+a:visited{
+  color: grey;
+}
+
+.custom-navbar {
+  margin-bottom: 1em;
+  height: 60px;
+}
+
+.custom-navbar a {
+  display: inline-block; 
+  padding: 18px 0;
+  margin-right: 1em; 
+  font-weight: bold; 
+}
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  text-decoration: none; 
+}
+
+@media print {
+  .custom-navbar {
+    display: none;
+  }
+}
+
+article {
+  padding-bottom: 1em;
+}
+
+img {
+  max-width: 100%;
+}
 
 
-    
-        <meta name="twitter:card" content="summary"/>
-    
+body {
+  background-color: #fff;
+}
 
 
 
-<meta name="twitter:title" content="git 初级教程"/>
-<meta name="twitter:description" content="Introduce git 不是一个对新手友好的工具，大多数新手第一次面对 git 总会有点手无足措。这时当你开始怀疑是不是一个蠢货时请不要停止，继续保持怀疑。面对一大堆命令和魔法般的黑色 terminal 大多数新手都会手无足措，不知道该怎么去用 git 去提交自己的代码。更可怕的事情是，如果搞砸了还会导致你旁边的豹子头同事把你给撕了的危险。本文档的主要作用是就是可以让你顺利的把代码提交到 git 库，避免产生意外的人身伤害。
-Example 在被我忽悠 git 后你可能会偷偷的跑去网上找 git 相关的教程读。或者在看到我贱指如飞、神乎奇技地在键盘上狂按一通的时候你偷偷的拿笔在旁边记录我敲过的顺序。作为一个踏坑无数，身经百战的老司机有必要在这时告诉你一点儿人生经验，你这么做并没有什么卵用！！！因为你碰到的问题和网上那些教程说的是不一样的，老司机和你看到的世界也是不一样的（隔壁老王用的撩妹技能你直接拿去用会有什么后果？）。因此我们现在以平常工作中最简单的一个应用场景来解释 git 的基本用法。
-现在假设有两个农民工张大锤，王大锤，以下简称老张和老王。老张和老王每天搬砖太累了，他们决定写一部电影剧本来改变世界。但两个人在同一个剧情时间点上写同一件事情的时候总是会产生冲突。老张本来在 1970 年10月24日把男主角写挂了。但老王由于刚在淘宝买了块机械键盘，打字打得太爽了。在1970年10月24日这一天写成男主角正在吃着火锅唱着歌。这个时候冲突产生了，老王和老张为了这个事情从相亲相爱变成了砖角遇到爱。下面我们开始详细描述这一起恶性暴力的流血事件。
-Commit 张大锤和王大锤已经写好了一些剧情了。他们的最开始的共同成果如下：
-1	从前有个人，名字叫赵铁柱。他人长得帅，又多金，还会写代码。 最前面那个 1 表示第一行。
-老张刚和前女友分手，伤心难过，悲痛欲绝，以致于影响了日常严肃文学创作。所以他把接下来的剧本改成了这样：
-1	从前有个人，名字叫赵铁柱。他人长得帅，又多金，还会写代码。 2	后来他死了。 写完后老张开始提交代码，他先输入 git status 查看 git 库给出的文件改动信息。(git status 是一个人畜无害的命令，你敲破桌子也不会有人理你)。
-[老张]$ git status On branch master Your branch is up-to-date with &#39;origin/master&#39;. Changes not staged for commit: (use &#34;git add &lt;file&gt;...&#34; to update what will be committed) (use &#34;git checkout -- &lt;file&gt;."/>
+body {
+  color: #212529;
+}
 
 
 
-  	<meta property="og:title" content=" git 初级教程 &middot;  Do The Right Things" />
-  	<meta property="og:site_name" content="Do The Right Things" />
-  	<meta property="og:url" content="http://www.leyafo.com/post/2016-12-18-git-getting-started/" />
+a {
+  color: #007bff;
+}
 
-    
-  	<meta property="og:type" content="article" />
 
-    <meta property="og:article:published_time" content="2016-12-20T11:11:54&#43;08:00" />
 
-    
-    
+a:hover,
+a:focus {
+  color: #0056b3;
+}
 
-    <title>
-       git 初级教程 &middot;  Do The Right Things
-    </title>
 
-    <meta name="description" content="Just Write Some Minds" />
 
-    <meta name="HandheldFriendly" content="True" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+.custom-navbar {
+  background-color: #212529;
+}
 
-    <link rel="shortcut icon" href="http://www.leyafo.com/images/favicon.ico">
-	  <link rel="apple-touch-icon" href="http://www.leyafo.com/images/apple-touch-icon.png" />
 
-    <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/screen.css" />
-    <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/nav.css" />
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400|Inconsolata" />
-    
-      
-          <link href="http://www.leyafo.com/index.xml" rel="alternate" type="application/rss+xml" title="Do The Right Things" />
-      
-      
-    
-    <meta name="generator" content="Hugo 0.71.0" />
 
-    <link rel="canonical" href="http://www.leyafo.com/post/2016-12-18-git-getting-started/" />
+.custom-navbar a {
+  color: rgba(255,255,255,.75);
+}
 
-    
 
-    
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  color: rgba(255,255,255,1);
+}
+
+
+
+
+
+</style>
 </head>
-<body class="nav-closed">
 
-  <div class="nav">
-    <h3 class="nav-title">Menu</h3>
-    <a href="#" class="nav-close">
-        <span class="hidden">Close</span>
-    </a>
-    <ul>
-        
-        
-        
-    </ul>
-    
-    
-    <a class="subscribe-button icon-feed" href="http://www.leyafo.com/index.xml">Subscribe</a>
-    
-</div>
-<span class="nav-cover"></span>
-
-
- <div class="site-wrapper">
-
-
-
-
-<header class="main-header post-head no-cover">
-  <nav class="main-nav clearfix">
-
-
-  
-  
-      <a class="menu-button icon-feed" href="http://www.leyafo.com/index.xml">&nbsp;&nbsp;Subscribe</a>
-  
-  </nav>
+<body>
+  <header>
+<nav>
+  [ <a class="nav-btn" href="http://www.leyafo.com/">Home</a> ] 
+  [ <a class="nav-btn" href="http://www.leyafo.com/about.html">About</a> ] 
+  [ <a class="nav-btn" href="http://www.leyafo.com/contact.html">Contact</a> ] 
+</nav>
 </header>
-
-
-
-<main class="content" role="main">
-
-
-
-
-  <article class="post post">
-
-    <header class="post-header">
-        <h3 class="post-title">git 初级教程</h3>
-        <small></small>
-
-        <section class="post-meta">
-        
-          <time class="post-date" datetime="2016-12-20T11:11:54&#43;08:00">
-            Dec 20, 2016
-          </time>
-        
-         
-        </section>
-    </header>
-
-    <section class="post-content">
-      <h2 id="introduce">Introduce</h2>
+  
+  <div>
+    <article>
+      <h1>git 初级教程</h1>
+<p>
+  <small class="text-secondary">
+  
+  
+  December 20, 2016
+  </small>
+  
+</p>
+<h2 id="introduce">Introduce</h2>
 <p>git 不是一个对新手友好的工具，大多数新手第一次面对 git 总会有点手无足措。这时当你开始怀疑是不是一个蠢货时请不要停止，继续保持怀疑。面对一大堆命令和魔法般的黑色 terminal 大多数新手都会手无足措，不知道该怎么去用 git 去提交自己的代码。更可怕的事情是，如果搞砸了还会导致你旁边的豹子头同事把你给撕了的危险。本文档的主要作用是就是可以让你顺利的把代码提交到 git 库，避免产生意外的人身伤害。</p>
 <h2 id="example">Example</h2>
 <p>在被我忽悠 git 后你可能会偷偷的跑去网上找 git 相关的教程读。或者在看到我贱指如飞、神乎奇技地在键盘上狂按一通的时候你偷偷的拿笔在旁边记录我敲过的顺序。作为一个踏坑无数，身经百战的老司机有必要在这时告诉你一点儿人生经验，你这么做并没有什么卵用！！！因为你碰到的问题和网上那些教程说的是不一样的，老司机和你看到的世界也是不一样的（隔壁老王用的撩妹技能你直接拿去用会有什么后果？）。因此我们现在以平常工作中最简单的一个应用场景来解释 git 的基本用法。</p>
@@ -297,39 +307,8 @@ $ git add some_resolved_file
 $ git rebase --contine
 $ git push origin master
 </code></pre></div>
-    </section>
-
-
-  <footer class="post-footer">
-
-
-    
-
-    <section class="author">
-  <h4><a href="http://www.leyafo.com/">leyafo</a></h4>
-</section>
-
-
-    
-
-    
-
-  </footer>
-</article>
-
-</main>
-    <footer class="site-footer clearfix">
-        <section class="copyright"><a href="">Do The Right Things</a> All rights reserved by Leyafo</section>
-        
-        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
-        
-    </footer>
-    </div>
-    <script type="text/javascript" src="http://www.leyafo.com/js/jquery.js"></script>
-    <script type="text/javascript" src="http://www.leyafo.com/js/jquery.fitvids.js"></script>
-    <script type="text/javascript" src="http://www.leyafo.com/js/index.js"></script>
-    <script id='nodebb-comments-script' ourl="https://v2mm.tech" ocid="49" blogger='leyafo' src="https://v2mm.tech/plugins/nodebb-plugin-blog-comments2/lib/simple-hugo.js"></script>
-    
+    </article>
+  </div>
 </body>
-</html>
 
+</html>

@@ -1,128 +1,143 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
+<!doctype html>
+<html lang="en">
+
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <meta name="generator" content="Hugo 0.71.0" />
 
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  
 
-    
+  
+  <link rel="manifest" href="http://www.leyafo.com/site.webmanifest">
+
+  
+  <link rel="stylesheet" href="http://www.leyafo.com/css/bootstrap.min.css" />
+
+  
+  <title>rails 注册登录 | Do The Right Things</title>
+  
+
+  <style>
+body {
+  color: #000000;
+  line-height: 1.6em;
+  padding: 1em;
+  margin: auto;
+  max-width: 72em;
+  background: #fefefe;
+}
+
+nav {
+    margin-bottom: 20px;
+}
+a:visited{
+  color: grey;
+}
+
+.custom-navbar {
+  margin-bottom: 1em;
+  height: 60px;
+}
+
+.custom-navbar a {
+  display: inline-block; 
+  padding: 18px 0;
+  margin-right: 1em; 
+  font-weight: bold; 
+}
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  text-decoration: none; 
+}
+
+@media print {
+  .custom-navbar {
+    display: none;
+  }
+}
+
+article {
+  padding-bottom: 1em;
+}
+
+img {
+  max-width: 100%;
+}
 
 
-    
-        <meta name="twitter:card" content="summary"/>
-    
+body {
+  background-color: #fff;
+}
 
 
 
-<meta name="twitter:title" content="rails 注册登录"/>
-<meta name="twitter:description" content="这几天在做一个小型的论坛，做到了注册登录这一块。之前没有完整做过注册登录这个东西，这次我打算从头写到尾去详细的了解里面的一些基本原理。所以这次并没有使用devise这样的 gem。
-密码存储 用户密码安全存储是作为一个 web 开发者的基本节操。好在现有的一些解决方案已经能比较好的解决这个问题了，做起来也比较容易。只需要了解一些基本的安全常识就可以保证90%的情况下是安全的。 在数据库里面存储加密后的密文是为了防止被拖库，如果黑客拖下了整个用户表，加密后的密码他们拿着也是没有用的。即使是网站的管理员也是没法知道这个密码的真实原文。因为现在一般的密码 hash 算法是不可逆的。所以现在的一些比较常用的密码明文获取方式是进行字典暴力破解。如果在密码原文 hash 前给密码添加一些比较长的唯一的随机字符串，这会使攻击者的字典基本上失效(因为很长，枚举次数要上升很大一个数量级)。这就是密码加盐(salt)的基本作用。当然加盐的另外一个作用是让两个相同的密码产生不同的 hash 值。这样即使知道加密算法和加密后的密文也无法通过比较密文来得到原文。 在用户登录时我们会拿到用户的原始密码，这个原始密码相当于一把钥匙。拿着这个密码通过加密算法和数据库里面的 salt 得到加密后的密文。再用这串密文与数据库的密文进行比对，比对成功后则验证通过。在这样一个过程中，密码看起来就像打开箱子的钥匙一样，由用户携带，网站不进行存储。
-session 和 cookie cookie 是存储在用户浏览器中的一段唯一标识，http request 会将它传送到服务端。现在一般的 web framework 会去检测用户的 http request 是否带有 cookie, 如果没有发现请求中没有 cookie，它会建立一个session。并且以 cookie 作为 key 来保存 session。这样如果用户下次同样 cookie 的 http request 进来了，就可以找到相同的 session。 session 和 cookie 是实现记住用户的基石。http 协议是无状态的协议。在用户登录某一个网站后，我们是需要记住登录状态的。这时候就要通过 cookie 和 session 来干这件事情。 rails 默认是已经将 session 建立好了。在 controller 中可以很方便的拿到 session 变量去存储一些信息。另外比较有意思的是 rails 默认是将 session 经过加密后存储在用户 cookie 中的。当用户的 cookie 传送到后端时会将 cookie 进行解密得到相应的 session。"/>
+body {
+  color: #212529;
+}
 
 
 
-  	<meta property="og:title" content=" rails 注册登录 &middot;  Do The Right Things" />
-  	<meta property="og:site_name" content="Do The Right Things" />
-  	<meta property="og:url" content="http://www.leyafo.com/post/2014-07-24-rails-log/" />
+a {
+  color: #007bff;
+}
 
-    
-  	<meta property="og:type" content="article" />
 
-    <meta property="og:article:published_time" content="2014-07-24T08:53:00&#43;08:00" />
 
-    
-    
+a:hover,
+a:focus {
+  color: #0056b3;
+}
 
-    <title>
-       rails 注册登录 &middot;  Do The Right Things
-    </title>
 
-    <meta name="description" content="Just Write Some Minds" />
 
-    <meta name="HandheldFriendly" content="True" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+.custom-navbar {
+  background-color: #212529;
+}
 
-    <link rel="shortcut icon" href="http://www.leyafo.com/images/favicon.ico">
-	  <link rel="apple-touch-icon" href="http://www.leyafo.com/images/apple-touch-icon.png" />
 
-    <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/screen.css" />
-    <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/nav.css" />
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400|Inconsolata" />
-    
-      
-          <link href="http://www.leyafo.com/index.xml" rel="alternate" type="application/rss+xml" title="Do The Right Things" />
-      
-      
-    
-    <meta name="generator" content="Hugo 0.71.0" />
 
-    <link rel="canonical" href="http://www.leyafo.com/post/2014-07-24-rails-log/" />
+.custom-navbar a {
+  color: rgba(255,255,255,.75);
+}
 
-    
 
-    
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  color: rgba(255,255,255,1);
+}
+
+
+
+
+
+</style>
 </head>
-<body class="nav-closed">
 
-  <div class="nav">
-    <h3 class="nav-title">Menu</h3>
-    <a href="#" class="nav-close">
-        <span class="hidden">Close</span>
-    </a>
-    <ul>
-        
-        
-        
-    </ul>
-    
-    
-    <a class="subscribe-button icon-feed" href="http://www.leyafo.com/index.xml">Subscribe</a>
-    
-</div>
-<span class="nav-cover"></span>
-
-
- <div class="site-wrapper">
-
-
-
-
-<header class="main-header post-head no-cover">
-  <nav class="main-nav clearfix">
-
-
-  
-  
-      <a class="menu-button icon-feed" href="http://www.leyafo.com/index.xml">&nbsp;&nbsp;Subscribe</a>
-  
-  </nav>
+<body>
+  <header>
+<nav>
+  [ <a class="nav-btn" href="http://www.leyafo.com/">Home</a> ] 
+  [ <a class="nav-btn" href="http://www.leyafo.com/about.html">About</a> ] 
+  [ <a class="nav-btn" href="http://www.leyafo.com/contact.html">Contact</a> ] 
+</nav>
 </header>
-
-
-
-<main class="content" role="main">
-
-
-
-
-  <article class="post post">
-
-    <header class="post-header">
-        <h3 class="post-title">rails 注册登录</h3>
-        <small></small>
-
-        <section class="post-meta">
-        
-          <time class="post-date" datetime="2014-07-24T08:53:00&#43;08:00">
-            Jul 24, 2014
-          </time>
-        
-         
-        </section>
-    </header>
-
-    <section class="post-content">
-      <p>这几天在做一个小型的论坛，做到了注册登录这一块。之前没有完整做过注册登录这个东西，这次我打算从头写到尾去详细的了解里面的一些基本原理。所以这次并没有使用<a href="https://github.com/plataformatec/devise">devise</a>这样的 <em>gem</em>。</p>
+  
+  <div>
+    <article>
+      <h1>rails 注册登录</h1>
+<p>
+  <small class="text-secondary">
+  
+  
+  July 24, 2014
+  </small>
+  
+</p>
+<p>这几天在做一个小型的论坛，做到了注册登录这一块。之前没有完整做过注册登录这个东西，这次我打算从头写到尾去详细的了解里面的一些基本原理。所以这次并没有使用<a href="https://github.com/plataformatec/devise">devise</a>这样的 <em>gem</em>。</p>
 <h2 id="密码存储">密码存储</h2>
 <p>用户密码安全存储是作为一个 <em>web</em> 开发者的基本节操。好在现有的一些解决方案已经能比较好的解决这个问题了，做起来也比较容易。只需要了解一些基本的安全常识就可以保证90%的情况下是安全的。
 在数据库里面存储加密后的密文是为了防止被拖库，如果黑客拖下了整个用户表，加密后的密码他们拿着也是没有用的。即使是网站的管理员也是没法知道这个密码的真实原文。因为现在一般的密码 <em>hash</em> 算法是不可逆的。所以现在的一些比较常用的密码明文获取方式是进行<a href="http://blog.jobbole.com/61872/">字典暴力破解</a>。如果在密码原文 <em>hash</em> 前给密码添加一些比较长的唯一的随机字符串，这会使攻击者的字典基本上失效(因为很长，枚举次数要上升很大一个数量级)。这就是密码加盐(salt)的基本作用。当然加盐的另外一个作用是让两个相同的密码产生不同的 <em>hash</em> 值。这样即使知道加密算法和加密后的密文也无法通过比较密文来得到原文。
@@ -131,39 +146,8 @@ session 和 cookie cookie 是存储在用户浏览器中的一段唯一标识，
 <p><em>cookie</em> 是存储在用户浏览器中的一段唯一标识，<em>http request</em> 会将它传送到服务端。现在一般的 <em>web framework</em> 会去检测用户的 <em>http request</em> 是否带有 <em>cookie</em>, 如果没有发现请求中没有 <em>cookie</em>，它会建立一个<em>session</em>。并且以 <em>cookie</em> 作为 <em>key</em> 来保存 <em>session</em>。这样如果用户下次同样 <em>cookie</em> 的 <em>http request</em> 进来了，就可以找到相同的 <em>session</em>。
 <em>session</em> 和 <em>cookie</em> 是实现记住用户的基石。<em>http</em> 协议是无状态的协议。在用户登录某一个网站后，我们是需要记住登录状态的。这时候就要通过 <em>cookie</em> 和 <em>session</em> 来干这件事情。 <em>rails</em> 默认是已经将 <em>session</em> 建立好了。在 <em>controller</em> 中可以很方便的拿到 <em>session</em> 变量去存储一些信息。另外比较有意思的是 <em>rails</em> 默认是将 <em>session</em> 经过加密后存储在用户 <em>cookie</em> 中的。当用户的 <em>cookie</em> 传送到后端时会将 <em>cookie</em> 进行解密得到相应的 <em>session</em>。</p>
 
-    </section>
-
-
-  <footer class="post-footer">
-
-
-    
-
-    <section class="author">
-  <h4><a href="http://www.leyafo.com/">leyafo</a></h4>
-</section>
-
-
-    
-
-    
-
-  </footer>
-</article>
-
-</main>
-    <footer class="site-footer clearfix">
-        <section class="copyright"><a href="">Do The Right Things</a> All rights reserved by Leyafo</section>
-        
-        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
-        
-    </footer>
-    </div>
-    <script type="text/javascript" src="http://www.leyafo.com/js/jquery.js"></script>
-    <script type="text/javascript" src="http://www.leyafo.com/js/jquery.fitvids.js"></script>
-    <script type="text/javascript" src="http://www.leyafo.com/js/index.js"></script>
-    <script id='nodebb-comments-script' ourl="https://v2mm.tech" ocid="49" blogger='leyafo' src="https://v2mm.tech/plugins/nodebb-plugin-blog-comments2/lib/simple-hugo.js"></script>
-    
+    </article>
+  </div>
 </body>
-</html>
 
+</html>

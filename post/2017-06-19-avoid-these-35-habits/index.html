@@ -1,137 +1,143 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
+<!doctype html>
+<html lang="en">
+
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <meta name="generator" content="Hugo 0.71.0" />
 
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  
 
-    
+  
+  <link rel="manifest" href="http://www.leyafo.com/site.webmanifest">
+
+  
+  <link rel="stylesheet" href="http://www.leyafo.com/css/bootstrap.min.css" />
+
+  
+  <title>避开这 35 个坏习惯让你的代码可维护 | Do The Right Things</title>
+  
+
+  <style>
+body {
+  color: #000000;
+  line-height: 1.6em;
+  padding: 1em;
+  margin: auto;
+  max-width: 72em;
+  background: #fefefe;
+}
+
+nav {
+    margin-bottom: 20px;
+}
+a:visited{
+  color: grey;
+}
+
+.custom-navbar {
+  margin-bottom: 1em;
+  height: 60px;
+}
+
+.custom-navbar a {
+  display: inline-block; 
+  padding: 18px 0;
+  margin-right: 1em; 
+  font-weight: bold; 
+}
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  text-decoration: none; 
+}
+
+@media print {
+  .custom-navbar {
+    display: none;
+  }
+}
+
+article {
+  padding-bottom: 1em;
+}
+
+img {
+  max-width: 100%;
+}
 
 
-    
-        <meta name="twitter:card" content="summary"/>
-    
+body {
+  background-color: #fff;
+}
 
 
 
-<meta name="twitter:title" content="避开这 35 个坏习惯让你的代码可维护"/>
-<meta name="twitter:description" content="本文翻译自[Avoid these 35 habits that lead to unmaintainable code](https://chrismm.com/blog/avoid-these-35-habits-that-lead-to-unmaintainable-code/)
-坏习惯难以改变，它会以意想不到的方式影响你的工作。如果你只是知道这些习惯，但并不在乎它，事情将会变得更糟。你既然来读这篇文章了，我想你肯定是在意这些坏习惯的。
-作为一个程序员，我见过很多不好的开发方式。这不仅体现在代码方面，还体现在团队协作方面。这 35 个习惯都是我本人的一些坏习惯，我并不以此为荣。我将按照代码组织、团队协作、编码、测试、维护这些类别来描述这些坏习惯。
-代码组织 1. “我承诺修复这个问题”，实际却永远也不去做。 延后修复这个坏习惯不仅仅只是一个定义问题的优先级。追踪一个问题需要耗费一些进度，但你仍然需要组织好问题追踪过程中的小问题。并在代码里面加上 TODO 确保这些问题不会被遗忘掉。
-2. 过度追求代码的简洁性 追求代码的 “优雅”，“简洁” 是程序员的常见特质。当你把一个 20 行的正则表达式简化成 2～3 行，这就像解谜一样有趣。不幸的是，这并没有让代码变得更有利于阅读。代码可读性好才是更重要的，你应该首先确保这一点，然后再考虑代码的 ”优雅“。
-3. 毫无目的的优化 我们常常会做一些没有意义的优化。这就好比通过优化文件大小来提高网站的加载速度。但为何不直接用 gzip 压缩？优化 request 难道不更有效吗？把优化工作放到项目结束的时候做，因为一般情况下优化是没有必要的，没有必要的优化就是在浪费你的时间。
- 过早的优化是万恶之源。
-​	－Donald Knuth
- 4. 不注重代码风格 如果我多年来一直在学习他人的代码， 最不需要了解的就是这个开发者的代码风格。或许没有经验的开发者很难看出代码风格带来的问题。但大多数时候风格问题将会使项目脱离正轨，从而带来雪崩一样的混乱。在细微处保持严格最佳实践，启用 lint 检查工具，这些将会让你从这些细节中结果出来， 从而去关心更重要的问题。
-5. 掩埋错误 无论捕获还是忽略异常或者使用不报告错误的库，掩埋错误的方式有很多种。但如果这些错误其中一个优先级变得很高，修复比忽略它要难很多倍，尤其是在你无从下手的时候。简单一点的方式就是避开它，然后纪录下来以便以后追踪。
-6. 命名没有包含足够的信息 命名很难，但有简单的方法可以让你的函数和变量命名合格。只要你在名字里面包含特定的信息，不要传递额外的信息，你的代码可以容易的让别人阅读。命名如此重要的原因在于它可以描述代码具体的作用。好的命名会让你更容易理解代码的作用，否则你需要花费更多的时间才能深入的了解代码的作用。
-7. 忽略更好的实践方式 代码复查(Code review)，TDD，QA，自动部署这些业界优良实践，为不计其数的项目产生了价值。这也是为什么开发者的 blog 会经常提到这些东西。这方面有一本非常好的参考书 Making Software: What Really Works, and Why We Believe It."/>
+body {
+  color: #212529;
+}
 
 
 
-  	<meta property="og:title" content=" 避开这 35 个坏习惯让你的代码可维护 &middot;  Do The Right Things" />
-  	<meta property="og:site_name" content="Do The Right Things" />
-  	<meta property="og:url" content="http://www.leyafo.com/post/2017-06-19-avoid-these-35-habits/" />
+a {
+  color: #007bff;
+}
 
-    
-  	<meta property="og:type" content="article" />
 
-    <meta property="og:article:published_time" content="2017-06-19T11:27:06&#43;08:00" />
 
-    
-    
+a:hover,
+a:focus {
+  color: #0056b3;
+}
 
-    <title>
-       避开这 35 个坏习惯让你的代码可维护 &middot;  Do The Right Things
-    </title>
 
-    <meta name="description" content="Just Write Some Minds" />
 
-    <meta name="HandheldFriendly" content="True" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+.custom-navbar {
+  background-color: #212529;
+}
 
-    <link rel="shortcut icon" href="http://www.leyafo.com/images/favicon.ico">
-	  <link rel="apple-touch-icon" href="http://www.leyafo.com/images/apple-touch-icon.png" />
 
-    <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/screen.css" />
-    <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/nav.css" />
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400|Inconsolata" />
-    
-      
-          <link href="http://www.leyafo.com/index.xml" rel="alternate" type="application/rss+xml" title="Do The Right Things" />
-      
-      
-    
-    <meta name="generator" content="Hugo 0.71.0" />
 
-    <link rel="canonical" href="http://www.leyafo.com/post/2017-06-19-avoid-these-35-habits/" />
+.custom-navbar a {
+  color: rgba(255,255,255,.75);
+}
 
-    
 
-    
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  color: rgba(255,255,255,1);
+}
+
+
+
+
+
+</style>
 </head>
-<body class="nav-closed">
 
-  <div class="nav">
-    <h3 class="nav-title">Menu</h3>
-    <a href="#" class="nav-close">
-        <span class="hidden">Close</span>
-    </a>
-    <ul>
-        
-        
-        
-    </ul>
-    
-    
-    <a class="subscribe-button icon-feed" href="http://www.leyafo.com/index.xml">Subscribe</a>
-    
-</div>
-<span class="nav-cover"></span>
-
-
- <div class="site-wrapper">
-
-
-
-
-<header class="main-header post-head no-cover">
-  <nav class="main-nav clearfix">
-
-
-  
-  
-      <a class="menu-button icon-feed" href="http://www.leyafo.com/index.xml">&nbsp;&nbsp;Subscribe</a>
-  
-  </nav>
+<body>
+  <header>
+<nav>
+  [ <a class="nav-btn" href="http://www.leyafo.com/">Home</a> ] 
+  [ <a class="nav-btn" href="http://www.leyafo.com/about.html">About</a> ] 
+  [ <a class="nav-btn" href="http://www.leyafo.com/contact.html">Contact</a> ] 
+</nav>
 </header>
-
-
-
-<main class="content" role="main">
-
-
-
-
-  <article class="post post">
-
-    <header class="post-header">
-        <h3 class="post-title">避开这 35 个坏习惯让你的代码可维护</h3>
-        <small></small>
-
-        <section class="post-meta">
-        
-          <time class="post-date" datetime="2017-06-19T11:27:06&#43;08:00">
-            Jun 19, 2017
-          </time>
-        
-         
-        </section>
-    </header>
-
-    <section class="post-content">
-      <p>本文翻译自[<a href="https://chrismm.com/blog/avoid-these-35-habits-that-lead-to-unmaintainable-code/">Avoid these 35 habits that lead to unmaintainable code</a>](<a href="https://chrismm.com/blog/avoid-these-35-habits-that-lead-to-unmaintainable-code/">https://chrismm.com/blog/avoid-these-35-habits-that-lead-to-unmaintainable-code/</a>)</p>
+  
+  <div>
+    <article>
+      <h1>避开这 35 个坏习惯让你的代码可维护</h1>
+<p>
+  <small class="text-secondary">
+  
+  
+  June 19, 2017
+  </small>
+  
+</p>
+<p>本文翻译自[<a href="https://chrismm.com/blog/avoid-these-35-habits-that-lead-to-unmaintainable-code/">Avoid these 35 habits that lead to unmaintainable code</a>](<a href="https://chrismm.com/blog/avoid-these-35-habits-that-lead-to-unmaintainable-code/">https://chrismm.com/blog/avoid-these-35-habits-that-lead-to-unmaintainable-code/</a>)</p>
 <p>坏习惯难以改变，它会以意想不到的方式影响你的工作。如果你只是知道这些习惯，但并不在乎它，事情将会变得更糟。你既然来读这篇文章了，我想你肯定是在意这些坏习惯的。</p>
 <p>作为一个程序员，我见过很多不好的开发方式。这不仅体现在代码方面，还体现在团队协作方面。这 35 个习惯都是我本人的一些坏习惯，我并不以此为荣。我将按照代码组织、团队协作、编码、测试、维护这些类别来描述这些坏习惯。</p>
 <h2 id="代码组织">代码组织</h2>
@@ -215,39 +221,8 @@
 <h2 id="你有什么程序员的坏习惯">你有什么程序员的坏习惯</h2>
 <p>俗话说：“人是习惯性的动物”。通过习惯获得提升的方式就是避免每次碰到问题去思考太多。吸收好的做事习惯会让你很容易进步。</p>
 
-    </section>
-
-
-  <footer class="post-footer">
-
-
-    
-
-    <section class="author">
-  <h4><a href="http://www.leyafo.com/">leyafo</a></h4>
-</section>
-
-
-    
-
-    
-
-  </footer>
-</article>
-
-</main>
-    <footer class="site-footer clearfix">
-        <section class="copyright"><a href="">Do The Right Things</a> All rights reserved by Leyafo</section>
-        
-        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
-        
-    </footer>
-    </div>
-    <script type="text/javascript" src="http://www.leyafo.com/js/jquery.js"></script>
-    <script type="text/javascript" src="http://www.leyafo.com/js/jquery.fitvids.js"></script>
-    <script type="text/javascript" src="http://www.leyafo.com/js/index.js"></script>
-    <script id='nodebb-comments-script' ourl="https://v2mm.tech" ocid="49" blogger='leyafo' src="https://v2mm.tech/plugins/nodebb-plugin-blog-comments2/lib/simple-hugo.js"></script>
-    
+    </article>
+  </div>
 </body>
-</html>
 
+</html>

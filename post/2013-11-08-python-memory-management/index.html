@@ -1,131 +1,143 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
+<!doctype html>
+<html lang="en">
+
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <meta name="generator" content="Hugo 0.71.0" />
 
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  
 
-    
+  
+  <link rel="manifest" href="http://www.leyafo.com/site.webmanifest">
+
+  
+  <link rel="stylesheet" href="http://www.leyafo.com/css/bootstrap.min.css" />
+
+  
+  <title>Python内存管理 | Do The Right Things</title>
+  
+
+  <style>
+body {
+  color: #000000;
+  line-height: 1.6em;
+  padding: 1em;
+  margin: auto;
+  max-width: 72em;
+  background: #fefefe;
+}
+
+nav {
+    margin-bottom: 20px;
+}
+a:visited{
+  color: grey;
+}
+
+.custom-navbar {
+  margin-bottom: 1em;
+  height: 60px;
+}
+
+.custom-navbar a {
+  display: inline-block; 
+  padding: 18px 0;
+  margin-right: 1em; 
+  font-weight: bold; 
+}
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  text-decoration: none; 
+}
+
+@media print {
+  .custom-navbar {
+    display: none;
+  }
+}
+
+article {
+  padding-bottom: 1em;
+}
+
+img {
+  max-width: 100%;
+}
 
 
-    
-        <meta name="twitter:card" content="summary"/>
-    
+body {
+  background-color: #fff;
+}
 
 
 
-<meta name="twitter:title" content="Python内存管理"/>
-<meta name="twitter:description" content="本文基于Python2.7.5源码中的obmalloc.c模块
- 在 Python 的内部系统中，它的内存管理结构是以金子塔结构呈现的.如下图所示:
- 其中-1和-2这两层是跟操作系统来负责的,这里我们略过不表. 第0层就是我们平常在 C 中使用的 malloc, Python 不会直接使用它,而是会在此基础上做一个内存池. 第1层是 Python 自己在基于 malloc 的基础上构造的一个内存池. 第2和第3层是基于第1层的.每当 Python 内部需要使用内存时,会使用第1层做好的分配器来分配内存. 因此第1层是 Python 内部管理内存的主要地方.  作用 在 C 中如果频繁的调用 malloc 与 free 时,是会产生性能问题的.再加上频繁的分配与释放小块的内存会产生内存碎片. Python 在这里主要干的工作有:
- 如果请求分配的内存在1~256字节之间就使用自己的内存管理系统,否则直接使用 malloc. 这里还是会调用 malloc 分配内存,但每次会分配一块大小为256k的大块内存. 经由内存池登记的内存到最后还是会回收到内存池,并不会调用 C 的 free 释放掉.以便下次使用.  内存池结构 如上图所示,整个黑框格子代表内存池(usedpools).每个单元格存放一个双向链表,每个链表的节点是一个大小为4k的内存块.在这个池中,每个单元格负责管理不同的小块内存.为了便于管理,每个单元格管理的内存块总是以8的倍数为单位.以如下代码为例:
-PyObject_Malloc(3) 这里我们需要一块大小为3个字节的内存.它将定位到管理大小为8字节的单元格.然后返回大小8字节的内存.在这里 usedpools 有一个令人蛋疼的 ticky. usedpools 在初始化时用了如下代码:
-#define PTA(x) ((poolp )((uchar *)&amp;(usedpools[2*(x)]) - 2*sizeof(block *))) #define PT(x) PTA(x), PTA(x) static poolp usedpools[2 * ((NB_SMALL_SIZE_CLASSES &#43; 7) / 8) * 8] = { PT(0), PT(1), PT(2), PT(3), PT(4), PT(5), PT(6), PT(7) ."/>
+body {
+  color: #212529;
+}
 
 
 
-  	<meta property="og:title" content=" Python内存管理 &middot;  Do The Right Things" />
-  	<meta property="og:site_name" content="Do The Right Things" />
-  	<meta property="og:url" content="http://www.leyafo.com/post/2013-11-08-python-memory-management/" />
+a {
+  color: #007bff;
+}
 
-    
-  	<meta property="og:type" content="article" />
 
-    <meta property="og:article:published_time" content="2013-11-08T11:25:00&#43;08:00" />
 
-    
-    
+a:hover,
+a:focus {
+  color: #0056b3;
+}
 
-    <title>
-       Python内存管理 &middot;  Do The Right Things
-    </title>
 
-    <meta name="description" content="Just Write Some Minds" />
 
-    <meta name="HandheldFriendly" content="True" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+.custom-navbar {
+  background-color: #212529;
+}
 
-    <link rel="shortcut icon" href="http://www.leyafo.com/images/favicon.ico">
-	  <link rel="apple-touch-icon" href="http://www.leyafo.com/images/apple-touch-icon.png" />
 
-    <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/screen.css" />
-    <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/nav.css" />
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400|Inconsolata" />
-    
-      
-          <link href="http://www.leyafo.com/index.xml" rel="alternate" type="application/rss+xml" title="Do The Right Things" />
-      
-      
-    
-    <meta name="generator" content="Hugo 0.71.0" />
 
-    <link rel="canonical" href="http://www.leyafo.com/post/2013-11-08-python-memory-management/" />
+.custom-navbar a {
+  color: rgba(255,255,255,.75);
+}
 
-    
 
-    
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  color: rgba(255,255,255,1);
+}
+
+
+
+
+
+</style>
 </head>
-<body class="nav-closed">
 
-  <div class="nav">
-    <h3 class="nav-title">Menu</h3>
-    <a href="#" class="nav-close">
-        <span class="hidden">Close</span>
-    </a>
-    <ul>
-        
-        
-        
-    </ul>
-    
-    
-    <a class="subscribe-button icon-feed" href="http://www.leyafo.com/index.xml">Subscribe</a>
-    
-</div>
-<span class="nav-cover"></span>
-
-
- <div class="site-wrapper">
-
-
-
-
-<header class="main-header post-head no-cover">
-  <nav class="main-nav clearfix">
-
-
-  
-  
-      <a class="menu-button icon-feed" href="http://www.leyafo.com/index.xml">&nbsp;&nbsp;Subscribe</a>
-  
-  </nav>
+<body>
+  <header>
+<nav>
+  [ <a class="nav-btn" href="http://www.leyafo.com/">Home</a> ] 
+  [ <a class="nav-btn" href="http://www.leyafo.com/about.html">About</a> ] 
+  [ <a class="nav-btn" href="http://www.leyafo.com/contact.html">Contact</a> ] 
+</nav>
 </header>
-
-
-
-<main class="content" role="main">
-
-
-
-
-  <article class="post post">
-
-    <header class="post-header">
-        <h3 class="post-title">Python内存管理</h3>
-        <small></small>
-
-        <section class="post-meta">
-        
-          <time class="post-date" datetime="2013-11-08T11:25:00&#43;08:00">
-            Nov 8, 2013
-          </time>
-        
-         
-        </section>
-    </header>
-
-    <section class="post-content">
-      <blockquote>
+  
+  <div>
+    <article>
+      <h1>Python内存管理</h1>
+<p>
+  <small class="text-secondary">
+  
+  
+  November 8, 2013
+  </small>
+  
+</p>
+<blockquote>
 <p>本文基于Python2.7.5源码中的obmalloc.c模块</p>
 </blockquote>
 <p>在 Python 的内部系统中，它的内存管理结构是以金子塔结构呈现的.如下图所示:<br>
@@ -172,39 +184,8 @@ PyObject_Malloc(3) 这里我们需要一块大小为3个字节的内存.它将�
 <h2 id="释放">释放</h2>
 <p>在释放时会判断将要释放的内存是否属于 usedpools 管理.通常情况下它会直接将这块内存放到的 usedpools 对应 pools 中.如果发现这个 pools 中的 block 全部是 free 状态,它将会返到 arenas .如果 arenas 中的所有的 pool 都为 free 状态的话,则会直接调用 C 中的 free 函数将内存归还与操作系统.否则将这块 arenas 链接到 usable_arenas 正确的位置中.</p>
 
-    </section>
-
-
-  <footer class="post-footer">
-
-
-    
-
-    <section class="author">
-  <h4><a href="http://www.leyafo.com/">leyafo</a></h4>
-</section>
-
-
-    
-
-    
-
-  </footer>
-</article>
-
-</main>
-    <footer class="site-footer clearfix">
-        <section class="copyright"><a href="">Do The Right Things</a> All rights reserved by Leyafo</section>
-        
-        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
-        
-    </footer>
-    </div>
-    <script type="text/javascript" src="http://www.leyafo.com/js/jquery.js"></script>
-    <script type="text/javascript" src="http://www.leyafo.com/js/jquery.fitvids.js"></script>
-    <script type="text/javascript" src="http://www.leyafo.com/js/index.js"></script>
-    <script id='nodebb-comments-script' ourl="https://v2mm.tech" ocid="49" blogger='leyafo' src="https://v2mm.tech/plugins/nodebb-plugin-blog-comments2/lib/simple-hugo.js"></script>
-    
+    </article>
+  </div>
 </body>
-</html>
 
+</html>

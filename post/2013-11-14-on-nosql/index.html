@@ -1,141 +1,143 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
+<!doctype html>
+<html lang="en">
+
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <meta name="generator" content="Hugo 0.71.0" />
 
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  
 
-    
+  
+  <link rel="manifest" href="http://www.leyafo.com/site.webmanifest">
+
+  
+  <link rel="stylesheet" href="http://www.leyafo.com/css/bootstrap.min.css" />
+
+  
+  <title>关于NoSQL | Do The Right Things</title>
+  
+
+  <style>
+body {
+  color: #000000;
+  line-height: 1.6em;
+  padding: 1em;
+  margin: auto;
+  max-width: 72em;
+  background: #fefefe;
+}
+
+nav {
+    margin-bottom: 20px;
+}
+a:visited{
+  color: grey;
+}
+
+.custom-navbar {
+  margin-bottom: 1em;
+  height: 60px;
+}
+
+.custom-navbar a {
+  display: inline-block; 
+  padding: 18px 0;
+  margin-right: 1em; 
+  font-weight: bold; 
+}
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  text-decoration: none; 
+}
+
+@media print {
+  .custom-navbar {
+    display: none;
+  }
+}
+
+article {
+  padding-bottom: 1em;
+}
+
+img {
+  max-width: 100%;
+}
 
 
-    
-        <meta name="twitter:card" content="summary"/>
-    
+body {
+  background-color: #fff;
+}
 
 
 
-<meta name="twitter:title" content="关于NoSQL"/>
-<meta name="twitter:description" content="传统关系型数据库,将数据以表结构的方式存储起来.并且所有的数据是基于 ACID1 原则.这种方式存储数据有很明显的缺点.首先,为了保证一致性,基于 ACID1 类型的数据库都是使用事物来保持数据的一致性.也就是说同时只能有一个 client 提交数据.然后,以表结构存储的数据库架构是死的,一个表的列基本上是固定的.如果变化的话会带来很多问题.
-比如:
-1.我有一种数据,这些数据都是一些 Excle 表格.每个表格的列都不相同.但实际上他们都是一种数据.该如何存储?
-2.一个表有 10 列,我想再加一个字段,但这个字段并不是所有数据都需要的.
-3.问题同上,如果加 20 个字段呢?再新建一个表?新建的表如何与现有的表关联?
-最后关联性数据库还有个不利于分布的弱点,如果数据分布在 N 台分布式的机器上,数据库该如何管理?
-为了弥补这些缺点, NoSQL 类数据库诞生了.首先 NoSQL 类数据库有以下特点:
-schema-less: 数据没有字段的概念,并且数据仓库(关联型数据库的 table )可以随时变化字段.
-Strong Consistency: 保证数据最终的一致性.
-High Availability: 保证所有请求数据的客户端都能得到一份数据的 copy.
-Partition-tolerance: 数据可以不限于分布在同一台机器上.
-一般 NoSQL 类数据库存储数据的模型有 4 种方式:
-Key-Value: 类似于 json 的 key-value 的方式进行数据存储
-BigTable: 多维度的 key-value 结构,并且存储方式是分布式,稀疏的2,严格排序的. Google 很多产品都在用,具有高压缩,高性能,易于查询的特点.
-Documents: 多个 key-value 结构的数据合为一条数据,每一条数据称为为一个 docment. 并且每个 docment 的 key-value 个数和 key 都可以不同.并且在搜索时,可以以 value 做为关键字来搜索.
-Graph: 以网状方式将数据存储在一个 dataset 中."/>
+body {
+  color: #212529;
+}
 
 
 
-  	<meta property="og:title" content=" 关于NoSQL &middot;  Do The Right Things" />
-  	<meta property="og:site_name" content="Do The Right Things" />
-  	<meta property="og:url" content="http://www.leyafo.com/post/2013-11-14-on-nosql/" />
+a {
+  color: #007bff;
+}
 
-    
-  	<meta property="og:type" content="article" />
 
-    <meta property="og:article:published_time" content="2013-11-14T09:39:00&#43;08:00" />
 
-    
-    
+a:hover,
+a:focus {
+  color: #0056b3;
+}
 
-    <title>
-       关于NoSQL &middot;  Do The Right Things
-    </title>
 
-    <meta name="description" content="Just Write Some Minds" />
 
-    <meta name="HandheldFriendly" content="True" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+.custom-navbar {
+  background-color: #212529;
+}
 
-    <link rel="shortcut icon" href="http://www.leyafo.com/images/favicon.ico">
-	  <link rel="apple-touch-icon" href="http://www.leyafo.com/images/apple-touch-icon.png" />
 
-    <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/screen.css" />
-    <link rel="stylesheet" type="text/css" href="http://www.leyafo.com/css/nav.css" />
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400|Inconsolata" />
-    
-      
-          <link href="http://www.leyafo.com/index.xml" rel="alternate" type="application/rss+xml" title="Do The Right Things" />
-      
-      
-    
-    <meta name="generator" content="Hugo 0.71.0" />
 
-    <link rel="canonical" href="http://www.leyafo.com/post/2013-11-14-on-nosql/" />
+.custom-navbar a {
+  color: rgba(255,255,255,.75);
+}
 
-    
 
-    
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  color: rgba(255,255,255,1);
+}
+
+
+
+
+
+</style>
 </head>
-<body class="nav-closed">
 
-  <div class="nav">
-    <h3 class="nav-title">Menu</h3>
-    <a href="#" class="nav-close">
-        <span class="hidden">Close</span>
-    </a>
-    <ul>
-        
-        
-        
-    </ul>
-    
-    
-    <a class="subscribe-button icon-feed" href="http://www.leyafo.com/index.xml">Subscribe</a>
-    
-</div>
-<span class="nav-cover"></span>
-
-
- <div class="site-wrapper">
-
-
-
-
-<header class="main-header post-head no-cover">
-  <nav class="main-nav clearfix">
-
-
-  
-  
-      <a class="menu-button icon-feed" href="http://www.leyafo.com/index.xml">&nbsp;&nbsp;Subscribe</a>
-  
-  </nav>
+<body>
+  <header>
+<nav>
+  [ <a class="nav-btn" href="http://www.leyafo.com/">Home</a> ] 
+  [ <a class="nav-btn" href="http://www.leyafo.com/about.html">About</a> ] 
+  [ <a class="nav-btn" href="http://www.leyafo.com/contact.html">Contact</a> ] 
+</nav>
 </header>
-
-
-
-<main class="content" role="main">
-
-
-
-
-  <article class="post post">
-
-    <header class="post-header">
-        <h3 class="post-title">关于NoSQL</h3>
-        <small></small>
-
-        <section class="post-meta">
-        
-          <time class="post-date" datetime="2013-11-14T09:39:00&#43;08:00">
-            Nov 14, 2013
-          </time>
-        
-         
-        </section>
-    </header>
-
-    <section class="post-content">
-      <p>传统关系型数据库,将数据以表结构的方式存储起来.并且所有的数据是基于 <em>ACID</em><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> 原则.这种方式存储数据有很明显的缺点.首先,为了保证一致性,基于 <em>ACID<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></em> 类型的数据库都是使用事物来保持数据的一致性.也就是说同时只能有一个 <em>client</em> 提交数据.然后,以表结构存储的数据库架构是死的,一个表的列基本上是固定的.如果变化的话会带来很多问题.<br>
+  
+  <div>
+    <article>
+      <h1>关于NoSQL</h1>
+<p>
+  <small class="text-secondary">
+  
+  
+  November 14, 2013
+  </small>
+  
+</p>
+<p>传统关系型数据库,将数据以表结构的方式存储起来.并且所有的数据是基于 <em>ACID</em><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> 原则.这种方式存储数据有很明显的缺点.首先,为了保证一致性,基于 <em>ACID<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></em> 类型的数据库都是使用事物来保持数据的一致性.也就是说同时只能有一个 <em>client</em> 提交数据.然后,以表结构存储的数据库架构是死的,一个表的列基本上是固定的.如果变化的话会带来很多问题.<br>
 比如:<br>
 1.我有一种数据,这些数据都是一些 <em>Excle</em> 表格.每个表格的列都不相同.但实际上他们都是一种数据.该如何存储?<br>
 2.一个表有 10 列,我想再加一个字段,但这个字段并不是所有数据都需要的.<br>
@@ -170,39 +172,8 @@ Graph: 以网状方式将数据存储在一个 dataset 中."/>
 </ol>
 </section>
 
-    </section>
-
-
-  <footer class="post-footer">
-
-
-    
-
-    <section class="author">
-  <h4><a href="http://www.leyafo.com/">leyafo</a></h4>
-</section>
-
-
-    
-
-    
-
-  </footer>
-</article>
-
-</main>
-    <footer class="site-footer clearfix">
-        <section class="copyright"><a href="">Do The Right Things</a> All rights reserved by Leyafo</section>
-        
-        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
-        
-    </footer>
-    </div>
-    <script type="text/javascript" src="http://www.leyafo.com/js/jquery.js"></script>
-    <script type="text/javascript" src="http://www.leyafo.com/js/jquery.fitvids.js"></script>
-    <script type="text/javascript" src="http://www.leyafo.com/js/index.js"></script>
-    <script id='nodebb-comments-script' ourl="https://v2mm.tech" ocid="49" blogger='leyafo' src="https://v2mm.tech/plugins/nodebb-plugin-blog-comments2/lib/simple-hugo.js"></script>
-    
+    </article>
+  </div>
 </body>
-</html>
 
+</html>
