@@ -12,7 +12,7 @@
   
 
   
-  <title>NSQ 简介 | Do The Right Things</title>
+  <title>NSQ 简介</title>
   
 
   <style>
@@ -23,6 +23,7 @@ body {
   margin: auto;
   max-width: 72em;
   background: #fefefe;
+  font-family: Fira Code,Monaco,Consolas,Ubuntu Mono,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,monospace,sans-serif;
 }
 
 nav {
@@ -110,7 +111,60 @@ a:focus {
 
 
 
+
+.comments{
+    text-align: center;
+    margin-top: 20px;
+    padding: 5px 10px;
+    font-size: .8rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: .1em;
+    z-index: 1;
+}
+
+.utterances{
+  max-width: 100%;
+}
+
+
+.hr-middle-text{
+  line-height: 1em;
+  position: relative;
+  outline: 0;
+  border: 0;
+  color: black;
+  text-align: center;
+  height: 1.5em;
+  opacity: .5;
+}
+.hr-middle-text:before {
+    content: '';
+    
+    
+    
+    background: linear-gradient(to right, transparent, black, transparent);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+}
+.hr-middle-text:after{
+    content: attr(data-content);
+    position: relative;
+    display: inline-block;
+    color: black;
+
+    padding: 0 .5em;
+    line-height: 1.5em;
+    
+    
+    background-color: #fcfcfa;
+}
+
 </style>
+
 </head>
 
 
@@ -173,9 +227,11 @@ a:focus {
 
 <p>另外就是 consumer 执行的任务注意幂等性，为了“保证每个任务都被执行一次”，就有可能会重复的发送消息或者任务执行失败后重试，在这样的条件下，每个任务执行的次数就有可能达到一次以上。</p>
 
-
-<script src="https://utteranc.es/client.js" repo="leyafo.github.io" issue-term="pathname" label="Commnets" theme="github-light" crossorigin="anonymous" async >
-</script>
+<div class="comments">
+  <hr class="hr-middle-text" data-content="COMMENTS">
+  <script src="https://utteranc.es/client.js" repo="leyafo/leyafo.github.io" issue-term="title" label="Commnets" theme="github-light" crossorigin="anonymous" async >
+  </script>
+</div>
     </article>
   </div>
 </body>

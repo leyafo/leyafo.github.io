@@ -12,7 +12,7 @@
   
 
   
-  <title>HTTP API golang 的选择 | Do The Right Things</title>
+  <title>HTTP API golang 的选择</title>
   
 
   <style>
@@ -23,6 +23,7 @@ body {
   margin: auto;
   max-width: 72em;
   background: #fefefe;
+  font-family: Fira Code,Monaco,Consolas,Ubuntu Mono,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,monospace,sans-serif;
 }
 
 nav {
@@ -110,7 +111,60 @@ a:focus {
 
 
 
+
+.comments{
+    text-align: center;
+    margin-top: 20px;
+    padding: 5px 10px;
+    font-size: .8rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: .1em;
+    z-index: 1;
+}
+
+.utterances{
+  max-width: 100%;
+}
+
+
+.hr-middle-text{
+  line-height: 1em;
+  position: relative;
+  outline: 0;
+  border: 0;
+  color: black;
+  text-align: center;
+  height: 1.5em;
+  opacity: .5;
+}
+.hr-middle-text:before {
+    content: '';
+    
+    
+    
+    background: linear-gradient(to right, transparent, black, transparent);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+}
+.hr-middle-text:after{
+    content: attr(data-content);
+    position: relative;
+    display: inline-block;
+    color: black;
+
+    padding: 0 .5em;
+    line-height: 1.5em;
+    
+    
+    background-color: #fcfcfa;
+}
+
 </style>
+
 </head>
 
 
@@ -152,9 +206,11 @@ a:focus {
 
 <p>Lua 加入到项目中只用做配置文件也太浪费 Lua 强大的功能了。它最强大的地方就是可以很方便的与宿主语言交互去直接调用宿主语言暴露出来的一些接口，使用外部脚本拓展静态语言没法实现的动态功能。我们可以用它模拟 HTTP 请求，做像真实用户调用那样的测试，彻底抛弃像 <a href="https://insomnia.rest/">insomnia</a> 这种完全需要靠人肉去点击的 HTTP Client 测试工具。实现这个需求很简单，我们只需要暴露一些 http request 相关的接口到 Lua 虚拟机，然后运行一个测试用的 HTTP Server，再把 Lua 脚本加载进 Lua 虚拟机并执行，我们可以在代码里自由的控制脚本的运行和一些真实数据的模拟。详细的代码可以看我这里的<a href="https://github.com/leyafo/nut/blob/master/examples/test.go">实现</a></p>
 
-
-<script src="https://utteranc.es/client.js" repo="leyafo.github.io" issue-term="pathname" label="Commnets" theme="github-light" crossorigin="anonymous" async >
-</script>
+<div class="comments">
+  <hr class="hr-middle-text" data-content="COMMENTS">
+  <script src="https://utteranc.es/client.js" repo="leyafo/leyafo.github.io" issue-term="title" label="Commnets" theme="github-light" crossorigin="anonymous" async >
+  </script>
+</div>
     </article>
   </div>
 </body>

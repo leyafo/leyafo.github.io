@@ -12,7 +12,7 @@
   
 
   
-  <title>一个 API 设计问题带来的思考 | Do The Right Things</title>
+  <title>一个 API 设计问题带来的思考</title>
   
 
   <style>
@@ -23,6 +23,7 @@ body {
   margin: auto;
   max-width: 72em;
   background: #fefefe;
+  font-family: Fira Code,Monaco,Consolas,Ubuntu Mono,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,monospace,sans-serif;
 }
 
 nav {
@@ -110,7 +111,60 @@ a:focus {
 
 
 
+
+.comments{
+    text-align: center;
+    margin-top: 20px;
+    padding: 5px 10px;
+    font-size: .8rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: .1em;
+    z-index: 1;
+}
+
+.utterances{
+  max-width: 100%;
+}
+
+
+.hr-middle-text{
+  line-height: 1em;
+  position: relative;
+  outline: 0;
+  border: 0;
+  color: black;
+  text-align: center;
+  height: 1.5em;
+  opacity: .5;
+}
+.hr-middle-text:before {
+    content: '';
+    
+    
+    
+    background: linear-gradient(to right, transparent, black, transparent);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+}
+.hr-middle-text:after{
+    content: attr(data-content);
+    position: relative;
+    display: inline-block;
+    color: black;
+
+    padding: 0 .5em;
+    line-height: 1.5em;
+    
+    
+    background-color: #fcfcfa;
+}
+
 </style>
+
 </head>
 
 
@@ -181,9 +235,11 @@ a:focus {
 <p>这样我们通过 method 和 HTTP path 就能指定到对应的 API，也不会存在二次解析这样的问题。在我们不知道一个东西为什么会有各种各样的条条框框和标准时我们最好按照标准去做，否则就最终做出来的东西就非常丑陋。<br />
 接下来请您思考一个问题：为什么 API Server 的返回码应该和 HTTP 保持语义上的一致（如：200 成功，201 创建成功，404 资源不存在），而不要全部 API 统一使用 200 返回或者自己在 body 里定义一套返回码？</p>
 
-
-<script src="https://utteranc.es/client.js" repo="leyafo.github.io" issue-term="pathname" label="Commnets" theme="github-light" crossorigin="anonymous" async >
-</script>
+<div class="comments">
+  <hr class="hr-middle-text" data-content="COMMENTS">
+  <script src="https://utteranc.es/client.js" repo="leyafo/leyafo.github.io" issue-term="title" label="Commnets" theme="github-light" crossorigin="anonymous" async >
+  </script>
+</div>
     </article>
   </div>
 </body>

@@ -12,7 +12,7 @@
   
 
   
-  <title>我认为PHP不好的地方 | Do The Right Things</title>
+  <title>我认为PHP不好的地方</title>
   
 
   <style>
@@ -23,6 +23,7 @@ body {
   margin: auto;
   max-width: 72em;
   background: #fefefe;
+  font-family: Fira Code,Monaco,Consolas,Ubuntu Mono,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,monospace,sans-serif;
 }
 
 nav {
@@ -110,7 +111,60 @@ a:focus {
 
 
 
+
+.comments{
+    text-align: center;
+    margin-top: 20px;
+    padding: 5px 10px;
+    font-size: .8rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: .1em;
+    z-index: 1;
+}
+
+.utterances{
+  max-width: 100%;
+}
+
+
+.hr-middle-text{
+  line-height: 1em;
+  position: relative;
+  outline: 0;
+  border: 0;
+  color: black;
+  text-align: center;
+  height: 1.5em;
+  opacity: .5;
+}
+.hr-middle-text:before {
+    content: '';
+    
+    
+    
+    background: linear-gradient(to right, transparent, black, transparent);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+}
+.hr-middle-text:after{
+    content: attr(data-content);
+    position: relative;
+    display: inline-block;
+    color: black;
+
+    padding: 0 .5em;
+    line-height: 1.5em;
+    
+    
+    background-color: #fcfcfa;
+}
+
 </style>
+
 </head>
 
 
@@ -150,9 +204,11 @@ a:focus {
 
 <p>函数本身没啥好说的，每个语言最基本的单元。如果这玩意也实现不好那真的太糟了。但我要说的是 <em>PHP</em> 从5.3以后引入的匿名函数。<em>PHP</em> 的匿名函数看起来好像是可以在任意的地方定义它，这很符合匿名函数的特性。但问题是你如果要用到上下文变量需要显示的使用 <em>use</em> 将变量引入。这看起来好像是没有什么问题，但是如果函数嵌套的层级一多，这完全是个枷锁。另外如果要判断一个变量是不是一个函数 <em>PHP</em> 有一个 <strong>is_callable</strong> 的方法,这个方法的奇怪之处在于你可以传入变量名或者以字符串形式传入函数名。但如果直接传入一个函数它返回的值是 <strong>false</strong>。经过使用 <strong>is_callable</strong> 函数的一些失败尝试后，我彻底放弃了 <strong>PHP</strong> 的匿名函数与闭包。</p>
 
-
-<script src="https://utteranc.es/client.js" repo="leyafo.github.io" issue-term="pathname" label="Commnets" theme="github-light" crossorigin="anonymous" async >
-</script>
+<div class="comments">
+  <hr class="hr-middle-text" data-content="COMMENTS">
+  <script src="https://utteranc.es/client.js" repo="leyafo/leyafo.github.io" issue-term="title" label="Commnets" theme="github-light" crossorigin="anonymous" async >
+  </script>
+</div>
     </article>
   </div>
 </body>

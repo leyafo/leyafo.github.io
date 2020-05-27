@@ -12,7 +12,7 @@
   
 
   
-  <title>我需要什么样的笔记软件？ | Do The Right Things</title>
+  <title>我需要什么样的笔记软件？</title>
   
 
   <style>
@@ -23,6 +23,7 @@ body {
   margin: auto;
   max-width: 72em;
   background: #fefefe;
+  font-family: Fira Code,Monaco,Consolas,Ubuntu Mono,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,monospace,sans-serif;
 }
 
 nav {
@@ -110,7 +111,60 @@ a:focus {
 
 
 
+
+.comments{
+    text-align: center;
+    margin-top: 20px;
+    padding: 5px 10px;
+    font-size: .8rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: .1em;
+    z-index: 1;
+}
+
+.utterances{
+  max-width: 100%;
+}
+
+
+.hr-middle-text{
+  line-height: 1em;
+  position: relative;
+  outline: 0;
+  border: 0;
+  color: black;
+  text-align: center;
+  height: 1.5em;
+  opacity: .5;
+}
+.hr-middle-text:before {
+    content: '';
+    
+    
+    
+    background: linear-gradient(to right, transparent, black, transparent);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+}
+.hr-middle-text:after{
+    content: attr(data-content);
+    position: relative;
+    display: inline-block;
+    color: black;
+
+    padding: 0 .5em;
+    line-height: 1.5em;
+    
+    
+    background-color: #fcfcfa;
+}
+
 </style>
+
 </head>
 
 
@@ -144,9 +198,11 @@ a:focus {
 
 <p>现在我找到了一个符合我的这些要求的开源软件，这个软件就是 <a href="https://www.dokuwiki.org/">DokuWiki</a>。它是一个基于 web 访问的软件，所有的内容都是以 txt 文本形式存储在服务端。为了简便它连数据库了也省了，内建索引可以快速搜索。由于开源，社区有海量的插件支持，代码也可以随意修改。安装也比较方便，把 host 地址指向 127.0.0.1 就能做为私人的笔记本使用了。无限制的的笔记 tag 和 category 对于管理资料很方便。所有数据都 host 在本地，没有任何第三方可以拿到数据，这正是我最需要的功能。由于是 web 形式的呈现，我可以把它 host 任何地方，手机也能访问。 现在唯一的问题就是它的内部的 wiki 文件格式是他自己特有的，我的一些笔记转换过来需要花点时间。不过这无所谓，把以往的笔记转为纯文本存储问题也不大。</p>
 
-
-<script src="https://utteranc.es/client.js" repo="leyafo.github.io" issue-term="pathname" label="Commnets" theme="github-light" crossorigin="anonymous" async >
-</script>
+<div class="comments">
+  <hr class="hr-middle-text" data-content="COMMENTS">
+  <script src="https://utteranc.es/client.js" repo="leyafo/leyafo.github.io" issue-term="title" label="Commnets" theme="github-light" crossorigin="anonymous" async >
+  </script>
+</div>
     </article>
   </div>
 </body>

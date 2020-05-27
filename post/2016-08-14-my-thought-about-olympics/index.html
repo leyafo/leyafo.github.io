@@ -12,7 +12,7 @@
   
 
   
-  <title>我看奥运会 | Do The Right Things</title>
+  <title>我看奥运会</title>
   
 
   <style>
@@ -23,6 +23,7 @@ body {
   margin: auto;
   max-width: 72em;
   background: #fefefe;
+  font-family: Fira Code,Monaco,Consolas,Ubuntu Mono,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,monospace,sans-serif;
 }
 
 nav {
@@ -110,7 +111,60 @@ a:focus {
 
 
 
+
+.comments{
+    text-align: center;
+    margin-top: 20px;
+    padding: 5px 10px;
+    font-size: .8rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: .1em;
+    z-index: 1;
+}
+
+.utterances{
+  max-width: 100%;
+}
+
+
+.hr-middle-text{
+  line-height: 1em;
+  position: relative;
+  outline: 0;
+  border: 0;
+  color: black;
+  text-align: center;
+  height: 1.5em;
+  opacity: .5;
+}
+.hr-middle-text:before {
+    content: '';
+    
+    
+    
+    background: linear-gradient(to right, transparent, black, transparent);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+}
+.hr-middle-text:after{
+    content: attr(data-content);
+    position: relative;
+    display: inline-block;
+    color: black;
+
+    padding: 0 .5em;
+    line-height: 1.5em;
+    
+    
+    background-color: #fcfcfa;
+}
+
 </style>
+
 </head>
 
 
@@ -154,9 +208,11 @@ a:focus {
 
 <p>我个人因为在两年前身体上的一些小毛病在机缘巧合的情况下开始去健身房健身。我个人并不是太喜欢在健身时的那种感觉，那种运动的感觉让人不那么舒适，很吃力，我喜欢健身完之后的那种感觉。这就好比你顶着巨大的压力前行，等去掉这些压力以后再继续前行，你会觉得很轻松，觉得自己又变强壮了，那种强壮的感觉真的很好。我从小到大从来没有踢过足球，到工作后才和同事踢过几次小场地足球。我这种烂水平在场上摸不到几次球，甚至有时要被派去当守门员。尽管如此，我仍然很喜欢这个运动。十几个人在场上为了一只球到处追，到处跑。有时把球带到球门前，临门一脚打进去时肾上腺素飙升那种刺激的感觉真的很好，很难在平常的生活中找到那种感觉。这就是我现在对于运动的看法，我不知道其他喜欢运动的人有没有更高的境界，我很想知道。</p>
 
-
-<script src="https://utteranc.es/client.js" repo="leyafo.github.io" issue-term="pathname" label="Commnets" theme="github-light" crossorigin="anonymous" async >
-</script>
+<div class="comments">
+  <hr class="hr-middle-text" data-content="COMMENTS">
+  <script src="https://utteranc.es/client.js" repo="leyafo/leyafo.github.io" issue-term="title" label="Commnets" theme="github-light" crossorigin="anonymous" async >
+  </script>
+</div>
     </article>
   </div>
 </body>

@@ -12,7 +12,7 @@
   
 
   
-  <title>avl 树的实现 | Do The Right Things</title>
+  <title>avl 树的实现</title>
   
 
   <style>
@@ -23,6 +23,7 @@ body {
   margin: auto;
   max-width: 72em;
   background: #fefefe;
+  font-family: Fira Code,Monaco,Consolas,Ubuntu Mono,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,monospace,sans-serif;
 }
 
 nav {
@@ -110,7 +111,60 @@ a:focus {
 
 
 
+
+.comments{
+    text-align: center;
+    margin-top: 20px;
+    padding: 5px 10px;
+    font-size: .8rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: .1em;
+    z-index: 1;
+}
+
+.utterances{
+  max-width: 100%;
+}
+
+
+.hr-middle-text{
+  line-height: 1em;
+  position: relative;
+  outline: 0;
+  border: 0;
+  color: black;
+  text-align: center;
+  height: 1.5em;
+  opacity: .5;
+}
+.hr-middle-text:before {
+    content: '';
+    
+    
+    
+    background: linear-gradient(to right, transparent, black, transparent);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+}
+.hr-middle-text:after{
+    content: attr(data-content);
+    position: relative;
+    display: inline-block;
+    color: black;
+
+    padding: 0 .5em;
+    line-height: 1.5em;
+    
+    
+    background-color: #fcfcfa;
+}
+
 </style>
+
 </head>
 
 
@@ -172,9 +226,11 @@ a:focus {
 <p>在这两种情况中一般书上给的答案是‘判断新插入的节点到底是在左子树，还是在右子树’。然后再做对应的调整，这样确实是能解决问题的。但是在删除一个节点时，是不可能使用这种方法进行判断的。但我们可以根据树旋转的性质去解决这个问题。从上面的问题可以看出，树旋转最根本的原因就是降低树的高度。根据这个性质我们可以做进一步的分析。对不平衡的子节点去做旋转。那就是&rdquo;哪边更高我们就去将它旋转一下，将它将降低一层&rdquo;。 如果子节点两边的高度是一样的，或者更高的子节点方向与父节点一致的，那么就直接去旋转父节点。
    以上就是avl树基本的旋转过程，avl树和二叉树的插入与删除操作都是一样的。不同的是avl树在插入和删除后需要由下至上扫描并旋转整棵树以保持平衡。</p>
 
-
-<script src="https://utteranc.es/client.js" repo="leyafo.github.io" issue-term="pathname" label="Commnets" theme="github-light" crossorigin="anonymous" async >
-</script>
+<div class="comments">
+  <hr class="hr-middle-text" data-content="COMMENTS">
+  <script src="https://utteranc.es/client.js" repo="leyafo/leyafo.github.io" issue-term="title" label="Commnets" theme="github-light" crossorigin="anonymous" async >
+  </script>
+</div>
     </article>
   </div>
 </body>

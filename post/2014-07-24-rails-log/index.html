@@ -12,7 +12,7 @@
   
 
   
-  <title>rails 注册登录 | Do The Right Things</title>
+  <title>rails 注册登录</title>
   
 
   <style>
@@ -23,6 +23,7 @@ body {
   margin: auto;
   max-width: 72em;
   background: #fefefe;
+  font-family: Fira Code,Monaco,Consolas,Ubuntu Mono,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,monospace,sans-serif;
 }
 
 nav {
@@ -110,7 +111,60 @@ a:focus {
 
 
 
+
+.comments{
+    text-align: center;
+    margin-top: 20px;
+    padding: 5px 10px;
+    font-size: .8rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: .1em;
+    z-index: 1;
+}
+
+.utterances{
+  max-width: 100%;
+}
+
+
+.hr-middle-text{
+  line-height: 1em;
+  position: relative;
+  outline: 0;
+  border: 0;
+  color: black;
+  text-align: center;
+  height: 1.5em;
+  opacity: .5;
+}
+.hr-middle-text:before {
+    content: '';
+    
+    
+    
+    background: linear-gradient(to right, transparent, black, transparent);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+}
+.hr-middle-text:after{
+    content: attr(data-content);
+    position: relative;
+    display: inline-block;
+    color: black;
+
+    padding: 0 .5em;
+    line-height: 1.5em;
+    
+    
+    background-color: #fcfcfa;
+}
+
 </style>
+
 </head>
 
 
@@ -149,9 +203,11 @@ a:focus {
 <p><em>cookie</em> 是存储在用户浏览器中的一段唯一标识，<em>http request</em> 会将它传送到服务端。现在一般的 <em>web framework</em> 会去检测用户的 <em>http request</em> 是否带有 <em>cookie</em>, 如果没有发现请求中没有 *cookie*，它会建立一个*session*。并且以 <em>cookie</em> 作为 <em>key</em> 来保存 *session*。这样如果用户下次同样 <em>cookie</em> 的 <em>http request</em> 进来了，就可以找到相同的 *session*。
 <em>session</em> 和 <em>cookie</em> 是实现记住用户的基石。<em>http</em> 协议是无状态的协议。在用户登录某一个网站后，我们是需要记住登录状态的。这时候就要通过 <em>cookie</em> 和 <em>session</em> 来干这件事情。 <em>rails</em> 默认是已经将 <em>session</em> 建立好了。在 <em>controller</em> 中可以很方便的拿到 <em>session</em> 变量去存储一些信息。另外比较有意思的是 <em>rails</em> 默认是将 <em>session</em> 经过加密后存储在用户 <em>cookie</em> 中的。当用户的 <em>cookie</em> 传送到后端时会将 <em>cookie</em> 进行解密得到相应的 *session*。</p>
 
-
-<script src="https://utteranc.es/client.js" repo="leyafo.github.io" issue-term="pathname" label="Commnets" theme="github-light" crossorigin="anonymous" async >
-</script>
+<div class="comments">
+  <hr class="hr-middle-text" data-content="COMMENTS">
+  <script src="https://utteranc.es/client.js" repo="leyafo/leyafo.github.io" issue-term="title" label="Commnets" theme="github-light" crossorigin="anonymous" async >
+  </script>
+</div>
     </article>
   </div>
 </body>
