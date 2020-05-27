@@ -1,2 +1,153 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <meta name="generator" content="Hugo 0.58.3" />
+
+  
+
+  
+
+  
+  <title>关于测试 | Do The Right Things</title>
+  
+
+  <style>
+body {
+  color: #000000;
+  line-height: 1.6em;
+  padding: 1em;
+  margin: auto;
+  max-width: 72em;
+  background: #fefefe;
+}
+
+nav {
+    margin-bottom: 20px;
+}
+a:visited{
+  color: grey;
+}
+
+.custom-navbar {
+  margin-bottom: 1em;
+  height: 60px;
+}
+
+.custom-navbar a {
+  display: inline-block; 
+  padding: 18px 0;
+  margin-right: 1em; 
+  font-weight: bold; 
+}
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  text-decoration: none; 
+}
+
+@media print {
+  .custom-navbar {
+    display: none;
+  }
+}
+
+article {
+  padding-bottom: 1em;
+}
+
+img {
+  max-width: 100%;
+}
+
+
+body {
+  background-color: #fff;
+}
+
+
+
+body {
+  color: #212529;
+}
+
+
+
+a {
+  color: #007bff;
+}
+
+
+
+a:hover,
+a:focus {
+  color: #0056b3;
+}
+
+
+
+.custom-navbar {
+  background-color: #212529;
+}
+
+
+
+.custom-navbar a {
+  color: rgba(255,255,255,.75);
+}
+
+
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  color: rgba(255,255,255,1);
+}
+
+
+
+
+
+</style>
+</head>
+
+
+<body>
+  <header>
+<nav>
+  [ <a class="nav-btn" href="http://www.leyafo.com/">Home</a> ] 
+  [ <a class="nav-btn" href="http://www.leyafo.com/about.html">About</a> ] 
+  [ <a class="nav-btn" href="http://www.leyafo.com/contact.html">Contact</a> ] 
+</nav>
+</header>
+  
+  <div>
+    <article>
+      <h1>关于测试</h1>
+<p>
+  <small class="text-secondary">
+  
+  
+  May 16, 2016
+  </small>
+  
+</p>
+<p>在我做 C/C++ 开发时测试这个概念在这个圈子里不那么流行，这也有可能是 C/C++ 这类静态语言写 test 不是那么好写。 C/C++ 这类静态语言写 test code 光想一想也挺烦的。但这并不是因此就不写测试一个借口。我现在做的 Rails 项目一开始也认为写测试会拖慢项目进度的，后来实践下来发现测试能很好的维护项目的稳定，这实际上节约了不少时间。只要克服下一开始认为测试代码会增加的心智负担就好了。</p>
+
+<p>我们也不必太需要去理会什么 TDD，BDD，DDD 等一类名词。这一类名词对写测试的帮助并不大，而且有害。把原来本来很简单的事情弄得很复杂。写测试关键是要简单，只有简单的测试代码才能测试简单的测试代码。恩，这个有点绕。意思就是代码必须要容易测试，不容易测试的代码要把它改成容易测试的代码。TDD 奉行的测试驱动开发在我看来是挺难做到的。因为有时候我自己都不知道这个代码写好后会变成什么样子。单纯的一个输入输出是很难决定代码中间所经历的一些过程。还有一个重要的点就是被测试代码粒度越小越好，越小意味着模块化程度越高，接口的定义也越干净，这是非常值得的。所以别管什么 BDD, TDD, DDD 这一类名词，尽管写测试代码好了，尽可能把测试覆盖面辐射到更广才是最重要的。</p>
+
+<p>Rspec 的问题
+Rspec 定义了测试的领域语言，他的目的是让非开发人员也能写测试。这个目的挺美好的，想想也挺美好的。实际上我们在项目中很难找到一个会去写测试的测试工程师。写 Rspec 这个东西没有一点开发能力还真搞不定。所以 Rspec 的让非开发人员写 test code 还是想想就好了，test code 还是得你自己来写，因为你对你自己写得模块是最清楚的。另外相对于 Rails 自带的测试框架 Rspec 解决的还是相同的问题。Rails 自带的测试框架已经挺好的了，模块化分析测试也很好的控制了测试的粒度。关键是它非常快，跑完所有的测试要同样数量的 Rspec 快很多。这很重要，Rspec 的性能很为人诟病，因为会增加对写 test code 的厌恶。一个简单的测试用例要跑 10 秒是很影响写代码的体验的。</p>
+
+<p>测试的作用
+改代码比写新的代码要烦，需要小心的应对以前的历史包袱，还要了解以前的工作机制是怎样的。所以，如果有一些现成的测试用例代码就能很好的应对这些问题。它能保证你不回对以前的代码产生副作用，并且在些测试代码阶段可以让你自己在代码层面对接口的合理性做更详细的检查。能让代码质量变得更高。在项目部署前跑一遍所有的测试用例可安心不少，尽管部署时出现的问题大多数集中在恶劣的服务器环境上。</p>
+
+
 <script src="https://utteranc.es/client.js" repo="leyafo.github.io" issue-term="pathname" label="Commnets" theme="github-light" crossorigin="anonymous" async >
 </script>
+    </article>
+  </div>
+</body>
+</html>

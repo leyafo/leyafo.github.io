@@ -1,2 +1,191 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <meta name="generator" content="Hugo 0.58.3" />
+
+  
+
+  
+
+  
+  <title>尾递归优化 | Do The Right Things</title>
+  
+
+  <style>
+body {
+  color: #000000;
+  line-height: 1.6em;
+  padding: 1em;
+  margin: auto;
+  max-width: 72em;
+  background: #fefefe;
+}
+
+nav {
+    margin-bottom: 20px;
+}
+a:visited{
+  color: grey;
+}
+
+.custom-navbar {
+  margin-bottom: 1em;
+  height: 60px;
+}
+
+.custom-navbar a {
+  display: inline-block; 
+  padding: 18px 0;
+  margin-right: 1em; 
+  font-weight: bold; 
+}
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  text-decoration: none; 
+}
+
+@media print {
+  .custom-navbar {
+    display: none;
+  }
+}
+
+article {
+  padding-bottom: 1em;
+}
+
+img {
+  max-width: 100%;
+}
+
+
+body {
+  background-color: #fff;
+}
+
+
+
+body {
+  color: #212529;
+}
+
+
+
+a {
+  color: #007bff;
+}
+
+
+
+a:hover,
+a:focus {
+  color: #0056b3;
+}
+
+
+
+.custom-navbar {
+  background-color: #212529;
+}
+
+
+
+.custom-navbar a {
+  color: rgba(255,255,255,.75);
+}
+
+
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  color: rgba(255,255,255,1);
+}
+
+
+
+
+
+</style>
+</head>
+
+
+<body>
+  <header>
+<nav>
+  [ <a class="nav-btn" href="http://www.leyafo.com/">Home</a> ] 
+  [ <a class="nav-btn" href="http://www.leyafo.com/about.html">About</a> ] 
+  [ <a class="nav-btn" href="http://www.leyafo.com/contact.html">Contact</a> ] 
+</nav>
+</header>
+  
+  <div>
+    <article>
+      <h1>尾递归优化</h1>
+<p>
+  <small class="text-secondary">
+  
+  
+  November 23, 2013
+  </small>
+  
+</p>
+<p><strong>递归是一个奇特的玩意,它能简洁的描述复杂的思考.</strong></p>
+
+<p>一个简单的递归函数:</p>
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#8b008b;font-weight:bold">def</span> <span style="color:#008b45">fibonacci</span>(n):
+	<span style="color:#8b008b;font-weight:bold">if</span> n &lt;= <span style="color:#b452cd">1</span>:
+		<span style="color:#8b008b;font-weight:bold">return</span> <span style="color:#b452cd">1</span>
+	<span style="color:#8b008b;font-weight:bold">return</span> fibonacci(n-<span style="color:#b452cd">1</span>) + fibonacci(n-<span style="color:#b452cd">2</span>) </code></pre></div>
+<p>这个函数实现了一个裴波那契数列.非常简单,代码只有 3 行,但如果跟着函数运行的轨迹走.会发现这个函数背后的调用过程非常的复杂.每次递归都会依赖前面两次计算的结果.随着递归的层级上升,每次都会重新去调用前两次计算产生的结果.为了简化描述,下面是以 fibonacci(5) 模拟递归调用过程.
+<img src="http://user-image.logdown.io/user/4793/blog/4808/post/161697/ACy9LF8WSqK0PWHRVX83_fib.png" alt="fib.png" />
+可以看到,每次递归都会重复前两次的调用过程.实际上这个递归数列并不需要每次都重复去求前两次的结果.如果用压栈的方法,一遍递归就可以搞定了.</p>
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#8b008b;font-weight:bold">def</span> <span style="color:#008b45">fibonacci</span>(n):
+    L = fibonacci.L
+    <span style="color:#8b008b;font-weight:bold">if</span> n &lt;= <span style="color:#b452cd">2</span>:
+        <span style="color:#8b008b;font-weight:bold">return</span> L[-<span style="color:#b452cd">1</span>]  <span style="color:#228b22">#get top</span>
+    <span style="color:#8b008b;font-weight:bold">else</span>:
+        n2 = L.pop()  
+        n1 = L.pop()
+        L.append(n2)  <span style="color:#228b22">#&#39;append&#39; is stack&#39;s push  </span>
+        L.append(n1+n2)
+    <span style="color:#8b008b;font-weight:bold">return</span> fibonacci(n-<span style="color:#b452cd">1</span>)
+fibonacci.L = [<span style="color:#b452cd">1</span>,<span style="color:#b452cd">1</span>]  </code></pre></div>
+<p>上面的代码耍了一个小花招.首先先设定好两个初始的计算结果,然后开始递归迭代.与前一版本递归不同的是,前一个递归需要在进入到递归底部后,才开始跳出来计算每一步递归后的结果,直到返回.而后一个递归会在最开始递归进入时就开始计算,进入到递归底部后(也就是 n &lt;= 2)最终的结果就已经计算出来了,直接一层一层返回这个结果就可以了.
+为了便于说明下面代码是利用两个变量做中间结果的版本:</p>
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#8b008b;font-weight:bold">def</span> <span style="color:#008b45">fib</span>(n, n1=<span style="color:#b452cd">1</span>, n2=<span style="color:#b452cd">1</span>):
+    <span style="color:#8b008b;font-weight:bold">if</span> n &lt; <span style="color:#b452cd">2</span>:
+        <span style="color:#8b008b;font-weight:bold">return</span> n1
+    <span style="color:#8b008b;font-weight:bold">return</span> fib(n-<span style="color:#b452cd">1</span>, n2, n1+n2)  </code></pre></div>
+<p>跟上面那个压栈的方式一样.先设定好两个默认的结果,在递归进入时直接将结果计算出来并保存好.
+下面是这个函数的调用过程:</p>
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">  fib(n = <span style="color:#b452cd">10</span>, n1 = <span style="color:#b452cd">1</span>, n2 = <span style="color:#b452cd">1</span>)
+
+  fib(n = <span style="color:#b452cd">9</span>, n1 = <span style="color:#b452cd">1</span>, n2 = <span style="color:#b452cd">2</span>)
+
+  fib(n = <span style="color:#b452cd">8</span>, n1 = <span style="color:#b452cd">2</span>, n2 = <span style="color:#b452cd">3</span>)
+
+  fib(n = <span style="color:#b452cd">7</span>, n1 = <span style="color:#b452cd">3</span>, n2 = <span style="color:#b452cd">5</span>)
+
+  fib(n = <span style="color:#b452cd">6</span>, n1 = <span style="color:#b452cd">5</span>, n2 = <span style="color:#b452cd">8</span>)
+
+  fib(n = <span style="color:#b452cd">5</span>, n1 = <span style="color:#b452cd">8</span>, n2 = <span style="color:#b452cd">13</span>)
+
+  fib(n = <span style="color:#b452cd">4</span>, n1 = <span style="color:#b452cd">13</span>, n2 = <span style="color:#b452cd">21</span>)
+
+  fib(n = <span style="color:#b452cd">3</span>, n1 = <span style="color:#b452cd">21</span>, n2 = <span style="color:#b452cd">34</span>)
+
+  fib(n = <span style="color:#b452cd">2</span>, n1 = <span style="color:#b452cd">34</span>, n2 = <span style="color:#b452cd">55</span>)
+
+  fib(n = <span style="color:#b452cd">1</span>, n1 = <span style="color:#b452cd">55</span>, n2 = <span style="color:#b452cd">89</span>)</code></pre></div>
+
 <script src="https://utteranc.es/client.js" repo="leyafo.github.io" issue-term="pathname" label="Commnets" theme="github-light" crossorigin="anonymous" async >
 </script>
+    </article>
+  </div>
+</body>
+</html>

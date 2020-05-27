@@ -1,2 +1,192 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <meta name="generator" content="Hugo 0.58.3" />
+
+  
+
+  
+
+  
+  <title>Understanding Dependence in Makefile | Do The Right Things</title>
+  
+
+  <style>
+body {
+  color: #000000;
+  line-height: 1.6em;
+  padding: 1em;
+  margin: auto;
+  max-width: 72em;
+  background: #fefefe;
+}
+
+nav {
+    margin-bottom: 20px;
+}
+a:visited{
+  color: grey;
+}
+
+.custom-navbar {
+  margin-bottom: 1em;
+  height: 60px;
+}
+
+.custom-navbar a {
+  display: inline-block; 
+  padding: 18px 0;
+  margin-right: 1em; 
+  font-weight: bold; 
+}
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  text-decoration: none; 
+}
+
+@media print {
+  .custom-navbar {
+    display: none;
+  }
+}
+
+article {
+  padding-bottom: 1em;
+}
+
+img {
+  max-width: 100%;
+}
+
+
+body {
+  background-color: #fff;
+}
+
+
+
+body {
+  color: #212529;
+}
+
+
+
+a {
+  color: #007bff;
+}
+
+
+
+a:hover,
+a:focus {
+  color: #0056b3;
+}
+
+
+
+.custom-navbar {
+  background-color: #212529;
+}
+
+
+
+.custom-navbar a {
+  color: rgba(255,255,255,.75);
+}
+
+
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  color: rgba(255,255,255,1);
+}
+
+
+
+
+
+</style>
+</head>
+
+
+<body>
+  <header>
+<nav>
+  [ <a class="nav-btn" href="http://www.leyafo.com/">Home</a> ] 
+  [ <a class="nav-btn" href="http://www.leyafo.com/about.html">About</a> ] 
+  [ <a class="nav-btn" href="http://www.leyafo.com/contact.html">Contact</a> ] 
+</nav>
+</header>
+  
+  <div>
+    <article>
+      <h1>Understanding Dependence in Makefile</h1>
+<p>
+  <small class="text-secondary">
+  
+  
+  May 7, 2020
+  </small>
+  
+</p>
+
+
+<h2 id="introduction">Introduction</h2>
+
+<p><code>make</code> is a simple and useful tool that allows you building your own code projects. It can be used in any programming language. It&rsquo;s also used in coding for repetitive computer tasks. For example, if you have multiple shell tasks that listed one by one. You can use <code>make</code> to organize your work flow.</p>
+
+<p>If you&rsquo;ve downloaded some open source code or joined a new project as a developer. To run the entire project, you have to start building it first. Nearly all open source projects have a <code>Makefile</code> for organizing code. The <code>Makefile</code> is not easy to understand. The <code>Makefile</code> official manual is so long it&rsquo;s hard to understand. You can&rsquo;t modify the <code>Makefile</code> for your mind if you&rsquo;re a newbie. You can then Google the <code>Makefile</code> tutorial and copy&amp;paste some codes within your <code>Makefile</code>. But you don&rsquo;t know how <code>Makefile</code> works, you just let your code run.</p>
+
+<p>This post will take you 10 minutes to understand the <code>make</code> core concepts. Afterwards, you will create your own <code>Makefile</code> to do some basic tasks and figure out how <code>make</code> works.</p>
+
+<h2 id="core-conception">Core conception</h2>
+
+<p><strong>Dependence</strong> is the <code>make</code>&rsquo;s core. Understanding this is the most important principle in <code>make</code>. In the <code>Makefile</code> every task depends on another prerequisites that can be files, tasks, or some other form of rules. If you want to do a task, you must define your target and its prerequisites. We call this a dependence. A simple <code>Makefile</code> consists of &ldquo;dependencies&rdquo; with the following shape:</p>
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-makefile" data-lang="makefile"><span style="color:#008b45">foo</span>: bar
+</code></pre></div>
+<p>The above <code>Makefile</code> is do nothing, because you <code>bar</code> target is undefined. Target should depend on a defined prerequisite or just define how it works. The following target is a defined to run <code>echo</code> command.</p>
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-makefile" data-lang="makefile"><span style="color:#008b45">foo</span>:
+    <span style="color:#658b00">echo</span> <span style="color:#cd5555">&#34;hello world&#34;</span>  <span style="color:#228b22">#noticed: you must use &#39;tab&#39; to start this line.</span>
+</code></pre></div>
+<h2 id="a-realistic-example">A realistic example</h2>
+
+<p>Next, we will give you a realistic example. Suppose we have a simple C project, which contains the following files:</p>
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">.
+├── http.c
+├── http.h
+├── main.c
+├── socket.c
+├── socket.h</code></pre></div>
+<p>In our project, we have the following dependencies:<br />
+<code>http.c</code> include <code>http.h</code> and <code>socket.h</code><br />
+<code>socket.c</code> include <code>socket.h</code><br />
+<code>main.c</code> include <code>socket.h</code> and <code>http.h</code>.</p>
+
+<p>To build an executing file using <code>gcc</code>, we must compile the source to the object and then link them to the be an executing file. we must compile the object first. Here are our rules:</p>
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Makefile" data-lang="Makefile"><span style="color:#008b45">http.o</span>: http.c http.h socket.h
+    gcc -c http.c
+<span style="color:#008b45">socket.o</span>: socket.h
+    gcc -c socket.c
+<span style="color:#008b45">main.o</span>: main.c http.h socket.h
+    gcc -c main.c
+</code></pre></div>
+<p>Link all object files to be a execute file:</p>
+
+<pre><code>exe: http.o socket.o main.o
+    gcc -o exe http.o socket.o main.o
+</code></pre>
+
+<p>Now, you can type <code>make exe</code> to build your own project.</p>
+
+
 <script src="https://utteranc.es/client.js" repo="leyafo.github.io" issue-term="pathname" label="Commnets" theme="github-light" crossorigin="anonymous" async >
 </script>
+    </article>
+  </div>
+</body>
+</html>

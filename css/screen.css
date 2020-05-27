@@ -34,8 +34,7 @@ audio, canvas, video { display: inline-block; }
 audio:not([controls]) { display: none; height: 0; }
 [hidden], template { display: none; }
 html {
-   /*font-family: sans-serif;*/
-   font-family: "Microsoft YaHei" ! important;
+   font-family: sans-serif;
    -ms-text-size-adjust: 100%;
    -webkit-text-size-adjust: 100%;
 }
@@ -105,14 +104,57 @@ table { border-collapse: collapse; border-spacing: 0; }
    1. Icons - Sets up the icon font and respective classes
    ========================================================================== */
 
+/* Import the font files */
+@font-face {
+  font-family: 'Open Sans';
+  src: local('Open Sans'), local('OpenSans'), url('../fonts/Open_Sans/OpenSans-Regular.ttf') format('truetype');
+  font-weight: normal; font-style: normal;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  src: local('Open Sans Bold'), local('OpenSans-Bold'), url('../fonts/Open_Sans/OpenSans-Bold.ttf') format('truetype');
+  font-weight: bold; font-style: normal;
+}
+
+@font-face {
+  font-family: 'Merriweather';
+  src: local('Merriweather Light'), local('Merriweather-Light'), url('../fonts/Merriweather/Merriweather-Light.ttf') format('truetype');
+  font-weight: light; font-style: normal;
+}
+
+@font-face {
+  font-family: 'Merriweather';
+  src: local('Merriweather Light Italic'), local('Merriweather-LightItalic'), url('../fonts/Merriweather/Merriweather-LightItalic.ttf') format('truetype');
+  font-weight: light; font-style: italic;
+}
+
+@font-face {
+  font-family: 'Merriweather';
+  src: local('Merriweather Bold'), local('Merriweather-Bold'), url('../fonts/Merriweather/Merriweather-Bold.ttf') format('truetype');
+  font-weight: bold; font-style: normal;
+}
+
+@font-face {
+  font-family: 'Merriweather';
+  src: local('Merriweather Bold Italic'), local('Merriweather-BoldItalic'), url('../fonts/Merriweather/Merriweather-BoldItalic.ttf') format('truetype');
+  font-weight: bold; font-style: italic;
+}
+
+@font-face {
+  font-family: 'Inconsolata';
+  src: local('Inconsolata Regular'), local('Inconsolata-Regular'), url('../fonts/Inconsolata/Inconsolata-Regular.ttf') format('truetype');
+  font-weight: normal; font-style: normal;
+}
+
 /* Import the font file with the icons in it */
 @font-face {
   font-family: 'genericons';
-  src: url('../fonts/Genericons.eot');
-  src: url('../fonts/Genericons.eot?#iefix') format('embedded-opentype'),
-       url('../fonts/Genericons.woff') format('woff'),
-       url('../fonts/Genericons.ttf') format('truetype'),
-       url('../fonts/Genericons.svg#entypo') format('svg');
+  src: url('../fonts/Genericons/Genericons.eot');
+  src: url('../fonts/Genericons/Genericons.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/Genericons/Genericons.woff') format('woff'),
+       url('../fonts/Genericons/Genericons.ttf') format('truetype'),
+       url('../fonts/Genericons/Genericons.svg#entypo') format('svg');
   font-weight: normal; font-style: normal;
 }
 
@@ -130,10 +172,20 @@ table { border-collapse: collapse; border-spacing: 0; }
     -moz-osx-font-smoothing: grayscale;
 }
 
+/* In order to have correct background when using the monokai pygments style*/
+.highlight pre {
+  background-color: inherit;
+  color: green;
+}
+
 /* Each icon is created by inserting the correct character into the
    content of the :before pseudo element. Like a boss. */
 .icon-github:before {
     content: "\f200";
+}
+
+.icon-codepen:before {
+    content: "\f216";
 }
 
 .icon-hugo:before{
@@ -148,6 +200,12 @@ table { border-collapse: collapse; border-spacing: 0; }
 }
 .icon-twitter:before {
     content: "\f202";
+}
+.icon-flickr:before {
+    content: "\f211";
+}
+.icon-mail:before {
+    content: "\f410";
 }
 .icon-google-plus:before {
     content: "\f206";
@@ -192,8 +250,7 @@ html {
 body {
     height: 100%;
     max-height: 100%;
-    /*font-family: "Merriweather", serif;*/
-    font-family: "Microsoft YaHei" ! important;
+    font-family: "Merriweather", serif;
     letter-spacing: 0.01rem;
     font-size: 1.8rem;
     line-height: 1.75em;
@@ -220,8 +277,7 @@ h4, h5, h6 {
     color: #2E2E2E;
     line-height: 1.15em;
     margin: 0 0 0.4em 0;
-    /*font-family: "Open Sans", sans-serif;*/
-    font-family: "Microsoft YaHei" ! important;
+    font-family: "Open Sans", sans-serif;
     text-rendering: geometricPrecision;
 }
 
@@ -265,7 +321,7 @@ p, ul, ol, dl {
     -webkit-font-feature-settings: 'liga' 1, 'onum' 1, 'kern' 1;
     -moz-font-feature-settings: 'liga' 1, 'onum' 1, 'kern' 1;
     -o-font-feature-settings: 'liga' 1, 'onum' 1, 'kern' 1;
-    margin: 0 0 0.8em 0;
+    margin: 0 0 1.75em 0;
     text-rendering: geometricPrecision;
 }
 
@@ -313,109 +369,33 @@ hr {
     padding: 0;
 }
 
-/*blockquote {*/
-    /*-moz-box-sizing: border-box;*/
-    /*box-sizing: border-box;*/
-    /*margin: 1.75em 0 1.75em -2.2em;*/
-    /*padding: 0 0 0 1.75em;*/
-    /*border-left: #4A4A4A 0.4em solid;*/
-/*}*/
-
-/*blockquote p {*/
-    /*margin: 0.8em 0;*/
-    /*font-style: italic;*/
-/*}*/
-
-/*blockquote small {*/
-    /*display: inline-block;*/
-    /*margin: 0.8em 0 0.8em 1.5em;*/
-    /*font-size: 0.9em;*/
-    /*color: #CCC;*/
-/*}*/
-
-/*blockquote small:before { content: "\2014 \00A0"; }*/
-
-/*blockquote cite {*/
-    /*font-weight: 700;*/
-/*}*/
-
-/*blockquote cite a { font-weight: normal; }*/
-
-/***********blockquote style 2***********/
-/*blockquote {*/
-  /*background: #f9f9f9;*/
-  /*border-left: 10px solid #ccc;*/
-  /*margin: 1.5em 10px;*/
-  /*padding: 0.5em 10px;*/
-  /*quotes: "\201C""\201D""\2018""\2019";*/
-  /*font-style: italic;*/
-  /*color: gray;*/
-/*}*/
-/*blockquote:before {*/
-  /*color: #ccc;*/
-  /*content: open-quote;*/
-  /*font-size: 4em;*/
-  /*line-height: 0.1em;*/
-  /*margin-right: 0.25em;*/
-  /*vertical-align: -0.4em;*/
-/*}*/
-/*blockquote p {*/
-  /*display: inline;*/
-/*}*/
-
-/*blockquote:after {*/
-  /*color: #ccc;*/
-  /*content: close-quote;*/
-  /*font-size: 4em;*/
-  /*line-height: 0.1em;*/
-  /*margin-left: 0.25em;*/
-  /*margin-top: 1.25em;*/
-  /*vertical-align: -0.6em;*/
-/*}*/
-/***********blockquote style 2***********/
-
-/***********blockquote style 3***********/
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:400italic);
-blockquote{
-  /*font-size: 1.4em;*/
-  /*width:60%;*/
-  margin:20px auto;
-  font-family:Open Sans;
-  font-style:italic;
-  color: #555555;
-  padding:1.2em 30px 1.2em 75px;
-  border-left:8px solid #78C0A8 ;
-  line-height:1.6;
-  position: relative;
-  background:#EDEDED;
+blockquote {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    margin: 1.75em 0 1.75em -2.2em;
+    padding: 0 0 0 1.75em;
+    border-left: #4A4A4A 0.4em solid;
 }
 
-blockquote::before{
-  font-family:Arial;
-  content: "\201C";
-  color:#78C0A8;
-  font-size:4em;
-  position: absolute;
-  left: 10px;
-  top:-10px;
+blockquote p {
+    margin: 0.8em 0;
+    font-style: italic;
 }
 
-blockquote::after{
-  content: '';
+blockquote small {
+    display: inline-block;
+    margin: 0.8em 0 0.8em 1.5em;
+    font-size: 0.9em;
+    color: #CCC;
 }
 
-blockquote span{
-  display:block;
-  color:#333333;
-  font-style: normal;
-  font-weight: bold;
-  margin-top:1em;
-}
-/*blockquote p {*/
-  /*display: inline;*/
-/*}*/
+blockquote small:before { content: "\2014 \00A0"; }
 
-/***********blockquote style 3***********/
+blockquote cite {
+    font-weight: 700;
+}
+
+blockquote cite a { font-weight: normal; }
 
 mark {
     background-color: #FFC336;
@@ -604,6 +584,18 @@ body.nav-opened .site-wrapper {
     text-decoration: none;
 }
 
+.main-header a.bloglogo .icon-linkedin,
+.main-header a.bloglogo .icon-codepen,
+.main-header a.bloglogo .icon-github,
+.main-header a.bloglogo .icon-twitter,
+.main-header a.bloglogo .icon-facebook,
+.main-header a.bloglogo .icon-instagram,
+.main-header a.bloglogo .icon-pinterest,
+.main-header a.bloglogo .icon-google-plus {
+    color: white;
+    font-size: 2em;
+}
+
 .main-nav {
     position: relative;
     padding: 35px 40px;
@@ -612,8 +604,7 @@ body.nav-opened .site-wrapper {
 
 .main-nav a {
     text-decoration: none;
-    /*font-family: 'Open Sans', sans-serif;*/
-    font-family: "Microsoft YaHei" ! important;
+    font-family: 'Open Sans', sans-serif;
 }
 
 /* Navigation */
@@ -1007,7 +998,7 @@ body.nav-opened .menu-button .word {
 .post {
     position: relative;
     width: 80%;
-    max-width: 810px;
+    max-width: 710px;
     margin: 4rem auto;
     padding-bottom: 4rem;
     border-bottom: #EBF2F6 1px solid;
@@ -1035,9 +1026,9 @@ body.nav-opened .menu-button .word {
     box-shadow: #FFF 0 0 0 5px;
 }
 
-/*body:not(.post-template) .post-title {*/
-    /*font-size: 3.6rem;*/
-/*}*/
+body:not(.post-template) .post-title {
+    font-size: 3.6rem;
+}
 
 .post-title a {
     text-decoration: none;
@@ -1591,9 +1582,9 @@ body.nav-opened .menu-button .word {
         font-size: 0.95em
     }
 
-    /*body:not(.post-template) .post-title {*/
-        /*font-size: 2.6rem;*/
-    /*}*/
+    body:not(.post-template) .post-title {
+        font-size: 3.2rem;
+    }
 
     hr {
         margin: 2.4em 0;
@@ -1607,13 +1598,9 @@ body.nav-opened .menu-button .word {
         font-size: 4.5rem;
         text-indent: -2px;
     }
-    .post-title h1{
-        font-size: 4.5rem;
-        text-indent: -2px;
-    }
 
     h2 {
-        font-size: 2.6rem;
+        font-size: 3.6rem;
     }
 
     h3 {
@@ -1832,7 +1819,7 @@ body.nav-opened .menu-button .word {
     }
 
     body:not(.post-template) .post-title {
-        font-size: 2.6rem;
+        font-size: 2.5rem;
     }
 
     .post-template .post {

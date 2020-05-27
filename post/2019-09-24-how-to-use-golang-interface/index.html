@@ -1,2 +1,237 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <meta name="generator" content="Hugo 0.58.3" />
+
+  
+
+  
+
+  
+  <title>golang interface 要怎么用？ | Do The Right Things</title>
+  
+
+  <style>
+body {
+  color: #000000;
+  line-height: 1.6em;
+  padding: 1em;
+  margin: auto;
+  max-width: 72em;
+  background: #fefefe;
+}
+
+nav {
+    margin-bottom: 20px;
+}
+a:visited{
+  color: grey;
+}
+
+.custom-navbar {
+  margin-bottom: 1em;
+  height: 60px;
+}
+
+.custom-navbar a {
+  display: inline-block; 
+  padding: 18px 0;
+  margin-right: 1em; 
+  font-weight: bold; 
+}
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  text-decoration: none; 
+}
+
+@media print {
+  .custom-navbar {
+    display: none;
+  }
+}
+
+article {
+  padding-bottom: 1em;
+}
+
+img {
+  max-width: 100%;
+}
+
+
+body {
+  background-color: #fff;
+}
+
+
+
+body {
+  color: #212529;
+}
+
+
+
+a {
+  color: #007bff;
+}
+
+
+
+a:hover,
+a:focus {
+  color: #0056b3;
+}
+
+
+
+.custom-navbar {
+  background-color: #212529;
+}
+
+
+
+.custom-navbar a {
+  color: rgba(255,255,255,.75);
+}
+
+
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  color: rgba(255,255,255,1);
+}
+
+
+
+
+
+</style>
+</head>
+
+
+<body>
+  <header>
+<nav>
+  [ <a class="nav-btn" href="http://www.leyafo.com/">Home</a> ] 
+  [ <a class="nav-btn" href="http://www.leyafo.com/about.html">About</a> ] 
+  [ <a class="nav-btn" href="http://www.leyafo.com/contact.html">Contact</a> ] 
+</nav>
+</header>
+  
+  <div>
+    <article>
+      <h1>golang interface 要怎么用？</h1>
+<p>
+  <small class="text-secondary">
+  
+  
+  September 24, 2019
+  </small>
+  
+</p>
+
+
+<p>golang 的抽象组件并不多，一个 interface 几乎囊括所有抽象所需的设计。interface 可以来实现 duck type，继承，泛型，抽象类这些在其他语言实现的常见抽象。interface 可以说是 golang 这门语言的抽象核心。</p>
+
+<h2 id="面向对象的思考">面向对象的思考</h2>
+
+<p>我们学习面向对象经常讨论的三大毒瘤是：封装，继承，多态。我们先来分析和定义这三大特性，最后再来介绍为什么 golang 一个 interface 就能实现所有的这三大特性。</p>
+
+<h3 id="封装">封装</h3>
+
+<p>我们先来思考封装的本质是什么？封装的本质就是把你的代码做成一个可装卸的组件，组件暴露一些接口，用户使用组件时毋需关注内部的实现，只关心接口的输入输出就可以把这个组件集成到代码里面。为了把这一系列的过程更加便捷的描述出来，我们可以把它命名成一个具体的对象，对象里面包含一系列操作。</p>
+
+<h3 id="继承-多态">继承，多态</h3>
+
+<p>golang 里面实际上没有继承这个概念。golang 里面把一个 struct 包含到另一个 struct 辅以一定的编译的语法糖看起来像继承一样的抽象实际上不是继承，它还是封装这个概念的升级版。在 golang 里面把这叫做<strong>组合式继承</strong>。<br />
+继承和多态并不能各自分开独立的来看。多态如果脱离继承它将变成另一抽象的概念：duck type。<br />
+在其他面向对象的语言里面我们继承一个实体，就拥有父类的所有方法。如果需要对父类同一方法进行覆盖，我们就实现一个同样的方法进行覆盖。这样的目的是让我们为两个不同的对象调用同一个方法。但实现这一点我们为什么需要继承？如果一个对象有一个我们需要的方法，那么我们并不需要关心这具体是个什么对象。这就是 duck type 的概念（如果一个物体会像鸭子一样叫，那么它就是一个鸭子）。 dock type 相对于继承式的多态要更加灵活。如下代码所示：</p>
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#8b008b;font-weight:bold">import</span> (
+	<span style="color:#cd5555">&#34;fmt&#34;</span>
+)
+
+<span style="color:#8b008b;font-weight:bold">type</span> Speaker <span style="color:#8b008b;font-weight:bold">interface</span>{
+   <span style="color:#008b45">Speak</span>()
+}
+<span style="color:#8b008b;font-weight:bold">type</span> Bird <span style="color:#8b008b;font-weight:bold">struct</span>{
+
+}
+<span style="color:#8b008b;font-weight:bold">func</span> (b *Bird)<span style="color:#008b45">Speak</span>(){
+    fmt.<span style="color:#008b45">Println</span>(<span style="color:#cd5555">&#34;zzzzzzzz&#34;</span>)
+}
+<span style="color:#8b008b;font-weight:bold">type</span> People <span style="color:#8b008b;font-weight:bold">struct</span>{
+}
+<span style="color:#8b008b;font-weight:bold">func</span> (p *People)<span style="color:#008b45">Speak</span>(){
+    fmt.<span style="color:#008b45">Println</span>(<span style="color:#cd5555">&#34;hello world&#34;</span>)
+}
+
+<span style="color:#8b008b;font-weight:bold">func</span> <span style="color:#008b45">main</span>() {
+	<span style="color:#8b008b;font-weight:bold">var</span> speakers []Speaker
+	speakers = <span style="color:#658b00">append</span>(speakers, <span style="color:#658b00">new</span>(Bird), <span style="color:#658b00">new</span>(People))
+	<span style="color:#8b008b;font-weight:bold">for</span> _, s := <span style="color:#8b008b;font-weight:bold">range</span>(speakers){
+		s.<span style="color:#008b45">Speak</span>()
+	}
+}</code></pre></div>
+<p>如上所示我们不需要关心 bird 和 people 是否有同一个共同的父类，或者是否都继承自 Object 这个祖先类。我们不需要关心对象，只需要关心是否能方便的把代码组织到一起。封装实际上是所有编程语言的基础要素，它本质上就是<strong>代码复用</strong>和你的代码是否<strong>面向对象</strong>没有任何的关系。而 interface 是我们代码抽象的一种方式，它只关心我们要做到事情，并不关心它属于一个什么<strong>对象</strong>。所以在 golang 里面我们没有 <strong>has-a</strong> 和 <strong>is-a</strong> 这两个概念的困惑。在 golang 里面网络传输，文件读写，编解码用 reader 和 writer 这两个接口抽象起来非常自然。</p>
+
+<h2 id="interface">interface{}</h2>
+
+<p>golang 经常被人诟病的一点就是它没有泛型，但泛型反对者们说 <code>interface{}</code> 就是泛型，可以拿来做为泛型用。这种说法是不对的。 <code>interface{}</code> 它不是泛型，它是一个接口，这个接口可以适配任何类型。它与 void 又不太一样，它会保存传入对象的 value 和 type 信息。<br />
+使用 <code>interface{}</code> 的时候我们重点需要关注的怎样传递 value，而不是用来抽象接口的设计。当一个接口没有明确的输入输出的信息，那这是个糟糕的接口，它会让使用接口的人非常困惑。</p>
+
+<h2 id="interface-receiver">interface receiver</h2>
+
+<p>在 struct 上 bind 一个 function 有 pointer 和 value 的区别。在调用的时候没有区别，但在 interface 的实现上，需要明确的指定传递的对象是一个 pointer 还是非 pointer。这也是使用 interface 有点迷惑的地方。如下代码所示：</p>
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#8b008b;font-weight:bold">import</span> (
+	<span style="color:#cd5555">&#34;fmt&#34;</span>
+)
+
+<span style="color:#8b008b;font-weight:bold">type</span> Speaker <span style="color:#8b008b;font-weight:bold">interface</span>{
+   <span style="color:#008b45">Speak</span>()
+}
+
+<span style="color:#8b008b;font-weight:bold">type</span> People <span style="color:#8b008b;font-weight:bold">struct</span>{
+   Age <span style="color:#00688b;font-weight:bold">int</span>
+}
+<span style="color:#8b008b;font-weight:bold">func</span> (p *People)<span style="color:#008b45">Speak</span>(){
+    fmt.<span style="color:#008b45">Println</span>(<span style="color:#cd5555">&#34;hello world&#34;</span>)
+}
+
+<span style="color:#8b008b;font-weight:bold">func</span> <span style="color:#008b45">main</span>() {
+	p1 := <span style="color:#658b00">new</span>(People)
+	p1.<span style="color:#008b45">Speak</span>()
+	p2 := &amp;People{}
+	p2.<span style="color:#008b45">Speak</span>()
+
+	<span style="color:#8b008b;font-weight:bold">var</span> speakers []Speaker
+	<span style="color:#228b22">//Can&#39;t compile
+</span><span style="color:#228b22"></span>	<span style="color:#228b22">//speakers = append(speakers, new(People), People{})
+</span><span style="color:#228b22"></span>	speakers = <span style="color:#658b00">append</span>(speakers, <span style="color:#658b00">new</span>(People), &amp;People{})
+	<span style="color:#8b008b;font-weight:bold">for</span> _, s := <span style="color:#8b008b;font-weight:bold">range</span>(speakers){
+		s.<span style="color:#008b45">Speak</span>()
+	}
+}</code></pre></div>
+<h2 id="interface-现实应用案例分析">interface 现实应用案例分析</h2>
+
+<p>从 java 转过来的同学容易对 interface 进行滥用，在不必要使用 interface 的地方使用 interface。如下代码就是一位写 java 的同学转过来写 golang 的代码。</p>
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang">    <span style="color:#8b008b;font-weight:bold">type</span> RemoteClienter <span style="color:#8b008b;font-weight:bold">interface</span>{
+        <span style="color:#8b008b;font-weight:bold">func</span> <span style="color:#008b45">Start</span>(addr <span style="color:#00688b;font-weight:bold">string</span>)
+        <span style="color:#8b008b;font-weight:bold">func</span> <span style="color:#008b45">Send</span>([]<span style="color:#00688b;font-weight:bold">byte</span>)(<span style="color:#00688b;font-weight:bold">int</span>, <span style="color:#00688b;font-weight:bold">error</span>)
+        <span style="color:#8b008b;font-weight:bold">func</span> <span style="color:#008b45">AsyncSend</span>([]<span style="color:#00688b;font-weight:bold">byte</span>)(<span style="color:#00688b;font-weight:bold">int</span>, <span style="color:#00688b;font-weight:bold">error</span>)
+    }</code></pre></div>
+<p>这段代码的目的是抽象不同的 client，它可以通过 http，tcp，或者其他协议进行同步或异步网络数据发送。单纯的从这个目的推断这个接口的实现是没有问题的。但我们为什么要去抽象一个 client？我们为什么需要关心接口的数据发送是同步还是异步的？这个 client 我们实际上只需要关心数据是否可以发出去，至于用什么协议，同步还是异步发送这些问题根本不重要。因此这个接口更适合用 golang 的 writer 接口抽象。如下所示：</p>
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang">    <span style="color:#8b008b;font-weight:bold">type</span> Wirter <span style="color:#8b008b;font-weight:bold">interface</span>{
+        <span style="color:#8b008b;font-weight:bold">func</span> <span style="color:#008b45">Write</span>([]<span style="color:#00688b;font-weight:bold">byte</span>)(<span style="color:#00688b;font-weight:bold">int</span>, <span style="color:#00688b;font-weight:bold">error</span>)
+    }</code></pre></div>
+
 <script src="https://utteranc.es/client.js" repo="leyafo.github.io" issue-term="pathname" label="Commnets" theme="github-light" crossorigin="anonymous" async >
 </script>
+    </article>
+  </div>
+</body>
+</html>
