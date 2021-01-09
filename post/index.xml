@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved by Leyafo</copyright>
-    <lastBuildDate>Fri, 22 May 2020 21:46:06 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 09 Jan 2021 20:47:03 +0800</lastBuildDate>
     
 	<atom:link href="http://www.leyafo.com/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Understanding Utf8</title>
+      <link>http://www.leyafo.com/post/2021-01-09-understanding-utf8/</link>
+      <pubDate>Sat, 09 Jan 2021 20:47:03 +0800</pubDate>
+      
+      <guid>http://www.leyafo.com/post/2021-01-09-understanding-utf8/</guid>
+      <description>Many programmers are confused so long about what difference of UTF-8, unicode, ASCII, CP936, GB2312&amp;hellip; why we were always being recommended use UTF-8 for our code in many situations. Character encoding is not a hard problem but it&amp;rsquo;s unclear. To understand the characters encode problem clearly, we should separate the encode method and character set first.
+Just like Joel says: Please do not write another line of code until you finish reading this article.</description>
+    </item>
     
     <item>
       <title>Open source is a business model, not just free beer or software.</title>
@@ -18,8 +28,8 @@
       <pubDate>Fri, 22 May 2020 21:46:06 +0800</pubDate>
       
       <guid>http://www.leyafo.com/post/2020-05-22-open-source-as-a-business-model/</guid>
-      <description>We can freely use open source code in our products, but it&amp;rsquo;s not paid for by the user. There is a problem with this: what income do these open source project authors get? Some are side projects, but many are maintained as full-time jobs.
-If you have created a popular project like redis or nginx, then many people will know what you can do in your professional field. The next step is to build a new server for your customers.</description>
+      <description>We can use open source code in our products, but we rarely pay for them. There is a problem at this: How to make money from an open source project? As we know, some of them are side projects, the others are full-time jobs.
+If you have created a popular project like Redis or Nginx, many people will know you and your professional field. You can build a new service for your customers.</description>
     </item>
     
     <item>
