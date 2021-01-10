@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Do The Right Things</title>
@@ -18,8 +18,8 @@
       <pubDate>Fri, 22 May 2020 21:46:06 +0800</pubDate>
       
       <guid>http://www.leyafo.com/post/2020-05-22-open-source-as-a-business-model/</guid>
-      <description>We can freely use open source code in our products, but it&amp;rsquo;s not paid for by the user. There is a problem with this: what income do these open source project authors get? Some are side projects, but many are maintained as full-time jobs.
-If you have created a popular project like redis or nginx, then many people will know what you can do in your professional field. The next step is to build a new server for your customers.</description>
+      <description>We can use open source code in our products, but we rarely pay for them. There is a problem at this: How to make money from an open source project? As we know, some of them are side projects, the others are full-time jobs.
+If you have created a popular project like Redis or Nginx, many people will know you and your professional field. You can build a new service for your customers.</description>
     </item>
     
     <item>
@@ -29,7 +29,7 @@ If you have created a popular project like redis or nginx, then many people will
       
       <guid>http://www.leyafo.com/post/2020-05-07-understanding-dependence-in-makefile/</guid>
       <description>Introduction make is a simple and useful tool that allows you building your own code projects. It can be used in any programming language. It&amp;rsquo;s also used in coding for repetitive computer tasks. For example, if you have multiple shell tasks that listed one by one. You can use make to organize your work flow.
-If you&amp;rsquo;ve downloaded some open source code or joined a new project as a developer.</description>
+If you&amp;rsquo;ve downloaded some open source code or joined a new project as a developer. To run the entire project, you have to start building it first.</description>
     </item>
     
     <item>
@@ -49,9 +49,7 @@ func Foo() error{ var err error func newBar(){ if err != nil{ return } err = Bar
       <pubDate>Tue, 24 Sep 2019 17:19:17 +0800</pubDate>
       
       <guid>http://www.leyafo.com/post/2019-09-24-why-paas-are-anti-requirements/</guid>
-      <description>试想一下你的开发团队需要一款 MQ(message queue) 服务，你是去买现成的云计算厂商的 MQ 服务还是自己买个 VPS(Virtual Private Server) 去安装一个 MQ 的服务呢？如果是买一个 MQ 的服务你如何确定这个 MQ 的服务是你现在团队需要的 MQ 服务？你如何确保从云计算厂家那里买过来的 MQ 服务是可靠的？
-如果你选择自己搭建一个 MQ 服务，在 2019 年你还会选择从头安装一个 MQ 服务吗？你会选用 docker 还是 k8s 去 setup 你的服务吗？
-你的开发环境，运行环境，测试环境，生产环境各自都有很多不一样的地方，如果和快速的把这几个测试环境 setup 起来？你是选用现有云计算提供的 paas 云服务，还是自己在公司内网的服务器搭建一套 k8s,线上再搭建一套。
+      <description>试想一下你的开发团队需要一款 MQ(message queue) 服务，你是去买现成的云计算厂商的 MQ 服务还是自己买个 VPS(Virtual Private Server) 去安装一个 MQ 的服务呢？如果是买一个 MQ 的服务你如何确定这个 MQ 的服务是你现在团队需要的 MQ 服务？你如何确保从云计算厂家那里买过来的 MQ 服务是可靠的？ 如果你选择自己搭建一个 MQ 服务，在 2019 年你还会选择从头安装一个 MQ 服务吗？你会选用 docker 还是 k8s 去 setup 你的服务吗？ 你的开发环境，运行环境，测试环境，生产环境各自都有很多不一样的地方，如果和快速的把这几个测试环境 setup 起来？你是选用现有云计算提供的 paas 云服务，还是自己在公司内网的服务器搭建一套 k8s,线上再搭建一套。
 如果每个团队的成员都需要一个开发环境怎么办？怎么快速的 setup 起来？
 如果你购买的 paas 服务出问题了，你要怎么解决？是直接找云计算厂商解决起来比较靠谱，还是自己了解清楚每一个细节比较靠谱？关键的业务涉及到计费，公司收入，你会交给别人去管理吗？你的公司增长的速度和技术支出的速度以同样的速度增加，你是自己培养一支技术团队，还是把命根子交到别人手里？
 以上问题就是我们做一个互联网服务经常遇到的问题。在快和可靠之间我们必须要有所取舍。对于技术的选型关键不在技术，而是在业务。当你的业务增长过快或者过慢的时候用现成的 paas 服务无论如何都不是好的选择。如果你的业务复杂，研发的周期长，自己做一套简化部署和运维的 k8s 是非常有必要的。
@@ -79,14 +77,10 @@ import ( &amp;#34;fmt&amp;#34; ) type Speaker interface{ Speak() } type Bird str
       <pubDate>Tue, 03 Sep 2019 10:34:50 +0800</pubDate>
       
       <guid>http://www.leyafo.com/post/2019-09-03-an-api-problem-myth/</guid>
-      <description>这两天在使用公司其他部门设计的一个 API，在和同事交流的过程中发现 HTTP API 设计的一个很关键的问题点，所以把思考的一些东西记录在这里。
-我的 API server 是公司其他部门上游发送过来的请求，我的服务器接收请求，并响应数据。上游的 API 服务器设计时并未过多的考虑接入的问题，最开始的一个版本是把所有的数据全部放在 URL querystring 里面去给下游的 API server 去解析，不同的 API 通过里面的 ?Action=CreateUser 这样的参数形式去解析。参数全部放到 querystring 明显会带来以下问题：
-1. 所有的参数都没有类型，全部是 string 类型，其他的数据类型需要再次做解析。
-2. HTTP 有长度限制，无法发送过多的数据。
-3. URL 需要 base64 转义，这又为参数传递多带来一层解码负担。
+      <description>这两天在使用公司其他部门设计的一个 API，在和同事交流的过程中发现 HTTP API 设计的一个很关键的问题点，所以把思考的一些东西记录在这里。 我的 API server 是公司其他部门上游发送过来的请求，我的服务器接收请求，并响应数据。上游的 API 服务器设计时并未过多的考虑接入的问题，最开始的一个版本是把所有的数据全部放在 URL querystring 里面去给下游的 API server 去解析，不同的 API 通过里面的 ?Action=CreateUser 这样的参数形式去解析。参数全部放到 querystring 明显会带来以下问题：
+ 所有的参数都没有类型，全部是 string 类型，其他的数据类型需要再次做解析。 HTTP 有长度限制，无法发送过多的数据。 URL 需要 base64 转义，这又为参数传递多带来一层解码负担。
 基于这些我们看的见的 query string 问题，我们公司上游的 HTTP server 新做了一版接口。这次的做法是把所有的参数全部都放到 HTTP body 里面，这里看似已经解决了 querystring 所有的问题，但根本的问题并没有解决（咱们先不谈为什么不用 RESTful）。
-下面是这个新版本的 HTTP body 的参数形式。
-{ &amp;#34;Action&amp;#34;:&amp;#34;CreateUser&amp;#34;, &amp;#34;Name&amp;#34;:&amp;#34;John&amp;#34;, &amp;#34;Email&amp;#34;:&amp;#34;John@example.com&amp;#34;, .... } 这里仍旧事把 Action 参数放到 body 里面，下游的 HTTP 服务器对于发送过来的信息需要首先去解码 body 里面的 Action 参数，然后再通过 Action 参数去判断这是具体属于哪一个 API 的服务。你需要通过一些手段把这个 Action map 到一个具体的入口点。这带来一个问题，就是我们的每个 API 需要的参数都是不一样的，当我们去序列化的时候我们无法为所有 API 都使用同一个数据结构去序列化数据。下面的两个 HTTP body 除了 Action 可以使用同样的方式去序列化以外，其他的的数据结构完全无法通用。</description>
+下面是这个新版本的 HTTP body 的参数形式。  { &amp;#34;Action&amp;#34;:&amp;#34;CreateUser&amp;#34;, &amp;#34;Name&amp;#34;:&amp;#34;John&amp;#34;, &amp;#34;Email&amp;#34;:&amp;#34;John@example.com&amp;#34;, .... } 这里仍旧事把 Action 参数放到 body 里面，下游的 HTTP 服务器对于发送过来的信息需要首先去解码 body 里面的 Action 参数，然后再通过 Action 参数去判断这是具体属于哪一个 API 的服务。你需要通过一些手段把这个 Action map 到一个具体的入口点。这带来一个问题，就是我们的每个 API 需要的参数都是不一样的，当我们去序列化的时候我们无法为所有 API 都使用同一个数据结构去序列化数据。下面的两个 HTTP body 除了 Action 可以使用同样的方式去序列化以外，其他的的数据结构完全无法通用。</description>
     </item>
     
     <item>
@@ -109,7 +103,7 @@ T0: producer execute register1 = count {register1 = 5} T1: producer execute regi
 C 语言只为模块化提供了 .h 头文件这一简单有效的工程机制，对于依赖的管理和编译的开关你需要自己做好管理。模块与模块之间需要人为控制调用链路和层级关系。在我们平常的思维方式里面 A -&amp;gt; B -&amp;gt; C 的链路可以很轻易的转换成 A -&amp;gt; C 。在组织工程方面你千万不能直接这样做，必须要控制好 A -&amp;gt; B -&amp;gt; C 的调用链路以及不能反过来调用，否则代码在过了几个月之后会变得像乱麻一样难以维护。 比较好的方式是按照自顶向下的层级进行划分，越底层外部依赖越小，高层可以随意调用底层，反之则不行。 顺着代码分层的思路，我们阅读 C 语言的开源项目会容易许多。你将会发现大部分有名的开源项目都是一定程度上严格按照层级来划分模块。
 C 没有提供面向对象的支持，这一点并不完全是坏处，面向对象不是解决所有问题的“万灵药”。没有面向对象的支持可以让我们在设计接口时不必过多拘泥于“对象”层级的抽象，也不需要过多的考虑 has_a（组合） 还是 is_a （继承）的问题。我们只需要把问题边界和定义以最清晰的方式描述出来，以此来设计接口，控制好哪些是用户应该看到的，哪些是用户应该操心的，其他的一律全部隐藏掉。我的做法就是尽可能的把 .h 文件做得无比简洁，让它没有任何外部依赖去声明一组接口，让 .c 文件去实现所有的细节。如下代码所示：
 struct Foo; struct Foo* New(char *opts); int AddFoo(struct Foo *f, struct Foo *f1); int FooBar(struct Foo *f, int bar); 这就是基于对象的接口封装，它简单却十分有效。你必须要很清晰的去定义好问题的边界和代码的层级，提高单个模块的内聚性。由于缺乏一些高级语言特性的支持，用 C 语言开发软件就要求我们必须非常清晰的去思考我们的问题是什么，哪些是需要解决的，哪些是不需要解决的，以及该用什么用的数据结构。至于工程内不断的重复造轮子实际上并不需要花过多的时间。毕竟设计上的失误比代码要更加难以修改。
-C 语言没有方便的 string 类，每当我们要操作一段字符串时必须要考虑字符串的生存周期管理。对于一些固定的常量字符串我们可以把它直接放在代码的静态区直接引用（如错误信息）。非固定的字符串我们应该考虑以模块化的方式去管理内存，尽量不要去做细粒度的堆上内存分配，释放内存过于繁琐很容易出现内存泄漏的问题。对于临时需要使用的一段字符串我们可以直接分配一个固定的字符串数组进行操作即可。 C 语言对编解码操作非常擅长，它可以让单个字符的操作达到最优效率。在一些编解码处理的情况下，静态代码 hard code 是必要的（比如 HTTP 的状态码和字符串返回信息的对应）。 为保证模块的内聚性和责任清晰，我们应当尽量不要让堆上的内存交由外部用户去释放或者删除，即使需要这样做也应该提供一个相应的 release 接口来对本模块分配的内存进行释放。</description>
+C 语言没有方便的 string 类，每当我们要操作一段字符串时必须要考虑字符串的生存周期管理。对于一些固定的常量字符串我们可以把它直接放在代码的静态区直接引用（如错误信息）。非固定的字符串我们应该考虑以模块化的方式去管理内存，尽量不要去做细粒度的堆上内存分配，释放内存过于繁琐很容易出现内存泄漏的问题。对于临时需要使用的一段字符串我们可以直接分配一个固定的字符串数组进行操作即可。 C 语言对编解码操作非常擅长，它可以让单个字符的操作达到最优效率。在一些编解码处理的情况下，静态代码 hard code 是必要的（比如 HTTP 的状态码和字符串返回信息的对应）。 为保证模块的内聚性和责任清晰，我们应当尽量不要让堆上的内存交由外部用户去释放或者删除，即使需要这样做也应该提供一个相应的 release 接口来对本模块分配的内存进行释放。 C 语言从 C89 以后就没有更多的改变，它是一门精简的无可再精简的语言。在现在这个年代如果还用 C 语言做开发那一定意味着对跨平台是有一定的要求的。我的做法是直接使用 C89 作为代码标准，并且屏蔽掉 C98 的语言特性和除 posix 库以外的标准库，这样做并没有损失什么，为代码一致性提供良好的支持。对于变量我们应当把一切的值以 0 做为初始化，struct 使用 memset(&amp;amp;s, 0, sizeof(struct s)) 这样的形式初始化，字符串常量数组始终以 char str[32]={0} 这种形式初始化。模块的初始化我们应当提供一个模块级的 init 函数去做。</description>
     </item>
     
     <item>
@@ -120,8 +114,8 @@ C 语言没有方便的 string 类，每当我们要操作一段字符串时必�
       <guid>http://www.leyafo.com/post/2018-07-16-nginx-configuration/</guid>
       <description>Nginx 的配置很多，最常见的配置就是做一个反向代理服务器。一般作为新手配置 Nginx 最常见的做法是去网上搜索关于 反向代理的配置，实际上里面配置的项并不是特别清楚。本文的作用就是详细介绍这些配置项的作用，可以让你在配置的时候不再依靠搜索引擎去找具体配置项的含义，最好能做看一眼 nginx 配置文件就能知道问题在那里。
 Nginx 进程关系 Nginx 使用 Master-Worker 多进程模式来进行并发处理网络连接。其中 worker 进程处理具体的事物，master 进程负责监督 worker 进程的工作状态。worker 进程之间通过共享内存，原子操作等一些进程间通信机制来实现负载均衡。
-这中多进程的方式有如下好处： 1. Master 进程可以监控 Worker 进程，并在其 crash 的时候重启。 2. Master 可以在运行时重载配置文件，可以做到平滑升级。 3. Worker 数量对应 CPU 数可以减少内核切换，没有同步锁的限制。
-进程相关的块配置 Nginx 块配置由一对大括号组成，每个块都有它对应支持的变量，以下是进程相关的块配置选项及说明。
+这中多进程的方式有如下好处：
+ Master 进程可以监控 Worker 进程，并在其 crash 的时候重启。 Master 可以在运行时重载配置文件，可以做到平滑升级。 Worker 数量对应 CPU 数可以减少内核切换，没有同步锁的限制。  进程相关的块配置 Nginx 块配置由一对大括号组成，每个块都有它对应支持的变量，以下是进程相关的块配置选项及说明。
    配置项 值(value) 说明 类别     daemon on/off 是否以 daemon 模式运行 调试   master_process on/off 是否以 master／worker 多进程的方式运行 调试   error_log pathfile level((从小到大依次是 debug、info、notice、warn、error、crit、alert、emerg)) log 的路径和级别 调试   debug_connection((使用前，需确保在编译执行configure时已经加入了&amp;ndash;with-debug参数，否则不会生效。)) IP/CIDR((10.</description>
     </item>
     
@@ -225,7 +219,7 @@ HTTP/1.1 302 Found Server: Tengine Date: Tue, 24 Apr 2018 02:00:40 GMT Content-T
       
       <guid>http://www.leyafo.com/post/2018-01-17-simple-logical/</guid>
       <description>There are two ways of thinking. One is to draw conclusions from your observations, and the other is proceed solely on the basis of logic.
-​ Jim Rogers &amp;lt;A Gift to My Children&amp;gt;
+​	Jim Rogers &amp;lt;A Gift to My Children&amp;gt;
  逻辑学是一门让思考变得清晰的学科，它是用来探寻事情的真相和本质。逻辑学在现代科学里面几乎无处不在，在国内外学术交流中，逻辑是交流双方的基本共识。逻辑还存在于语言的各个角落，语言本身就是使用逻辑构造的。我们用语言把大脑中的思考描绘出来，用逻辑在组织好这些语言，最后变成文章。本文就是使用逻辑来介绍逻辑学。
 逻辑学的基本概念 第一性原则 (First Principles) First Principles 是一种思考方式，首先提出这个问题的是古时期哲学家亚里士多德。这种思维方式是从事物的本质出发，从最基础的地方衍生万千变化。古希腊不朽名著《几何原本》，从最基本五条定理出发推出一整个几何系统。现代物理学领域从世界上最小单位、不可再分的原子基础上构建整个科学体系。几乎所有科学领域都是从最本质的第一性原则(Frist Principles)出发构建整个科学体系。逻辑学也不例外。
 我们来看看逻辑学的第一性原则
@@ -233,7 +227,7 @@ HTTP/1.1 302 Found Server: Tengine Date: Tue, 24 Apr 2018 02:00:40 GMT Content-T
 在生活中我们大脑容易过度关注事物的外在表现，而不是本质的东西。行李箱的发明是我们大脑关注错位的一个绝好的例子。在古罗马时期人们就需要携带食物做长途旅行，人们把食物放在箱子里由马车来运载移动。在后来的 1000 多年里，人们在箱子表面和材质上做各种改进，却没人想过把轮子和箱子结合起来。直到 1970 年一个叫 Bernard Sadow 的人在机场看到工人用一块镶嵌着轮子的木板在驼东西，带轮子的行李箱才在将近 1000 后，在偶然中发明。
 First Principles 也是 Elon Musk 推崇的思考方式。去掉事物所有外在表现，从最本质的问题出发。在逻辑学里面推崇也是去掉事物的表面，关注事物本质。
 三段论 古希腊时期亚里士多德提出著名的三段论，这是逻辑推理的基本过程。它是由证据(Evidence)间相互链接(Establish)，最终构成一个基本的论点(Argument)。以下是基本的三段论式的推理过程。
-所有人都会死。 男人是人。 男人都会死。  我可以把它看成是法官断案，在综合(Establish)所有证据(Evidence)后，最终形成一个有效判定(Argument)。</description>
+所有人都会死。 男人是人。 男人都会死。 我可以把它看成是法官断案，在综合(Establish)所有证据(Evidence)后，最终形成一个有效判定(Argument)。</description>
     </item>
     
     <item>
@@ -243,7 +237,7 @@ First Principles 也是 Elon Musk 推崇的思考方式。去掉事物所有外�
       
       <guid>http://www.leyafo.com/post/2017-12-24-systemic-learning/</guid>
       <description>In this world we have two kinds of knowledge, one is Planck knowledge, the people who really know, they paid the dues they have the aptitude. Then we got chauffeur knowledge, they have learned to prattle the talk. They have a big head of hair, they have a fine temper in the voice, they make a hell of an impression, but in the end they&amp;rsquo;ve got chauffeur knowledge.
-​ Charlie Munger</description>
+​	Charlie Munger</description>
     </item>
     
     <item>
@@ -341,14 +335,14 @@ web 本身是一种信息的组织方式，它通过 HTTP 协议把全世界的�
       <pubDate>Mon, 19 Jun 2017 11:27:06 +0800</pubDate>
       
       <guid>http://www.leyafo.com/post/2017-06-19-avoid-these-35-habits/</guid>
-      <description>本文翻译自Avoid these 35 habits that lead to unmaintainable code
+      <description>本文翻译自[Avoid these 35 habits that lead to unmaintainable code](https://chrismm.com/blog/avoid-these-35-habits-that-lead-to-unmaintainable-code/)
 坏习惯难以改变，它会以意想不到的方式影响你的工作。如果你只是知道这些习惯，但并不在乎它，事情将会变得更糟。你既然来读这篇文章了，我想你肯定是在意这些坏习惯的。
 作为一个程序员，我见过很多不好的开发方式。这不仅体现在代码方面，还体现在团队协作方面。这 35 个习惯都是我本人的一些坏习惯，我并不以此为荣。我将按照代码组织、团队协作、编码、测试、维护这些类别来描述这些坏习惯。
 代码组织 1. “我承诺修复这个问题”，实际却永远也不去做。 延后修复这个坏习惯不仅仅只是一个定义问题的优先级。追踪一个问题需要耗费一些进度，但你仍然需要组织好问题追踪过程中的小问题。并在代码里面加上 TODO 确保这些问题不会被遗忘掉。
 2. 过度追求代码的简洁性 追求代码的 “优雅”，“简洁” 是程序员的常见特质。当你把一个 20 行的正则表达式简化成 2～3 行，这就像解谜一样有趣。不幸的是，这并没有让代码变得更有利于阅读。代码可读性好才是更重要的，你应该首先确保这一点，然后再考虑代码的 ”优雅“。
 3. 毫无目的的优化 我们常常会做一些没有意义的优化。这就好比通过优化文件大小来提高网站的加载速度。但为何不直接用 gzip 压缩？优化 request 难道不更有效吗？把优化工作放到项目结束的时候做，因为一般情况下优化是没有必要的，没有必要的优化就是在浪费你的时间。
  过早的优化是万恶之源。
-​ －Donald Knuth
+​	－Donald Knuth
  4. 不注重代码风格 如果我多年来一直在学习他人的代码， 最不需要了解的就是这个开发者的代码风格。或许没有经验的开发者很难看出代码风格带来的问题。但大多数时候风格问题将会使项目脱离正轨，从而带来雪崩一样的混乱。在细微处保持严格最佳实践，启用 lint 检查工具，这些将会让你从这些细节中结果出来， 从而去关心更重要的问题。
 5. 掩埋错误 无论捕获还是忽略异常或者使用不报告错误的库，掩埋错误的方式有很多种。但如果这些错误其中一个优先级变得很高，修复比忽略它要难很多倍，尤其是在你无从下手的时候。简单一点的方式就是避开它，然后纪录下来以便以后追踪。
 6. 命名没有包含足够的信息 命名很难，但有简单的方法可以让你的函数和变量命名合格。只要你在名字里面包含特定的信息，不要传递额外的信息，你的代码可以容易的让别人阅读。命名如此重要的原因在于它可以描述代码具体的作用。好的命名会让你更容易理解代码的作用，否则你需要花费更多的时间才能深入的了解代码的作用。
@@ -444,7 +438,8 @@ Rspec 的问题 Rspec 定义了测试的领域语言，他的目的是让非开�
 TEST ABCABCABCDEF ABCABCDEF | |-------- 进入下一个位置进行匹配 ------&amp;gt; TEST ABCABCABCDEF ABCABCDEF | &amp;lt;----- 还是不匹配,继续往前走 ------| | | ......前面三个还是不匹配..... 这个时候我们待匹配的子串走到了‘TEST ’后面一个位置
 TEST ABCABCABCDEF ABCABCDEF | |------ D 和 A 不匹配。 这个时候主串和子串出现了部分匹配的情况，这个时候我们的子串该如何前进继续匹配？目前能想到的方法就是按照暴力匹配的方式继续向前进一步。但本文的目的不在于讨论暴力匹配，所以这种方法被 Pass 掉。如果直接将子串移动到现在不匹配 D 的位置，这种方式会错过可能会匹配的子串。比如下面这种情况会错过可能会匹配的子串。
 ABCABCDEFGHIJK -----&amp;gt; ABCABCDEFG ABCDEFG ABCDEFG 因此上面的移动是不合法的，算法会出现错误。从这里我们可以观察到合法的移动是将子串移动到 ABC 。这样我们就能再次匹配到 ABC，这也就是本文前面说的那句话，利用已经匹配成功的部分子串来跳转到下一次能再次匹配的串。现在问题是我们该如何在程序中得到这个正确的移动位置？首先我们先来观察已经匹配的部分匹配子串。
-TEST ABCABCABCDEF ABCABCDEF | |---------&amp;gt;部分匹配子串 ABCABC 从这里我们可以看到 ABC 出现了两次，因此 ABC 是我们需要的再次匹配的串。但这个 ABC 是如何得到的？因此我们现在我们需要解决的问题有2个。 1. 找到再次匹配串。 2.</description>
+TEST ABCABCABCDEF ABCABCDEF | |---------&amp;gt;部分匹配子串 ABCABC 从这里我们可以看到 ABC 出现了两次，因此 ABC 是我们需要的再次匹配的串。但这个 ABC 是如何得到的？因此我们现在我们需要解决的问题有2个。
+ 找到再次匹配串。 确定这个再次匹配串需要移动的位置。  这个时候我们要解决的问题跟主串已经没啥关系了，我们的问题变成了找子串中重合的子串。实际上还是找子串，不同的是这次我需要去分析部分匹配串里面的子串。这个问题比较好解决，我们只需要把部分匹配串全部分解为子串。就能找到出现两次或者两次以上的子串了。因此ABCABC 可以分解为如下子串：</description>
     </item>
     
     <item>
@@ -455,11 +450,11 @@ TEST ABCABCABCDEF ABCABCDEF | |---------&amp;gt;部分匹配子串 ABCABC 从这
       <guid>http://www.leyafo.com/post/2014-10-27-a-red-black-tree-implementation/</guid>
       <description>红黑树是有序平衡树的一种，它于1978年由 Guibas 和 Sedgewick 发明。红黑树是2-3-4 树 的一种抽象表示。有趣的是现在大多数算法书关于红黑树都没有提到过 2-3-4 树。算法书上关于红黑树的讲解都是基于定理来实现红黑树。至于这些定理怎么来的，算法书却没有描述过。这就是为啥算法书上的红黑树难以理解，这是算法书的坑。所以要理解红黑树，理解 2-3-4树 是必不可少的一个过程。
 2-3-4树 2-3-4树的基本性质 2-3-4树也是一种有序的平衡树，它具有以下性质：
- 所有节点最多存三个值，分别是从左到右大小依次排序。
- 所有最底部叶子节点到最顶 root 的高度都是相等的。
- 每个节点可容纳 2 到 4 个子节点。1个值的节点可以有两个子节点，2个值的节点可以有3个子节点，3个值的节点可以有4个子节点。也就是说一个值有两条边的子树，像二叉树一样，大小是按照从左到右排的。
-  下图分别是 2-3-4 树的3种子树类型（这里的子树按边算的，有几条边就有几个子树）。
-2-3-4树的插入 前面说了 2-3-4树是一种平横树，叶子节点到 root 的高度都是相等的。这也就意味着每当插入一个新节点不能单纯的像 BST 那样将新的节点插入到树的底部，否则会破坏树的平衡。2-3-4树使用的平衡方法是合并。就是将2树变为3树，3树变4树。如下图：
+  所有节点最多存三个值，分别是从左到右大小依次排序。
+  所有最底部叶子节点到最顶 root 的高度都是相等的。
+  每个节点可容纳 2 到 4 个子节点。1个值的节点可以有两个子节点，2个值的节点可以有3个子节点，3个值的节点可以有4个子节点。也就是说一个值有两条边的子树，像二叉树一样，大小是按照从左到右排的。
+下图分别是 2-3-4 树的3种子树类型（这里的子树按边算的，有几条边就有几个子树）。
+  2-3-4树的插入 前面说了 2-3-4树是一种平横树，叶子节点到 root 的高度都是相等的。这也就意味着每当插入一个新节点不能单纯的像 BST 那样将新的节点插入到树的底部，否则会破坏树的平衡。2-3-4树使用的平衡方法是合并。就是将2树变为3树，3树变4树。如下图：
 上面上正常情况下的插入，不会破坏树的平衡。但要插入的节点已经是一个4树了，这种方法就不管用了，因为4树是没法变为5树的。这时可以将 4 树往上挪一个分裂出两个 2 树的子节点，如果父节点已经是 4 树了，则继续往上挪动，直到 root 节点分裂，整颗树的高度会增加一层。下图是一个分裂增加树高度的方式：
 2-3-4树的删除 树结构的删除都很麻烦，2-3-4树 也不例外。2-3-4树 插入的时候需要保持树的平衡，删除的时候也需要保持树的平衡，树高度的调整需要从 root 合并来降低树的高度。2-3-4树 和 AVL 树一样会选择从最底部的叶子节点删除。如果找到的节点不是 leaf 节点会从当前节点的右边出发，找到最左边的 leaf 节点来替换，然后删除被替换后的 leaf 节点。如果 leaf 节点是 3 树或者或者4 树，直接删除即可。如果是2树的话就不能直接删除，需要对其进行旋转操作，从临近的同一层节点挪个节点过来补上。如果临近元素也是 2 树则从父节点挪一个节点下来。 下图是删除 3树 或 4 树的情况：</description>
     </item>
@@ -470,9 +465,9 @@ TEST ABCABCABCDEF ABCABCDEF | |---------&amp;gt;部分匹配子串 ABCABC 从这
       <pubDate>Thu, 24 Jul 2014 08:53:00 +0800</pubDate>
       
       <guid>http://www.leyafo.com/post/2014-07-24-rails-log/</guid>
-      <description>这几天在做一个小型的论坛，做到了注册登录这一块。之前没有完整做过注册登录这个东西，这次我打算从头写到尾去详细的了解里面的一些基本原理。所以这次并没有使用devise这样的 *gem*。
+      <description>这几天在做一个小型的论坛，做到了注册登录这一块。之前没有完整做过注册登录这个东西，这次我打算从头写到尾去详细的了解里面的一些基本原理。所以这次并没有使用devise这样的 gem。
 密码存储 用户密码安全存储是作为一个 web 开发者的基本节操。好在现有的一些解决方案已经能比较好的解决这个问题了，做起来也比较容易。只需要了解一些基本的安全常识就可以保证90%的情况下是安全的。 在数据库里面存储加密后的密文是为了防止被拖库，如果黑客拖下了整个用户表，加密后的密码他们拿着也是没有用的。即使是网站的管理员也是没法知道这个密码的真实原文。因为现在一般的密码 hash 算法是不可逆的。所以现在的一些比较常用的密码明文获取方式是进行字典暴力破解。如果在密码原文 hash 前给密码添加一些比较长的唯一的随机字符串，这会使攻击者的字典基本上失效(因为很长，枚举次数要上升很大一个数量级)。这就是密码加盐(salt)的基本作用。当然加盐的另外一个作用是让两个相同的密码产生不同的 hash 值。这样即使知道加密算法和加密后的密文也无法通过比较密文来得到原文。 在用户登录时我们会拿到用户的原始密码，这个原始密码相当于一把钥匙。拿着这个密码通过加密算法和数据库里面的 salt 得到加密后的密文。再用这串密文与数据库的密文进行比对，比对成功后则验证通过。在这样一个过程中，密码看起来就像打开箱子的钥匙一样，由用户携带，网站不进行存储。
-session 和 cookie cookie 是存储在用户浏览器中的一段唯一标识，http request 会将它传送到服务端。现在一般的 web framework 会去检测用户的 http request 是否带有 cookie, 如果没有发现请求中没有 *cookie*，它会建立一个*session*。并且以 cookie 作为 key 来保存 *session*。这样如果用户下次同样 cookie 的 http request 进来了，就可以找到相同的 *session*。 session 和 cookie 是实现记住用户的基石。http 协议是无状态的协议。在用户登录某一个网站后，我们是需要记住登录状态的。这时候就要通过 cookie 和 session 来干这件事情。 rails 默认是已经将 session 建立好了。在 controller 中可以很方便的拿到 session 变量去存储一些信息。另外比较有意思的是 rails 默认是将 session 经过加密后存储在用户 cookie 中的。当用户的 cookie 传送到后端时会将 cookie 进行解密得到相应的 *session*。</description>
+session 和 cookie cookie 是存储在用户浏览器中的一段唯一标识，http request 会将它传送到服务端。现在一般的 web framework 会去检测用户的 http request 是否带有 cookie, 如果没有发现请求中没有 cookie，它会建立一个session。并且以 cookie 作为 key 来保存 session。这样如果用户下次同样 cookie 的 http request 进来了，就可以找到相同的 session。 session 和 cookie 是实现记住用户的基石。http 协议是无状态的协议。在用户登录某一个网站后，我们是需要记住登录状态的。这时候就要通过 cookie 和 session 来干这件事情。 rails 默认是已经将 session 建立好了。在 controller 中可以很方便的拿到 session 变量去存储一些信息。另外比较有意思的是 rails 默认是将 session 经过加密后存储在用户 cookie 中的。当用户的 cookie 传送到后端时会将 cookie 进行解密得到相应的 session。</description>
     </item>
     
     <item>
@@ -494,7 +489,7 @@ Capistrano 非常依赖版本控制，在 deploy.rb 文件中 repo_url 是用于
       
       <guid>http://www.leyafo.com/post/2014-05-22-i-think-php-is-terrible/</guid>
       <description>最近在用PHP做项目，让我个人感觉PHP是门非常不顺手的编程语言。PHP太多东西给人的感觉就像是一个半成品。
-namespace PHP 的 namespace 是我见过的所有语言最难用的 namespace，没有之一。它使用反斜杠\**来进行层级切分，在使用上非常容易跟 include 使用的文件路径斜杠搞混淆。namespace** 的 use 语句使用也是让人赶到非常奇怪，它不能在代码中的任意作用域使用，只能在一个文件的最顶级作用域中使用 use。namespace 这个东西是控制访问冲突使用的，在文件顶级作用域中使用 namespace 是一个产生冲突的隐患。这就是一个半成品，PHP 中的内部库函数是没有使用 namespace 的，也不知道他们自己为啥不用这玩意。
+namespace PHP 的 namespace 是我见过的所有语言最难用的 namespace，没有之一。它使用反斜杠**\**来进行层级切分，在使用上非常容易跟 *include* 使用的文件路径斜杠搞混淆。**namespace** 的 **use** 语句使用也是让人赶到非常奇怪，它不能在代码中的任意作用域使用，只能在一个文件的最顶级作用域中使用 **use**。**namespace** 这个东西是控制访问冲突使用的，在文件顶级作用域中使用 **namespace** 是一个产生冲突的隐患。这就是一个半成品，*PHP* 中的内部库函数是没有使用 *namespace* 的，也不知道他们自己为啥不用这玩意。
 变量 在每一个变量前加一个$符号，让我对这个语言的第一印象非常不好，给我的感觉是丑陋。变量名加$可以很方便的嵌入到字符串中，但是 PHP 在字符串内嵌中增加了 {} 语法，这让变量前面 $ 符号失去了它唯一的作用。$ 符号除了让代码变得更丑陋以外，没有任何的实际用处。另外在 PHP 中 if 和 for 还有 while 一系列控制语句中，变量是没有作用域的。可以很随意的去拿 if 和 else 中的变量，解释器不会报错。但是你不知道什么时候解释器会给你报一个 undefine 的错误。
 函数与闭包 函数本身没啥好说的，每个语言最基本的单元。如果这玩意也实现不好那真的太糟了。但我要说的是 PHP 从5.3以后引入的匿名函数。PHP 的匿名函数看起来好像是可以在任意的地方定义它，这很符合匿名函数的特性。但问题是你如果要用到上下文变量需要显示的使用 use 将变量引入。这看起来好像是没有什么问题，但是如果函数嵌套的层级一多，这完全是个枷锁。另外如果要判断一个变量是不是一个函数 PHP 有一个 is_callable 的方法,这个方法的奇怪之处在于你可以传入变量名或者以字符串形式传入函数名。但如果直接传入一个函数它返回的值是 false。经过使用 is_callable 函数的一些失败尝试后，我彻底放弃了 PHP 的匿名函数与闭包。</description>
     </item>
@@ -508,10 +503,10 @@ namespace PHP 的 namespace 是我见过的所有语言最难用的 namespace，
       <description>过年在家没事，找出了几年前把我折磨得死去活来的&amp;lt;数据结构与算法分析&amp;gt;这本书。确切的说，这段时间这本书也在折磨我。上面的avl树的旋转说得不清不楚的，而且还是使用递归实现了avl树的插入与删除操作。让这本书上本身就已经不太清晰的描述变得更加的扑朔迷离，让我有一种想烧掉这本书的冲动。到最后我实在没法看懂书上描述的avl树的操作方式只好自己从网上找一些资料实现了avl树(代码在此)。另外维基百科上有关于avl树基本性质的描述，我在这里也不过多介绍。但是请勿对照这篇文章去实现avl树，这篇描述的删除操作是有问题的。关于树的旋转，这篇文章也没有把最根本的问题说清楚。avl树最难的部分就是关于树的旋转，本文主要讨旋转的问题。
 首先，旋转的作用是降低子树的高度。旋转的方式有两种，一种是用来降低左子树高度一般被称作右旋。一种是用来降低右子树高度一般被称为左旋。这两种旋转在物理上是对称的，在编码上也是无脑对称的。因此，在编码方面我们只需要实现出一种旋转后另一种旋转也可以依葫芦画瓢的实现出来。另外在每个节点中保存一个父节点可以让编码的复杂度大大降低。
 下面是左旋的具体变化过程:
-A B \ / \ B 左旋 ==&amp;gt; A C \ C  下面是右旋的具体变化过程:
-A B / / \ B 右旋 ==&amp;gt; C A / C  上面的这两种情况是比较理想的情况，在实际的使用情况下是没有这么理想的。不能处理下面这些情况。
+A B \ / \ B 左旋 ==&amp;gt; A C \ C 下面是右旋的具体变化过程:
+A B / / \ B 右旋 ==&amp;gt; C A / C 上面的这两种情况是比较理想的情况，在实际的使用情况下是没有这么理想的。不能处理下面这些情况。
 A A \ / B B / \ C	C 上面的这两种情况就是书上所说的关于双旋转的问题。解决这两种情况的方法就是先旋转B节点,先将C点与B点旋转到A点与B点相同的指向方向。然后在根据A点做对应方向的旋转。
-A A C A A C \ \ / \ / \ / \ B =&amp;gt; C =&amp;gt; A B B =&amp;gt; C =&amp;gt; A B / \ \ \ C B C B  写到这里貌似可以去开工写代码了，但是请等等。在实际的编码中碰到如下情况还是不知道到底该怎样旋转。</description>
+A A C A A C \ \ / \ / \ / \ B =&amp;gt; C =&amp;gt; A B B =&amp;gt; C =&amp;gt; A B / \ \ \ C B C B 写到这里貌似可以去开工写代码了，但是请等等。在实际的编码中碰到如下情况还是不知道到底该怎样旋转。</description>
     </item>
     
     <item>
@@ -529,7 +524,7 @@ A A C A A C \ \ / \ / \ / \ B =&amp;gt; C =&amp;gt; A B B =&amp;gt; C =&amp;gt; 
 订票过程尽量简单 现在用户订票需要选择日期后再查询，然后服务器再返回好几趟车的数据。我认为这一步实在是很多余，买票的人这么多，大家都会事先查好需要买哪趟车，不会等到出票时间去查询再买。面对这种情况，最好是让用户直接再事前输入准确的车次，起终点站就可以了。这样就能减少服务器与客户端之间的数据传输次数与数据量。
 可增加的功能（没错，我认为应该增加一些功能。） 现在的订票助手已经做到了离线化订票，既然这样12306为什么不直接把这件事给干了呢？12306拿到用户的订票信息，可根据偏远程度与火车的运载量在后台进行订票的优先级排序。甚至可以在某辆车运载量不够的情况下为用户自动安排最优化的换乘方案与对应的车票。
 增加电话订票的可用度 不得不说电话订票实在太难用了，中间经历的过程非常烦琐。能用电话订到票的基本上需要一部带有机械键盘的座机与职业游戏玩家的反应与手速才能做到。简化电话订票中间的流程，多开通几个订票号码，这样能分流一部分订票压力。
-后台改进 从春运的卖出的2.4亿张火车票的数量上来看，这真的是实实在在的大数据处理。甚至被称为世界级难题我认为都是可以的。因为后台跟12306前端所面对的问题完全是不再一个层面上的。因为后台需要将电话，售票点，代售点，网络售票，退票这几个点的火车票全部进行管理。也就是需要为这2.4亿张火车票做一个中心数据库系统。而且这个系统需要满足： 高并发：几百万人在一个时间点同时买票。 高可用性：不能done机 高响应：读写的时间不能太长 恐怖的一致性：是的，这个一致性很恐怖。因为所有的订票请求，都需要在一个地方去拿，不能出现两个人订到了同一张票的情况。虽然电话，售票点，代售点，退票这几个点可以提前分配好资源。网络售票在一个时间点保持几百万个资源的一致性是非常恐怖的操作。
+后台改进 从春运的卖出的2.4亿张火车票的数量上来看，这真的是实实在在的大数据处理。甚至被称为世界级难题我认为都是可以的。因为后台跟12306前端所面对的问题完全是不再一个层面上的。因为后台需要将电话，售票点，代售点，网络售票，退票这几个点的火车票全部进行管理。也就是需要为这2.4亿张火车票做一个中心数据库系统。而且这个系统需要满足： **高并发：**几百万人在一个时间点同时买票。 **高可用性：**不能done机 **高响应：**读写的时间不能太长 **恐怖的一致性：**是的，这个一致性很恐怖。因为所有的订票请求，都需要在一个地方去拿，不能出现两个人订到了同一张票的情况。虽然电话，售票点，代售点，退票这几个点可以提前分配好资源。网络售票在一个时间点保持几百万个资源的一致性是非常恐怖的操作。
 改进方案： 陈皓在去年提出了几点解决方案：数据镜像 ，数据分区 ，后端系统负载均衡
 他的大致思路是一个数据负载均衡的思路。就是尽量不让用户去大量的访问一个点。实际上铁道部已经在去年开始就使用了分时间段买票的方法。这一方法就是一个负载均衡的思路。效果是有了，但是实际上只是消化了一部分数据，但还是有海量的数据存在。我倒是比较赞同他的另外一个思路，就是收集用户的订单，然后到了一定的时间与数量再提交到中数据库中。
 我的思路： 既然要批量提交，为什么不把剩余票源提前从数据库里面挖出来做一个缓存，然后读写这块缓存，到最后在提交这块缓存到中心数据库。每个节点服务一批用户，缓存的节点不能太少，缓存应该在从中心数据里挖出来的那时候起就要保证将来数据库里一致性的问题。但难度在于如何将用户分配到适合的票源缓存点去？这就要按车次与席别还有乘车日期类型的不同来分配车票的类型。这个计算过程是独立，完全可以很轻松的做到并行计算。
@@ -542,8 +537,8 @@ A A C A A C \ \ / \ / \ / \ B =&amp;gt; C =&amp;gt; A B B =&amp;gt; C =&amp;gt; 
       <pubDate>Mon, 06 Jan 2014 14:00:00 +0800</pubDate>
       
       <guid>http://www.leyafo.com/post/2014-01-06-rails-ajax/</guid>
-      <description>在 Rails 中只需要指定在 erb 模板中指定 remote=true 选项就可以将请求变为异步的了。request-handle-response-callback 这是一个 AJAX 请求的过程。rails 将这些步骤直接简化成了 request 和 handle 两步，让它看起来的像魔法一样而简洁神秘。在我初次接触 Rails 的 AJAX 时，我也随手去翻了下 wikipedia 关于 AJAX 的条目。AJAX 很好理解，但这并未让我更好的去完全理解 Rails 魔法般的 *AJAX*。主要被困惑的在 controller 的 handle 函数里面的 response 实现。
-def handle @model = new some_model #do something if @model.save respond_to do |format| format.js end end  上面是一个典型的 Rails 应用场景，完全没有了那些简单粗暴原生的 html 与 javascript 的代码，更加别想看到 XMLHttpRequest 这种对象了。respond_to 是一个接收代码块的方法。而 format 表示 response 时使用的数据格式，format.js 会找到对应的 handle.js 并将里面的 js 代码 repond 到客户端。这仅仅只是客户端需要 js 类型回复的一个需求。如果客户端需要 json，XML，HTML 等不同类型的数据，只需要在 repondto 这个代码块使用 format 对象调用对应的方法即可。rails 会自动判断并回应对应的类型的数据到前台页面。 这样做的好处有： 1.</description>
+      <description>在 Rails 中只需要指定在 erb 模板中指定 remote=true 选项就可以将请求变为异步的了。request-handle-response-callback 这是一个 AJAX 请求的过程。rails 将这些步骤直接简化成了 request 和 handle 两步，让它看起来的像魔法一样而简洁神秘。在我初次接触 Rails 的 AJAX 时，我也随手去翻了下 wikipedia 关于 AJAX 的条目。AJAX 很好理解，但这并未让我更好的去完全理解 Rails 魔法般的 AJAX。主要被困惑的在 controller 的 handle 函数里面的 response 实现。
+def handle @model = new some_model #do something if @model.save respond_to do |format| format.js end end 上面是一个典型的 Rails 应用场景，完全没有了那些简单粗暴原生的 html 与 javascript 的代码，更加别想看到 XMLHttpRequest 这种对象了。respond_to 是一个接收代码块的方法。而 format 表示 response 时使用的数据格式，format.js 会找到对应的 handle.js 并将里面的 js 代码 repond 到客户端。这仅仅只是客户端需要 js 类型回复的一个需求。如果客户端需要 json，XML，HTML 等不同类型的数据，只需要在 repondto 这个代码块使用 format 对象调用对应的方法即可。rails 会自动判断并回应对应的类型的数据到前台页面。 这样做的好处有： 1.</description>
     </item>
     
     <item>
@@ -565,9 +560,9 @@ def handle @model = new some_model #do something if @model.save respond_to do |f
       <guid>http://www.leyafo.com/post/2013-11-23-tail-recursion-optimization/</guid>
       <description>递归是一个奇特的玩意,它能简洁的描述复杂的思考.
 一个简单的递归函数:
-def fibonacci(n): if n &amp;lt;= 1: return 1 return fibonacci(n-1) + fibonacci(n-2)  这个函数实现了一个裴波那契数列.非常简单,代码只有 3 行,但如果跟着函数运行的轨迹走.会发现这个函数背后的调用过程非常的复杂.每次递归都会依赖前面两次计算的结果.随着递归的层级上升,每次都会重新去调用前两次计算产生的结果.为了简化描述,下面是以 fibonacci(5) 模拟递归调用过程. 可以看到,每次递归都会重复前两次的调用过程.实际上这个递归数列并不需要每次都重复去求前两次的结果.如果用压栈的方法,一遍递归就可以搞定了.
-def fibonacci(n): L = fibonacci.L if n &amp;lt;= 2: return L[-1] #get top else: n2 = L.pop() n1 = L.pop() L.append(n2) #&amp;#39;append&amp;#39; is stack&amp;#39;s push  L.append(n1+n2) return fibonacci(n-1) fibonacci.L = [1,1]  上面的代码耍了一个小花招.首先先设定好两个初始的计算结果,然后开始递归迭代.与前一版本递归不同的是,前一个递归需要在进入到递归底部后,才开始跳出来计算每一步递归后的结果,直到返回.而后一个递归会在最开始递归进入时就开始计算,进入到递归底部后(也就是 n &amp;lt;= 2)最终的结果就已经计算出来了,直接一层一层返回这个结果就可以了. 为了便于说明下面代码是利用两个变量做中间结果的版本:
-def fib(n, n1=1, n2=1): if n &amp;lt; 2: return n1 return fib(n-1, n2, n1+n2)  跟上面那个压栈的方式一样.</description>
+def fibonacci(n): if n &amp;lt;= 1: return 1 return fibonacci(n-1) + fibonacci(n-2) 这个函数实现了一个裴波那契数列.非常简单,代码只有 3 行,但如果跟着函数运行的轨迹走.会发现这个函数背后的调用过程非常的复杂.每次递归都会依赖前面两次计算的结果.随着递归的层级上升,每次都会重新去调用前两次计算产生的结果.为了简化描述,下面是以 fibonacci(5) 模拟递归调用过程. 可以看到,每次递归都会重复前两次的调用过程.实际上这个递归数列并不需要每次都重复去求前两次的结果.如果用压栈的方法,一遍递归就可以搞定了.
+def fibonacci(n): L = fibonacci.L if n &amp;lt;= 2: return L[-1] #get top else: n2 = L.pop() n1 = L.pop() L.append(n2) #&amp;#39;append&amp;#39; is stack&amp;#39;s push  L.append(n1+n2) return fibonacci(n-1) fibonacci.L = [1,1] 上面的代码耍了一个小花招.首先先设定好两个初始的计算结果,然后开始递归迭代.与前一版本递归不同的是,前一个递归需要在进入到递归底部后,才开始跳出来计算每一步递归后的结果,直到返回.而后一个递归会在最开始递归进入时就开始计算,进入到递归底部后(也就是 n &amp;lt;= 2)最终的结果就已经计算出来了,直接一层一层返回这个结果就可以了. 为了便于说明下面代码是利用两个变量做中间结果的版本:
+def fib(n, n1=1, n2=1): if n &amp;lt; 2: return n1 return fib(n-1, n2, n1+n2) 跟上面那个压栈的方式一样.</description>
     </item>
     
     <item>
@@ -590,7 +585,8 @@ Partition-tolerance: 数据可以不限于分布在同一台机器上.
 一般 NoSQL 类数据库存储数据的模型有 4 种方式:
 Key-Value: 类似于 json 的 key-value 的方式进行数据存储
 BigTable: 多维度的 key-value 结构,并且存储方式是分布式,稀疏的2,严格排序的. Google 很多产品都在用,具有高压缩,高性能,易于查询的特点.
-Documents: 多个 key-value 结构的数据合为一条数据,每一条数据称为为一个 docment. 并且每个 docment 的 key-value 个数和 key 都可以不同.并且在搜索时,可以以 value 做为关键字来搜索.</description>
+Documents: 多个 key-value 结构的数据合为一条数据,每一条数据称为为一个 docment. 并且每个 docment 的 key-value 个数和 key 都可以不同.并且在搜索时,可以以 value 做为关键字来搜索.
+Graph: 以网状方式将数据存储在一个 dataset 中.</description>
     </item>
     
     <item>
@@ -601,10 +597,8 @@ Documents: 多个 key-value 结构的数据合为一条数据,每一条数据称
       <guid>http://www.leyafo.com/post/2013-11-08-python-memory-management/</guid>
       <description>本文基于Python2.7.5源码中的obmalloc.c模块
  在 Python 的内部系统中，它的内存管理结构是以金子塔结构呈现的.如下图所示:
-- 其中-1和-2这两层是跟操作系统来负责的,这里我们略过不表.
-- 第0层就是我们平常在 C 中使用的 malloc, Python 不会直接使用它,而是会在此基础上做一个内存池. - 第1层是 Python 自己在基于 malloc 的基础上构造的一个内存池. - 第2和第3层是基于第1层的.每当 Python 内部需要使用内存时,会使用第1层做好的分配器来分配内存. 因此第1层是 Python 内部管理内存的主要地方.
-作用 在 C 中如果频繁的调用 malloc 与 free 时,是会产生性能问题的.再加上频繁的分配与释放小块的内存会产生内存碎片. Python 在这里主要干的工作有: 1. 如果请求分配的内存在1~256字节之间就使用自己的内存管理系统,否则直接使用 malloc. 2. 这里还是会调用 malloc 分配内存,但每次会分配一块大小为256k的大块内存. 3. 经由内存池登记的内存到最后还是会回收到内存池,并不会调用 C 的 free 释放掉.以便下次使用.
-内存池结构 如上图所示,整个黑框格子代表内存池(usedpools).每个单元格存放一个双向链表,每个链表的节点是一个大小为4k的内存块.在这个池中,每个单元格负责管理不同的小块内存.为了便于管理,每个单元格管理的内存块总是以8的倍数为单位.以如下代码为例:
+ 其中-1和-2这两层是跟操作系统来负责的,这里我们略过不表. 第0层就是我们平常在 C 中使用的 malloc, Python 不会直接使用它,而是会在此基础上做一个内存池. 第1层是 Python 自己在基于 malloc 的基础上构造的一个内存池. 第2和第3层是基于第1层的.每当 Python 内部需要使用内存时,会使用第1层做好的分配器来分配内存. 因此第1层是 Python 内部管理内存的主要地方.  作用 在 C 中如果频繁的调用 malloc 与 free 时,是会产生性能问题的.再加上频繁的分配与释放小块的内存会产生内存碎片. Python 在这里主要干的工作有:
+ 如果请求分配的内存在1~256字节之间就使用自己的内存管理系统,否则直接使用 malloc. 这里还是会调用 malloc 分配内存,但每次会分配一块大小为256k的大块内存. 经由内存池登记的内存到最后还是会回收到内存池,并不会调用 C 的 free 释放掉.以便下次使用.  内存池结构 如上图所示,整个黑框格子代表内存池(usedpools).每个单元格存放一个双向链表,每个链表的节点是一个大小为4k的内存块.在这个池中,每个单元格负责管理不同的小块内存.为了便于管理,每个单元格管理的内存块总是以8的倍数为单位.以如下代码为例:
 PyObject_Malloc(3) 这里我们需要一块大小为3个字节的内存.它将定位到管理大小为8字节的单元格.然后返回大小8字节的内存.在这里 usedpools 有一个令人蛋疼的 ticky. usedpools 在初始化时用了如下代码:
 #define PTA(x) ((poolp )((uchar *)&amp;amp;(usedpools[2*(x)]) - 2*sizeof(block *))) #define PT(x) PTA(x), PTA(x) static poolp usedpools[2 * ((NB_SMALL_SIZE_CLASSES + 7) / 8) * 8] = { PT(0), PT(1), PT(2), PT(3), PT(4), PT(5), PT(6), PT(7) .</description>
     </item>

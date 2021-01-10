@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   
-  <meta name="generator" content="Hugo 0.58.3" />
+  <meta name="generator" content="Hugo 0.71.0" />
 
   
 
@@ -189,27 +189,16 @@ a:focus {
   
 </p>
 <p>下图是打开网页背后应用层发生的事情。大型的网站会比这个复杂的多（我也没做过，所以画不出更复杂的图:) ）。</p>
-
-<p><img src="http://www.leyafo.com/images/NetTrack.png" alt="NetTrack" /></p>
-
+<p><img src="http://www.leyafo.com/images/NetTrack.png" alt="NetTrack"></p>
 <p>中间涉及到的网络底层处理流程这张图没法全部描述出来，这又是另一个复杂的流程。下图是一个网络数据包到达另一个节点的详细流程，也是经典的 7 层 OSI 模型。上图几乎每一条实线的两边节点都会涉及以下流程。</p>
-
-<p><img src="http://www.leyafo.com/images/TCPTrack.png" alt="TCPTrack" /></p>
-
+<p><img src="http://www.leyafo.com/images/TCPTrack.png" alt="TCPTrack"></p>
 <p>我们最常用的协议是基于 TCP 的 HTTP 协议。TCP 的特点在于两端必须要建立可靠的连接才能进行通信。所以客户端会首先发起建立连接请求，服务端收到请求后并给予回应，客户端收到回应后再往服务端发送一条成功建立连接的回应，这时两边的 TCP 通道便成功建立起来发送数据。以下是三次握手的流程。</p>
-
-<p><img src="http://www.leyafo.com/images/TCPHandshake.png" alt="TCPHandshake" /></p>
-
+<p><img src="http://www.leyafo.com/images/TCPHandshake.png" alt="TCPHandshake"></p>
 <p>在上文我们说过，网络数据发送都是由一个个包组成的。那这包里的信息到底包含哪些东西呢？以下是一个网络数据包里面包含的内容。</p>
-
-<p><img src="http://www.leyafo.com/images/NetPackage.png" alt="NetPackage" /></p>
-
+<p><img src="http://www.leyafo.com/images/NetPackage.png" alt="NetPackage"></p>
 <p>一个数据包里面之所以会分为这么多的段，是因为 OSI 模型每一层都有它自己需要关注的数据段并处理。</p>
-
 <p>在我们平常的使用网络的过程中，我们看起来好像只要知道对方的 IP 就能和对方进行通信。实际的网络传输过程中机器 MAC 地址是必不可少的，当我们把数据包送到一个 IP 地址所在的主机时，这个主机并不一定就是目的主机。需要靠路由去广播找到对应机器。以送快递为例，我们知道收件人的地址，但不知道收件人的姓名。我们可以把快递发到目的地，但无法到达收件人的手里。这也可以解释我们在家里的路由器后把一个 HTTP 服务器运行在我们的电脑上，我们在公司是无法直接访问到这台 HTTP 服务器的，是需要做一些类似内网穿透这样的措施才行。</p>
-
 <p>MAC 地址的另外一个作用就是决定网络请求包发送的下一个目的地。在一个网络我们与其他机器通信并不一定是直接与另一个节点通信，而是会经过很多中间节点。这中间节点的路径由 ARP 协议决定，它靠广播来找到对应接收数据的节点。</p>
-
 <p>当我们发送一个 HTTP 请求时，最后到达我们 listen 的 socket 时，我们只需要关心数据层里面的数据即可。以下是一个HTTP 请求的头部信息，也就是最终到达 socket 应用层的数据。</p>
 <div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-http" data-lang="http"><span style="color:#8b008b;font-weight:bold">HTTP</span>/<span style="color:#b452cd">1.1</span> <span style="color:#b452cd">302</span> <span style="color:#008b45;font-weight:bold">Found</span>
 Server: Tengine
@@ -219,8 +208,8 @@ Content-Length: 258
 Connection: keep-alive
 Location: https://www.taobao.com/
 Set-Cookie: thw=cn; Path=/; Domain=.taobao.com; Expires=Wed, 24-Apr-19 02:00:40 GMT;
-Strict-Transport-Security: max-age=31536000</code></pre></div>
-<p>在 HTTP 服务器里面需要做的就是解析这里面的数据，返回客户端想要的资源。</p>
+Strict-Transport-Security: max-age=31536000
+</code></pre></div><p>在 HTTP 服务器里面需要做的就是解析这里面的数据，返回客户端想要的资源。</p>
 
 <div class="comments">
   <hr class="hr-middle-text" data-content="COMMENTS">

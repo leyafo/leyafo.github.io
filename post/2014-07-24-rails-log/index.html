@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   
-  <meta name="generator" content="Hugo 0.58.3" />
+  <meta name="generator" content="Hugo 0.71.0" />
 
   
 
@@ -188,20 +188,14 @@ a:focus {
   </small>
   
 </p>
-
-
-<p>这几天在做一个小型的论坛，做到了注册登录这一块。之前没有完整做过注册登录这个东西，这次我打算从头写到尾去详细的了解里面的一些基本原理。所以这次并没有使用<a href="https://github.com/plataformatec/devise">devise</a>这样的 *gem*。</p>
-
+<p>这几天在做一个小型的论坛，做到了注册登录这一块。之前没有完整做过注册登录这个东西，这次我打算从头写到尾去详细的了解里面的一些基本原理。所以这次并没有使用<a href="https://github.com/plataformatec/devise">devise</a>这样的 <em>gem</em>。</p>
 <h2 id="密码存储">密码存储</h2>
-
 <p>用户密码安全存储是作为一个 <em>web</em> 开发者的基本节操。好在现有的一些解决方案已经能比较好的解决这个问题了，做起来也比较容易。只需要了解一些基本的安全常识就可以保证90%的情况下是安全的。
 在数据库里面存储加密后的密文是为了防止被拖库，如果黑客拖下了整个用户表，加密后的密码他们拿着也是没有用的。即使是网站的管理员也是没法知道这个密码的真实原文。因为现在一般的密码 <em>hash</em> 算法是不可逆的。所以现在的一些比较常用的密码明文获取方式是进行<a href="http://blog.jobbole.com/61872/">字典暴力破解</a>。如果在密码原文 <em>hash</em> 前给密码添加一些比较长的唯一的随机字符串，这会使攻击者的字典基本上失效(因为很长，枚举次数要上升很大一个数量级)。这就是密码加盐(salt)的基本作用。当然加盐的另外一个作用是让两个相同的密码产生不同的 <em>hash</em> 值。这样即使知道加密算法和加密后的密文也无法通过比较密文来得到原文。
 在用户登录时我们会拿到用户的原始密码，这个原始密码相当于一把<strong>钥匙</strong>。拿着这个密码通过加密算法和数据库里面的 <em>salt</em>  得到加密后的密文。再用这串密文与数据库的密文进行比对，比对成功后则验证通过。在这样一个过程中，密码看起来就像打开箱子的钥匙一样，由用户携带，网站不进行存储。</p>
-
 <h2 id="session-和-cookie">session 和 cookie</h2>
-
-<p><em>cookie</em> 是存储在用户浏览器中的一段唯一标识，<em>http request</em> 会将它传送到服务端。现在一般的 <em>web framework</em> 会去检测用户的 <em>http request</em> 是否带有 <em>cookie</em>, 如果没有发现请求中没有 *cookie*，它会建立一个*session*。并且以 <em>cookie</em> 作为 <em>key</em> 来保存 *session*。这样如果用户下次同样 <em>cookie</em> 的 <em>http request</em> 进来了，就可以找到相同的 *session*。
-<em>session</em> 和 <em>cookie</em> 是实现记住用户的基石。<em>http</em> 协议是无状态的协议。在用户登录某一个网站后，我们是需要记住登录状态的。这时候就要通过 <em>cookie</em> 和 <em>session</em> 来干这件事情。 <em>rails</em> 默认是已经将 <em>session</em> 建立好了。在 <em>controller</em> 中可以很方便的拿到 <em>session</em> 变量去存储一些信息。另外比较有意思的是 <em>rails</em> 默认是将 <em>session</em> 经过加密后存储在用户 <em>cookie</em> 中的。当用户的 <em>cookie</em> 传送到后端时会将 <em>cookie</em> 进行解密得到相应的 *session*。</p>
+<p><em>cookie</em> 是存储在用户浏览器中的一段唯一标识，<em>http request</em> 会将它传送到服务端。现在一般的 <em>web framework</em> 会去检测用户的 <em>http request</em> 是否带有 <em>cookie</em>, 如果没有发现请求中没有 <em>cookie</em>，它会建立一个<em>session</em>。并且以 <em>cookie</em> 作为 <em>key</em> 来保存 <em>session</em>。这样如果用户下次同样 <em>cookie</em> 的 <em>http request</em> 进来了，就可以找到相同的 <em>session</em>。
+<em>session</em> 和 <em>cookie</em> 是实现记住用户的基石。<em>http</em> 协议是无状态的协议。在用户登录某一个网站后，我们是需要记住登录状态的。这时候就要通过 <em>cookie</em> 和 <em>session</em> 来干这件事情。 <em>rails</em> 默认是已经将 <em>session</em> 建立好了。在 <em>controller</em> 中可以很方便的拿到 <em>session</em> 变量去存储一些信息。另外比较有意思的是 <em>rails</em> 默认是将 <em>session</em> 经过加密后存储在用户 <em>cookie</em> 中的。当用户的 <em>cookie</em> 传送到后端时会将 <em>cookie</em> 进行解密得到相应的 <em>session</em>。</p>
 
 <div class="comments">
   <hr class="hr-middle-text" data-content="COMMENTS">

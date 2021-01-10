@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   
-  <meta name="generator" content="Hugo 0.58.3" />
+  <meta name="generator" content="Hugo 0.71.0" />
 
   
 
@@ -188,12 +188,8 @@ a:focus {
   </small>
   
 </p>
-
-
 <p>NSQ 客户端实现与编程语言无关，它通过 TCP 与 nsq 连接。主要实现的功能分为 5 大块，分别是：connection 管理, message 处理，producer, resumer, 并发控制。由于 producer 的流程比较简单，只是单纯的发把消息发送到 nsq，在这里不做描述。本文基于 <a href="https://github.com/nsqio/go-nsq">go-nsq</a> 源码分析除 producer 外其他 4 大块的主要代码流程。</p>
-
 <h2 id="connection-模块">Connection 模块</h2>
-
 <p>nsq 客户端主要分为两块：producer, resumer. 它们都使用 connection 模块与 nsq 连接。以下是 NewConn 初始化的主要结构。</p>
 <div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">	<span style="color:#8b008b;font-weight:bold">return</span> &amp;Conn{
 		addr: addr,  <span style="color:#228b22">//服务器地址
@@ -208,8 +204,8 @@ a:focus {
 </span><span style="color:#228b22"></span>		msgResponseChan: <span style="color:#658b00">make</span>(<span style="color:#8b008b;font-weight:bold">chan</span> *msgResponse),  <span style="color:#228b22">//消息回应管道
 </span><span style="color:#228b22"></span>		exitChan:        <span style="color:#658b00">make</span>(<span style="color:#8b008b;font-weight:bold">chan</span> <span style="color:#00688b;font-weight:bold">int</span>),		   <span style="color:#228b22">//退出信号
 </span><span style="color:#228b22"></span>		drainReady:      <span style="color:#658b00">make</span>(<span style="color:#8b008b;font-weight:bold">chan</span> <span style="color:#00688b;font-weight:bold">int</span>),		   <span style="color:#228b22">//中断信号
-</span><span style="color:#228b22"></span>	}</code></pre></div>
-<p>以上并不是完整 Conn 结构体字段，为了简便，我们现在只需要关注这几个字段。producer 和 resumer 会调用 Connect() 函数与 nsq 建立连接。以下是建立连接的过程，为了便于理解，本文截取的代码都忽略了一些无关紧要的细节。</p>
+</span><span style="color:#228b22"></span>	}
+</code></pre></div><p>以上并不是完整 Conn 结构体字段，为了简便，我们现在只需要关注这几个字段。producer 和 resumer 会调用 Connect() 函数与 nsq 建立连接。以下是建立连接的过程，为了便于理解，本文截取的代码都忽略了一些无关紧要的细节。</p>
 <div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#8b008b;font-weight:bold">func</span> (c *Conn) <span style="color:#008b45">Connect</span>() (*IdentifyResponse, <span style="color:#00688b;font-weight:bold">error</span>) {
 	<span style="color:#228b22">//...
 </span><span style="color:#228b22"></span>	conn, err := dialer.<span style="color:#008b45">Dial</span>(<span style="color:#cd5555">&#34;tcp&#34;</span>, c.addr)
@@ -229,8 +225,8 @@ a:focus {
 </span><span style="color:#228b22"></span>	<span style="color:#8b008b;font-weight:bold">go</span> c.<span style="color:#008b45">readLoop</span>()
 	<span style="color:#8b008b;font-weight:bold">go</span> c.<span style="color:#008b45">writeLoop</span>()
 	<span style="color:#8b008b;font-weight:bold">return</span> resp, <span style="color:#8b008b;font-weight:bold">nil</span>
-}</code></pre></div>
-<p>在与 NSQ 建立连接时会首先发送 identify 指令告诉服务器自己这边的一些配置。如 clientid, hostname, 心跳间隔时长，超时时长等一些配置信息。在建立连接后会分别启动一个 readloop 和 writeloop 的 goroutine 与服务器通信。以下是 readloop 的基本处理流程。</p>
+}
+</code></pre></div><p>在与 NSQ 建立连接时会首先发送 identify 指令告诉服务器自己这边的一些配置。如 clientid, hostname, 心跳间隔时长，超时时长等一些配置信息。在建立连接后会分别启动一个 readloop 和 writeloop 的 goroutine 与服务器通信。以下是 readloop 的基本处理流程。</p>
 <div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">	<span style="color:#8b008b;font-weight:bold">for</span> {
 	    <span style="color:#228b22">//...
 </span><span style="color:#228b22"></span>		frameType, data, err := <span style="color:#008b45">ReadUnpackedResponse</span>(c)
@@ -254,9 +250,9 @@ a:focus {
 </span><span style="color:#228b22"></span>		<span style="color:#8b008b;font-weight:bold">default</span>:
 			<span style="color:#228b22">//...
 </span><span style="color:#228b22"></span>		}
-	}</code></pre></div>
-<p>如果消息是 heartbeat 会回复一条空指令告诉服务器自己的存活状态。（heartbeat 发送的间隔时长在建立 identify 指令时传入的）。producer 与 resumer 会在调用 NewConn 函数时传入一个自己的 delegate 用来给 connection 模块回调处理消息。</p>
+	}
 
+</code></pre></div><p>如果消息是 heartbeat 会回复一条空指令告诉服务器自己的存活状态。（heartbeat 发送的间隔时长在建立 identify 指令时传入的）。producer 与 resumer 会在调用 NewConn 函数时传入一个自己的 delegate 用来给 connection 模块回调处理消息。</p>
 <p>我们再来看看 writeloop 做的事情。</p>
 <div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">	<span style="color:#8b008b;font-weight:bold">for</span>{
 		<span style="color:#8b008b;font-weight:bold">select</span> {
@@ -287,21 +283,14 @@ a:focus {
 			err := c.<span style="color:#008b45">WriteCommand</span>(resp.cmd)
 			<span style="color:#228b22">//...
 </span><span style="color:#228b22"></span>		}
-	}</code></pre></div>
-<p>writeloop 主要关心的是发送 cmd 指令，和回复消息处理的状态。在 nsq 客户端中一个消息的处理状态有四种。分别是：</p>
-
+	}
+</code></pre></div><p>writeloop 主要关心的是发送 cmd 指令，和回复消息处理的状态。在 nsq 客户端中一个消息的处理状态有四种。分别是：</p>
 <p>1.FIN 处理成功，告诉服务端可以放心的丢弃掉这条消息。</p>
-
 <p>2.REQ 处理失败，告诉服务端这条消息需要重新入队。</p>
-
 <p>3.TOUCH 告诉服务端需要更多的时间处理这条消息。</p>
-
 <p>4.消息处理超时，服务端会根据消息处理时长判断消息是否需要重新入队。</p>
-
 <p>这里为了消息处理更高效，使用了一个单独的 channel 发送 FIN 和 REQ 状态指令。</p>
-
 <h2 id="message-处理流程">Message 处理流程</h2>
-
 <p>在 consumer 模块内，有一个 handleloop 不断轮询 incomingMessages 管道来接收 connection 模块发过来的消息。connection 通过注册进来的 delegate 回调 OnMessage 相关的接口，OnMessage 会把 message 发送到 incomingMessages 管道里面。最后 handlerLoop 轮询 incomingMessages 管道获取消息，通过调用用户注册的 handler 接口来回调处理消息。以下是简单的代码流程。</p>
 <div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">c.delegate.<span style="color:#008b45">OnMessage</span>(c, msg) <span style="color:#228b22">//conn.go:530
 </span><span style="color:#228b22"></span>
@@ -318,12 +307,10 @@ r.incomingMessages &lt;- msg  <span style="color:#228b22">//consumer.go:648 in o
     <span style="color:#228b22">//...
 </span><span style="color:#228b22"></span>	err := handler.<span style="color:#008b45">HandleMessage</span>(message)
 	<span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>}</code></pre></div>
-<h2 id="resumer">Resumer</h2>
-
+</span><span style="color:#228b22"></span>}
+</code></pre></div><h2 id="resumer">Resumer</h2>
 <p>resumer 模块是整个 nsq client 的根本，夸张一点的说，整个 nsq client 就是围绕着 resumer 模块在做文章。这里为了讲解清晰我把 resumer 的并发控制放到下一段讲，这段主要讲解释 resumer 与 nsq 如何建立连接，如何接受来自多个 nsq 的消息。</p>
-
-<p>每个 resumer 会订阅一个 topic 和 channel（此 <em>channel</em> 非彼 *channel*）。一个 consumer 仅会与一个 topic 关联。 resumer 通过连接 nsqlookup 去获取对应的 nsq 地址并与之建立连接。也就是说一个 consumer 会建立多条连接去连不同的 nsq。我们可以通过看 consumer 和 nsqlookup 之间的基本流程得知这一点。</p>
+<p>每个 resumer 会订阅一个 topic 和 channel（此 <em>channel</em> 非彼 <em>channel</em>）。一个 consumer 仅会与一个 topic 关联。 resumer 通过连接 nsqlookup 去获取对应的 nsq 地址并与之建立连接。也就是说一个 consumer 会建立多条连接去连不同的 nsq。我们可以通过看 consumer 和 nsqlookup 之间的基本流程得知这一点。</p>
 <div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#8b008b;font-weight:bold">func</span> (r *Consumer) <span style="color:#008b45">ConnectToNSQLookupd</span>(addr <span style="color:#00688b;font-weight:bold">string</span>) <span style="color:#00688b;font-weight:bold">error</span> {
 	<span style="color:#228b22">// ....
 </span><span style="color:#228b22"></span>	r.lookupdHTTPAddrs = <span style="color:#658b00">append</span>(r.lookupdHTTPAddrs, addr)
@@ -338,8 +325,8 @@ r.incomingMessages &lt;- msg  <span style="color:#228b22">//consumer.go:648 in o
 	}
 
 	<span style="color:#8b008b;font-weight:bold">return</span> <span style="color:#8b008b;font-weight:bold">nil</span>
-}</code></pre></div>
-<p>在这里仅仅启动了一个 goroutine 去连接 nsqlookup， 由于 lookup 并不是一个需要频繁请求的资源，不需要启动多个 goroutine 去轮询。 多个 nsqlookup 会放到 lookupdHTTPAddrs 这个 slice 里面，在 lookupdLoop 轮询时会随机挑选一个没有被请求过的，以下代码我们可以看到这一点。</p>
+}
+</code></pre></div><p>在这里仅仅启动了一个 goroutine 去连接 nsqlookup， 由于 lookup 并不是一个需要频繁请求的资源，不需要启动多个 goroutine 去轮询。 多个 nsqlookup 会放到 lookupdHTTPAddrs 这个 slice 里面，在 lookupdLoop 轮询时会随机挑选一个没有被请求过的，以下代码我们可以看到这一点。</p>
 <div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#8b008b;font-weight:bold">func</span> (r *Consumer) <span style="color:#008b45">nextLookupdEndpoint</span>() <span style="color:#00688b;font-weight:bold">string</span> {
 	r.mtx.<span style="color:#008b45">RLock</span>()
 	<span style="color:#8b008b;font-weight:bold">if</span> r.lookupdQueryIndex &gt;= <span style="color:#658b00">len</span>(r.lookupdHTTPAddrs) {
@@ -350,8 +337,8 @@ r.incomingMessages &lt;- msg  <span style="color:#228b22">//consumer.go:648 in o
 	r.mtx.<span style="color:#008b45">RUnlock</span>()
 	r.lookupdQueryIndex = (r.lookupdQueryIndex + <span style="color:#b452cd">1</span>) % num
     <span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>}</code></pre></div>
-<p>lookupdLoop 这个函数会每隔一段时间调用 queryLookupd，在这个函数里面调用 HTTP API 去获取到对应的 nsq 地址，最后调用 ConnectToNSQD 与 nsq 建立新的连接并订阅消息。以下是代码流程。</p>
+</span><span style="color:#228b22"></span>}
+</code></pre></div><p>lookupdLoop 这个函数会每隔一段时间调用 queryLookupd，在这个函数里面调用 HTTP API 去获取到对应的 nsq 地址，最后调用 ConnectToNSQD 与 nsq 建立新的连接并订阅消息。以下是代码流程。</p>
 <div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#228b22">//lookupdLoop
 </span><span style="color:#228b22"></span>ticker = time.<span style="color:#008b45">NewTicker</span>(r.config.LookupdPollInterval)
 <span style="color:#8b008b;font-weight:bold">for</span> {
@@ -372,20 +359,16 @@ r.incomingMessages &lt;- msg  <span style="color:#228b22">//consumer.go:648 in o
 </span><span style="color:#228b22"></span>conn := <span style="color:#008b45">NewConn</span>(addr, &amp;r.config, &amp;consumerConnDelegate{r})
 resp, err := conn.<span style="color:#008b45">Connect</span>()
 cmd := <span style="color:#008b45">Subscribe</span>(r.topic, r.channel)
-err = conn.<span style="color:#008b45">WriteCommand</span>(cmd)</code></pre></div>
-<p>以上是 consumer 与 nsq 连接的基本流程。如果你不调用 ConnectToNSQLookupd 去与 nsq 建立连接，那么 consumer 仅仅只会与一个 nsq 连接。</p>
-
+err = conn.<span style="color:#008b45">WriteCommand</span>(cmd)
+</code></pre></div><p>以上是 consumer 与 nsq 连接的基本流程。如果你不调用 ConnectToNSQLookupd 去与 nsq 建立连接，那么 consumer 仅仅只会与一个 nsq 连接。</p>
 <h2 id="并发控制">并发控制</h2>
-
 <p>接下来就是整个 nsq client 的重头戏，并发控制。这也是整个客户端最难理解的部分。我们先来通过 nsq 的文档了解一些基本的情况。</p>
-
 <ol>
 <li>consumer 有一个 maxInFlight 变量用来标识可以处理的最大消息数量。totalRdyCount 变量用来计算可接收消息数量，它永远不会大于 maxInFlight，每当收到一个消息后会对其减 1。</li>
 <li>connection 的 rdyCount 用来标识当前 connection 可接收的消息数量，如果收到一个消息就对其减 1。它自己也有一个 maxInFlight 变量标识正在处理的消息数量。</li>
 <li>客户端会在连接的 identify 配置时传入一个 MaxRdyCount，服务端对每个 connection 发送的消息永远不超过这个数字。</li>
 <li>consumer 会维护一个 RDY 状态，每次消息处理完后更新 RDY 状态，如果数量过大，会重新将一些 connection 的 RDY 数字初始化为 0。</li>
 </ol>
-
 <p>为了便于理解 consumer.totalRdyCount,  conn.rdyCount 和 maxInFlight 我们可以通过一个消息的处理流程看看 conn 和 resumer 是如何维护这几个变量的。</p>
 <div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#228b22">//in conn.readLoop function
 </span><span style="color:#228b22"></span><span style="color:#8b008b;font-weight:bold">case</span> FrameTypeMessage:
@@ -415,9 +398,8 @@ maxPossibleRdy := <span style="color:#658b00">int64</span>(r.<span style="color:
 </span><span style="color:#228b22"></span>maxInFlight := r.<span style="color:#008b45">getMaxInFlight</span>()
 availableMaxInFlight := <span style="color:#658b00">int64</span>(maxInFlight) - atomic.<span style="color:#008b45">LoadInt64</span>(&amp;r.totalRdyCount)
 <span style="color:#228b22">//in consumer.sendRDY function
-</span><span style="color:#228b22"></span>atomic.<span style="color:#008b45">AddInt64</span>(&amp;r.totalRdyCount, -c.<span style="color:#008b45">RDY</span>()+count)</code></pre></div>
-<p>从以上代码我们可以看出 messagesInFlight 相当于对一个消息进行入队出队操作。conn 的 totalRdyCount 表示可处理消息的数量，每当处理一个消息，这个数量就会减 1。consumer 的 totalRdyCount 包含的是所有 connection（consumer 与 connection 是一对多的关系）的可处理 Rdy 的数量。</p>
-
+</span><span style="color:#228b22"></span>atomic.<span style="color:#008b45">AddInt64</span>(&amp;r.totalRdyCount, -c.<span style="color:#008b45">RDY</span>()+count)
+</code></pre></div><p>从以上代码我们可以看出 messagesInFlight 相当于对一个消息进行入队出队操作。conn 的 totalRdyCount 表示可处理消息的数量，每当处理一个消息，这个数量就会减 1。consumer 的 totalRdyCount 包含的是所有 connection（consumer 与 connection 是一对多的关系）的可处理 Rdy 的数量。</p>
 <p>我们可以通过看 resumer 的 redistributeRDY()  这个函数来观察并发如何控制的 。</p>
 <div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#8b008b;font-weight:bold">func</span> (r *Consumer) <span style="color:#008b45">redistributeRDY</span>() {
 	<span style="color:#228b22">//...
@@ -453,13 +435,10 @@ availableMaxInFlight := <span style="color:#658b00">int64</span>(maxInFlight) - 
 </span><span style="color:#228b22"></span>		possibleConns = <span style="color:#658b00">append</span>(possibleConns[:i], possibleConns[i+<span style="color:#b452cd">1</span>:]...)
 		r.<span style="color:#008b45">updateRDY</span>(c, <span style="color:#b452cd">1</span>)
 	}
-}</code></pre></div>
-<p>LastMessageTime 是上一条消息处理前设定的时间。</p>
-
+}
+</code></pre></div><p>LastMessageTime 是上一条消息处理前设定的时间。</p>
 <p>lastRdyTimestamp 是这个 connection 上一次调用 SetRdyCount 的时间。</p>
-
 <p>这两个时间的对比主要是为了找出那些处理消息比较慢的连接，尽量让其他的 connection 去接收消息。</p>
-
 <p>在 onConnMessage 这个函数里面，我们可以看到 maybeUpdateRDY 这个函数，这表示每当处理一条消息，都有可能重新进行并发控制计算。以下是这个函数的主要流程：</p>
 <div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#228b22">//...
 </span><span style="color:#228b22"></span>remain := conn.<span style="color:#008b45">RDY</span>()
@@ -470,9 +449,8 @@ count := r.<span style="color:#008b45">perConnMaxInFlight</span>()
 </span><span style="color:#228b22"></span><span style="color:#8b008b;font-weight:bold">if</span> remain &lt;= <span style="color:#b452cd">1</span> || remain &lt; (lastRdyCount/<span style="color:#b452cd">4</span>) || (count &gt; <span style="color:#b452cd">0</span> &amp;&amp; count &lt; remain) {
     r.<span style="color:#008b45">updateRDY</span>(conn, count)
 }
-//...</code></pre></div>
-<h2 id="小结">小结</h2>
-
+<span style="color:#228b22">//...
+</span></code></pre></div><h2 id="小结">小结</h2>
 <p>nsq 客户端并不是太复杂，开发一个客户端只需要处理好连接，做好消息接收，以及最重要的并发控制即可。在业务层面的代码，我们需要着重关注每个任务的执行时长，以及根据机器的性能调整并发控制。</p>
 
 <div class="comments">
