@@ -1,614 +1,578 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
 
+<html lang="zh-cn">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  
-  <meta name="generator" content="Hugo 0.71.0" />
-
-  
-
-  
-
-  
-  <title>NSQ 服务端源码剖析</title>
-  
-
-  <style>
-body {
-  color: #000000;
-  line-height: 1.6em;
-  padding: 1em;
-  margin: auto;
-  max-width: 72em;
-  background: #fefefe;
-  font-family: Fira Code,Monaco,Consolas,Ubuntu Mono,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,monospace,sans-serif;
-}
-
-nav {
-    margin-bottom: 20px;
-}
-a:visited{
-  color: grey;
-}
-
-.custom-navbar {
-  margin-bottom: 1em;
-  height: 60px;
-}
-
-.custom-navbar a {
-  display: inline-block; 
-  padding: 18px 0;
-  margin-right: 1em; 
-  font-weight: bold; 
-}
-
-.custom-navbar a:hover,
-.custom-navbar a:focus {
-  text-decoration: none; 
-}
-
-@media print {
-  .custom-navbar {
-    display: none;
-  }
-}
-
-article {
-  padding-bottom: 1em;
-}
-
-img {
-  max-width: 100%;
-}
-
-
-body {
-  background-color: #fff;
-}
-
-
-
-body {
-  color: #212529;
-}
-
-
-
-a {
-  color: #007bff;
-}
-
-
-
-a:hover,
-a:focus {
-  color: #0056b3;
-}
-
-
-
-.custom-navbar {
-  background-color: #212529;
-}
-
-
-
-.custom-navbar a {
-  color: rgba(255,255,255,.75);
-}
-
-
-
-.custom-navbar a:hover,
-.custom-navbar a:focus {
-  color: rgba(255,255,255,1);
-}
-
-
-
-
-
-
-.comments{
-    text-align: center;
-    margin-top: 20px;
-    padding: 5px 10px;
-    font-size: .8rem;
-    text-transform: uppercase;
-    text-decoration: none;
-    letter-spacing: .1em;
-    z-index: 1;
-}
-
-.utterances{
-  max-width: 100%;
-}
-
-
-.hr-middle-text{
-  line-height: 1em;
-  position: relative;
-  outline: 0;
-  border: 0;
-  color: black;
-  text-align: center;
-  height: 1.5em;
-  opacity: .5;
-}
-.hr-middle-text:before {
-    content: '';
+    <meta charset="UTF-8">
+    <title>NSQ 服务端源码剖析</title>
     
-    
-    
-    background: linear-gradient(to right, transparent, black, transparent);
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 100%;
-    height: 1px;
-}
-.hr-middle-text:after{
-    content: attr(data-content);
-    position: relative;
-    display: inline-block;
-    color: black;
+<style>
+        body {
+            color: #000000;
+            line-height: 1.6em;
+            padding: 1em;
+            margin: auto;
+            max-width: 72em;
+            background: #fefefe;
+            font-family: Fira Code,Monaco,Consolas,Ubuntu Mono,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,monospace,sans-serif;
+        }
+        blockquote {
+            background: #f9f9f9;
+            border-left: 10px solid #ccc;
+            margin: 1.5em 10px;
+            padding: 0.5em 10px;
+            quotes: "\201C""\201D""\2018""\2019";
+        }
+        blockquote:before {
+            color: #ccc;
+            content: open-quote;
+            font-size: 4em;
+            line-height: 0.1em;
+            margin-right: 0.25em;
+            vertical-align: -0.4em;
+        }
+        blockquote p {
+            display: inline;
+        }
+        em{
+            color: grey;
+        }
 
-    padding: 0 .5em;
-    line-height: 1.5em;
-    
-    
-    background-color: #fcfcfa;
-}
+        pre{
+            background-color: #eed;
+        }
+        code{
+            background-color: #eed;
+        }
+        nav {
+            margin-bottom: 20px;
+        }
+        small{
+            font-size: smaller;
+        }
+        a {
+            color: #007bff;
+        }
 
+        a:hover,
+        a:focus {
+            color: #0056b3;
+        }
+
+        a:visited{
+            color: grey;
+        }
+
+        article {
+            padding-bottom: 1em;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        body {
+            background-color: #fff;
+            color: #212529;
+        }
+
+        .comments{
+            text-align: center;
+            margin-top: 20px;
+            padding: 5px 10px;
+            font-size: .8rem;
+            text-transform: uppercase;
+            text-decoration: none;
+            letter-spacing: .1em;
+            z-index: 1;
+        }
+
+        .utterances{
+            max-width: 100%;
+        }
+        .hr-middle-text{
+            line-height: 1em;
+            position: relative;
+            outline: 0;
+            border: 0;
+            color: black;
+            text-align: center;
+            height: 1.5em;
+            opacity: .5;
+        }
+        .hr-middle-text:before {
+            content: '';
+            background: linear-gradient(to right, transparent, black, transparent);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+        }
+        .hr-middle-text:after{
+            content: attr(data-content);
+            position: relative;
+            display: inline-block;
+            color: black;
+            padding: 0 .5em;
+            line-height: 1.5em;
+            background-color: #fcfcfa;
+        }
 </style>
 
+    
+<!-- Google Analytics -->
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-188913654-2', 'auto');
+    ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+
+
 </head>
-
-
 <body>
-  <header>
-<nav>
-  [ <a class="nav-btn" href="http://www.leyafo.com/">Home</a> ] 
-  [ <a class="nav-btn" href="http://www.leyafo.com/about.html">About</a> ] 
-  [ <a class="nav-btn" href="http://www.leyafo.com/contact.html">Contact</a> ] 
-</nav>
+    
+<header>
+    <nav>
+        [ <a class="nav-btn" href="/">Home</a> ]
+        [ <a class="nav-btn" href="/about.html">About</a> ]
+        [ <a class="nav-btn" href="/contact.html">Contact</a> ]
+    </nav>
 </header>
-  
-  <div>
+
+
     <article>
-      <h1>NSQ 服务端源码剖析</h1>
-<p>
-  <small class="text-secondary">
-  
-  
-  May 7, 2018
-  </small>
-  
-</p>
+        <h1>NSQ 服务端源码剖析</h1>
 <p>NSQ 服务端代码我们可以先从主模块 nsqd 的 main 函数开始看起，这里是整个程序的入口。在一个 nsqd 启动前会有一些配置和并调用 nsqd.LoadMetadata() 和 nsqd.PersistMetadata() 来加载消息和持久化消息。为了关注主要的流程，我们这里可以忽律掉这些我们并不需要太过于关心的部分。</p>
 <p>在 main 函数里面，会分别启动一个 httpserver 和 TCPSever，它们俩做的实际上是同样的事情，这里我们可以只关心 TCPServer 的流程即可。</p>
 <p>NSQ 服务端的每个 TCP 连接都是长连接，一旦建立，数据会不断的通过 Socket 发送和接收数据。启动好 TCP 监听后，通过不断的轮询接受 client 的连接。建立好连接后通过版本号初次握手，拒绝掉一切不符合协议的客户端。服务端会为每一个进来的连接创建一个 goroutine handler。</p>
 <p>以下是整个服务端主要的 TCP 流程。</p>
-<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#228b22">// nsq.go in main function
-</span><span style="color:#228b22"></span>tcpListener, err := net.<span style="color:#008b45">Listen</span>(<span style="color:#cd5555">&#34;tcp&#34;</span>, n.<span style="color:#008b45">getOpts</span>().TCPAddress)
-n.<span style="color:#008b45">Lock</span>()
+<pre style="background-color:#fff"><span style="color:#998;font-style:italic">// nsq.go in main function
+</span><span style="color:#998;font-style:italic"></span>tcpListener, err <span style="color:#000;font-weight:bold">:=</span> net.<span style="color:#900;font-weight:bold">Listen</span>(<span style="color:#d14">&#34;tcp&#34;</span>, n.<span style="color:#900;font-weight:bold">getOpts</span>().TCPAddress)
+n.<span style="color:#900;font-weight:bold">Lock</span>()
 n.tcpListener = tcpListener
-n.<span style="color:#008b45">Unlock</span>()
-tcpServer := &amp;tcpServer{ctx: ctx}
-n.waitGroup.<span style="color:#008b45">Wrap</span>(<span style="color:#8b008b;font-weight:bold">func</span>() {
-	protocol.<span style="color:#008b45">TCPServer</span>(n.tcpListener, tcpServer, n.logf)
+n.<span style="color:#900;font-weight:bold">Unlock</span>()
+tcpServer <span style="color:#000;font-weight:bold">:=</span> <span style="color:#000;font-weight:bold">&amp;</span>tcpServer{ctx: ctx}
+n.waitGroup.<span style="color:#900;font-weight:bold">Wrap</span>(<span style="color:#000;font-weight:bold">func</span>() {
+	protocol.<span style="color:#900;font-weight:bold">TCPServer</span>(n.tcpListener, tcpServer, n.logf)
 })
-<span style="color:#228b22">// internal/protocol/tcp_server.go
-</span><span style="color:#228b22"></span><span style="color:#8b008b;font-weight:bold">func</span> <span style="color:#008b45">TCPServer</span>(listener net.Listener, handler TCPHandler, logf lg.AppLogFunc) {
-	<span style="color:#8b008b;font-weight:bold">for</span> {
-		clientConn, err := listener.<span style="color:#008b45">Accept</span>()
-		<span style="color:#8b008b;font-weight:bold">go</span> handler.<span style="color:#008b45">Handle</span>(clientConn)
+<span style="color:#998;font-style:italic">// internal/protocol/tcp_server.go
+</span><span style="color:#998;font-style:italic"></span><span style="color:#000;font-weight:bold">func</span> <span style="color:#900;font-weight:bold">TCPServer</span>(listener net.Listener, handler TCPHandler, logf lg.AppLogFunc) {
+	<span style="color:#000;font-weight:bold">for</span> {
+		clientConn, err <span style="color:#000;font-weight:bold">:=</span> listener.<span style="color:#900;font-weight:bold">Accept</span>()
+		<span style="color:#000;font-weight:bold">go</span> handler.<span style="color:#900;font-weight:bold">Handle</span>(clientConn)
 	}
 }
-<span style="color:#228b22">// nsqd/tcp.go
-</span><span style="color:#228b22"></span><span style="color:#8b008b;font-weight:bold">func</span> (p *tcpServer) <span style="color:#008b45">Handle</span>(clientConn net.Conn) {
-	buf := <span style="color:#658b00">make</span>([]<span style="color:#00688b;font-weight:bold">byte</span>, <span style="color:#b452cd">4</span>)
-	_, err := io.<span style="color:#008b45">ReadFull</span>(clientConn, buf)
-	protocolMagic := <span style="color:#658b00">string</span>(buf)
+<span style="color:#998;font-style:italic">// nsqd/tcp.go
+</span><span style="color:#998;font-style:italic"></span><span style="color:#000;font-weight:bold">func</span> (p <span style="color:#000;font-weight:bold">*</span>tcpServer) <span style="color:#900;font-weight:bold">Handle</span>(clientConn net.Conn) {
+	buf <span style="color:#000;font-weight:bold">:=</span> <span style="color:#0086b3">make</span>([]<span style="color:#458;font-weight:bold">byte</span>, <span style="color:#099">4</span>)
+	_, err <span style="color:#000;font-weight:bold">:=</span> io.<span style="color:#900;font-weight:bold">ReadFull</span>(clientConn, buf)
+	protocolMagic <span style="color:#000;font-weight:bold">:=</span> <span style="color:#0086b3">string</span>(buf)
 
-	<span style="color:#8b008b;font-weight:bold">var</span> prot protocol.Protocol
-	<span style="color:#8b008b;font-weight:bold">switch</span> protocolMagic {
-	<span style="color:#8b008b;font-weight:bold">case</span> <span style="color:#cd5555">&#34;  V2&#34;</span>:
-		prot = &amp;protocolV2{ctx: p.ctx}
-	<span style="color:#8b008b;font-weight:bold">default</span>:
-        <span style="color:#228b22">//拒绝其他任何一切不符合协议的连接
-</span><span style="color:#228b22"></span>		protocol.<span style="color:#008b45">SendFramedResponse</span>(clientConn, frameTypeError, []<span style="color:#658b00">byte</span>(<span style="color:#cd5555">&#34;E_BAD_PROTOCOL&#34;</span>))
-		clientConn.<span style="color:#008b45">Close</span>()
-		<span style="color:#8b008b;font-weight:bold">return</span>
+	<span style="color:#000;font-weight:bold">var</span> prot protocol.Protocol
+	<span style="color:#000;font-weight:bold">switch</span> protocolMagic {
+	<span style="color:#000;font-weight:bold">case</span> <span style="color:#d14">&#34;  V2&#34;</span>:
+		prot = <span style="color:#000;font-weight:bold">&amp;</span>protocolV2{ctx: p.ctx}
+	<span style="color:#000;font-weight:bold">default</span>:
+        <span style="color:#998;font-style:italic">//拒绝其他任何一切不符合协议的连接
+</span><span style="color:#998;font-style:italic"></span>		protocol.<span style="color:#900;font-weight:bold">SendFramedResponse</span>(clientConn, frameTypeError, []<span style="color:#0086b3">byte</span>(<span style="color:#d14">&#34;E_BAD_PROTOCOL&#34;</span>))
+		clientConn.<span style="color:#900;font-weight:bold">Close</span>()
+		<span style="color:#000;font-weight:bold">return</span>
 	}
- 	<span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>	err = prot.<span style="color:#008b45">IOLoop</span>(clientConn)
+ 	<span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>	err = prot.<span style="color:#900;font-weight:bold">IOLoop</span>(clientConn)
 }
 
 
-</code></pre></div><p>每个连接的 goroutine handle 里面都会调用 IOLoop，这个函数是很典型的 TCP 的 Reader 和 Writer 的工作方式。这个函数本身就是一个 reader for 循环去不断的读取客户端发过来的数据，并序列化成对应的指令去执行。</p>
-<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#228b22">// nsqd/protocol_v2.go
-</span><span style="color:#228b22"></span><span style="color:#8b008b;font-weight:bold">func</span> (p *protocolV2) <span style="color:#008b45">IOLoop</span>(conn net.Conn) <span style="color:#00688b;font-weight:bold">error</span> {
-	<span style="color:#8b008b;font-weight:bold">var</span> line []<span style="color:#00688b;font-weight:bold">byte</span>
+</pre><p>每个连接的 goroutine handle 里面都会调用 IOLoop，这个函数是很典型的 TCP 的 Reader 和 Writer 的工作方式。这个函数本身就是一个 reader for 循环去不断的读取客户端发过来的数据，并序列化成对应的指令去执行。</p>
+<pre style="background-color:#fff"><span style="color:#998;font-style:italic">// nsqd/protocol_v2.go
+</span><span style="color:#998;font-style:italic"></span><span style="color:#000;font-weight:bold">func</span> (p <span style="color:#000;font-weight:bold">*</span>protocolV2) <span style="color:#900;font-weight:bold">IOLoop</span>(conn net.Conn) <span style="color:#458;font-weight:bold">error</span> {
+	<span style="color:#000;font-weight:bold">var</span> line []<span style="color:#458;font-weight:bold">byte</span>
 
-	clientID := atomic.<span style="color:#008b45">AddInt64</span>(&amp;p.ctx.nsqd.clientIDSequence, <span style="color:#b452cd">1</span>)
-	client := <span style="color:#008b45">newClientV2</span>(clientID, conn, p.ctx)
+	clientID <span style="color:#000;font-weight:bold">:=</span> atomic.<span style="color:#900;font-weight:bold">AddInt64</span>(<span style="color:#000;font-weight:bold">&amp;</span>p.ctx.nsqd.clientIDSequence, <span style="color:#099">1</span>)
+	client <span style="color:#000;font-weight:bold">:=</span> <span style="color:#900;font-weight:bold">newClientV2</span>(clientID, conn, p.ctx)
 
-	messagePumpStartedChan := <span style="color:#658b00">make</span>(<span style="color:#8b008b;font-weight:bold">chan</span> <span style="color:#00688b;font-weight:bold">bool</span>)
-	<span style="color:#8b008b;font-weight:bold">go</span> p.<span style="color:#008b45">messagePump</span>(client, messagePumpStartedChan) 
-	&lt;-messagePumpStartedChan <span style="color:#228b22">//等待 Pump 函数初始化好
-</span><span style="color:#228b22"></span>
-	<span style="color:#8b008b;font-weight:bold">for</span> {
-        <span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>		line, err = client.Reader.<span style="color:#008b45">ReadSlice</span>(<span style="color:#cd5555">&#39;\n&#39;</span>)
-		<span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>		params := bytes.<span style="color:#008b45">Split</span>(line, separatorBytes)
+	messagePumpStartedChan <span style="color:#000;font-weight:bold">:=</span> <span style="color:#0086b3">make</span>(<span style="color:#000;font-weight:bold">chan</span> <span style="color:#458;font-weight:bold">bool</span>)
+	<span style="color:#000;font-weight:bold">go</span> p.<span style="color:#900;font-weight:bold">messagePump</span>(client, messagePumpStartedChan) 
+	<span style="color:#000;font-weight:bold">&lt;-</span>messagePumpStartedChan <span style="color:#998;font-style:italic">//等待 Pump 函数初始化好
+</span><span style="color:#998;font-style:italic"></span>
+	<span style="color:#000;font-weight:bold">for</span> {
+        <span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>		line, err = client.Reader.<span style="color:#900;font-weight:bold">ReadSlice</span>(<span style="color:#d14">&#39;\n&#39;</span>)
+		<span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>		params <span style="color:#000;font-weight:bold">:=</span> bytes.<span style="color:#900;font-weight:bold">Split</span>(line, separatorBytes)
 
-		<span style="color:#8b008b;font-weight:bold">var</span> response []<span style="color:#00688b;font-weight:bold">byte</span>
-		response, err = p.<span style="color:#008b45">Exec</span>(client, params)  <span style="color:#228b22">//执行指令
-</span><span style="color:#228b22"></span>	}
-	<span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>}
-</code></pre></div><p>IOLoop 里面 messagePump 函数实际上是一个TCP write 函数，它把消息写入到 Socket 里面，这个函数叫 Pump 的意思是客户端接受的消息都来自这里。</p>
-<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#8b008b;font-weight:bold">func</span> (p *protocolV2) <span style="color:#008b45">messagePump</span>(client *clientV2, startedChan <span style="color:#8b008b;font-weight:bold">chan</span> <span style="color:#00688b;font-weight:bold">bool</span>) {
-	<span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>	flushed := <span style="color:#8b008b;font-weight:bold">true</span>
-	<span style="color:#658b00">close</span>(startedChan) <span style="color:#228b22">//通知 Reader 可以开始读取消息了。
-</span><span style="color:#228b22"></span>	<span style="color:#8b008b;font-weight:bold">for</span> {
-		<span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>		<span style="color:#8b008b;font-weight:bold">select</span> {
-		<span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>		<span style="color:#8b008b;font-weight:bold">case</span> msg := &lt;-memoryMsgChan:
-            <span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>			subChannel.<span style="color:#008b45">StartInFlightTimeout</span>(msg, client.ID, msgTimeout)
-			client.<span style="color:#008b45">SendingMessage</span>()
-			err = p.<span style="color:#008b45">SendMessage</span>(client, msg)
-			<span style="color:#8b008b;font-weight:bold">if</span> err != <span style="color:#8b008b;font-weight:bold">nil</span> {
-				<span style="color:#8b008b;font-weight:bold">goto</span> exit
+		<span style="color:#000;font-weight:bold">var</span> response []<span style="color:#458;font-weight:bold">byte</span>
+		response, err = p.<span style="color:#900;font-weight:bold">Exec</span>(client, params)  <span style="color:#998;font-style:italic">//执行指令
+</span><span style="color:#998;font-style:italic"></span>	}
+	<span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>}
+</pre><p>IOLoop 里面 messagePump 函数实际上是一个TCP write 函数，它把消息写入到 Socket 里面，这个函数叫 Pump 的意思是客户端接受的消息都来自这里。</p>
+<pre style="background-color:#fff"><span style="color:#000;font-weight:bold">func</span> (p <span style="color:#000;font-weight:bold">*</span>protocolV2) <span style="color:#900;font-weight:bold">messagePump</span>(client <span style="color:#000;font-weight:bold">*</span>clientV2, startedChan <span style="color:#000;font-weight:bold">chan</span> <span style="color:#458;font-weight:bold">bool</span>) {
+	<span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>	flushed <span style="color:#000;font-weight:bold">:=</span> <span style="color:#000;font-weight:bold">true</span>
+	<span style="color:#0086b3">close</span>(startedChan) <span style="color:#998;font-style:italic">//通知 Reader 可以开始读取消息了。
+</span><span style="color:#998;font-style:italic"></span>	<span style="color:#000;font-weight:bold">for</span> {
+		<span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>		<span style="color:#000;font-weight:bold">select</span> {
+		<span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>		<span style="color:#000;font-weight:bold">case</span> msg <span style="color:#000;font-weight:bold">:=</span> <span style="color:#000;font-weight:bold">&lt;-</span>memoryMsgChan:
+            <span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>			subChannel.<span style="color:#900;font-weight:bold">StartInFlightTimeout</span>(msg, client.ID, msgTimeout)
+			client.<span style="color:#900;font-weight:bold">SendingMessage</span>()
+			err = p.<span style="color:#900;font-weight:bold">SendMessage</span>(client, msg)
+			<span style="color:#000;font-weight:bold">if</span> err <span style="color:#000;font-weight:bold">!=</span> <span style="color:#000;font-weight:bold">nil</span> {
+				<span style="color:#000;font-weight:bold">goto</span> exit
 			}
-			flushed = <span style="color:#8b008b;font-weight:bold">false</span>
-		<span style="color:#8b008b;font-weight:bold">case</span> &lt;-client.ExitChan:
-			<span style="color:#8b008b;font-weight:bold">goto</span> exit
+			flushed = <span style="color:#000;font-weight:bold">false</span>
+		<span style="color:#000;font-weight:bold">case</span> <span style="color:#000;font-weight:bold">&lt;-</span>client.ExitChan:
+			<span style="color:#000;font-weight:bold">goto</span> exit
 		}
 	}
 }
-</code></pre></div><p>messagePump 这个函数的数据主要来自于 go-channel，它实际上就是将内存数据写入到网络中。</p>
-<h2 id="topic">Topic</h2>
+</pre><p>messagePump 这个函数的数据主要来自于 go-channel，它实际上就是将内存数据写入到网络中。</p>
+<h2>Topic</h2>
 <p>在详细介绍 Topic 之前我们先简单的了解一下 Topic 的基本概念以及它在 nsq 里面扮演的角色以及它与 channel 之间的关系（为了不混淆概念，这篇文章里的 channel 对应的是 nsq 的 channel，golang 里面的 channel 全部以 go-channel 代替）。</p>
 <p>一个 nsqd 存在着多个 topic，每个 topic 有多个 channel。每个 channel 接收来自 topic 的拷贝，消息可以多路发送，每个消息放到一个 channel 里面，多个订阅者订阅一个 channel 可分布式接收消息，实现负载均衡。</p>
 <p>我们先来看看 Topic  的构造</p>
-<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#8b008b;font-weight:bold">func</span> <span style="color:#008b45">NewTopic</span>(topicName <span style="color:#00688b;font-weight:bold">string</span>, ctx *context, deleteCallback <span style="color:#8b008b;font-weight:bold">func</span>(*Topic)) *Topic {
-	t := &amp;Topic{
-	<span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>	}
+<pre style="background-color:#fff"><span style="color:#000;font-weight:bold">func</span> <span style="color:#900;font-weight:bold">NewTopic</span>(topicName <span style="color:#458;font-weight:bold">string</span>, ctx <span style="color:#000;font-weight:bold">*</span>context, deleteCallback <span style="color:#000;font-weight:bold">func</span>(<span style="color:#000;font-weight:bold">*</span>Topic)) <span style="color:#000;font-weight:bold">*</span>Topic {
+	t <span style="color:#000;font-weight:bold">:=</span> <span style="color:#000;font-weight:bold">&amp;</span>Topic{
+	<span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>	}
 
-	<span style="color:#8b008b;font-weight:bold">if</span> strings.<span style="color:#008b45">HasSuffix</span>(topicName, <span style="color:#cd5555">&#34;#ephemeral&#34;</span>) {
-		t.ephemeral = <span style="color:#8b008b;font-weight:bold">true</span>
-		t.backend = <span style="color:#008b45">newDummyBackendQueue</span>()
-	} <span style="color:#8b008b;font-weight:bold">else</span> {
-		<span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>		t.backend = diskqueue.<span style="color:#008b45">New</span>(
-			<span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>		)
+	<span style="color:#000;font-weight:bold">if</span> strings.<span style="color:#900;font-weight:bold">HasSuffix</span>(topicName, <span style="color:#d14">&#34;#ephemeral&#34;</span>) {
+		t.ephemeral = <span style="color:#000;font-weight:bold">true</span>
+		t.backend = <span style="color:#900;font-weight:bold">newDummyBackendQueue</span>()
+	} <span style="color:#000;font-weight:bold">else</span> {
+		<span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>		t.backend = diskqueue.<span style="color:#900;font-weight:bold">New</span>(
+			<span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>		)
 	}
 
-	t.waitGroup.<span style="color:#008b45">Wrap</span>(<span style="color:#8b008b;font-weight:bold">func</span>() { t.<span style="color:#008b45">messagePump</span>() })
-	t.ctx.nsqd.<span style="color:#008b45">Notify</span>(t)  <span style="color:#228b22">//通知 nsqlookupd 注册这个 topic
-</span><span style="color:#228b22"></span>	<span style="color:#8b008b;font-weight:bold">return</span> t
+	t.waitGroup.<span style="color:#900;font-weight:bold">Wrap</span>(<span style="color:#000;font-weight:bold">func</span>() { t.<span style="color:#900;font-weight:bold">messagePump</span>() })
+	t.ctx.nsqd.<span style="color:#900;font-weight:bold">Notify</span>(t)  <span style="color:#998;font-style:italic">//通知 nsqlookupd 注册这个 topic
+</span><span style="color:#998;font-style:italic"></span>	<span style="color:#000;font-weight:bold">return</span> t
 }
-</code></pre></div><p>这里 Topic 会创建一个 queue 做为消息的备份用，如果 topic name 里面含有 #ephemeral，表示不备份这个 topic 的消息。newDummyBackendQueue 后面实际上就是一系列空操作，消息一旦进入这里面就会完全丢弃。随后启动一个 messagePump 用来接收消息并处理（每个 topic 都会有一个 messagePump 不断轮询）。</p>
-<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#8b008b;font-weight:bold">func</span> (t *Topic) <span style="color:#008b45">messagePump</span>() {
-	t.<span style="color:#008b45">RLock</span>()
-	<span style="color:#8b008b;font-weight:bold">for</span> _, c := <span style="color:#8b008b;font-weight:bold">range</span> t.channelMap {
-		chans = <span style="color:#658b00">append</span>(chans, c)
+</pre><p>这里 Topic 会创建一个 queue 做为消息的备份用，如果 topic name 里面含有 #ephemeral，表示不备份这个 topic 的消息。newDummyBackendQueue 后面实际上就是一系列空操作，消息一旦进入这里面就会完全丢弃。随后启动一个 messagePump 用来接收消息并处理（每个 topic 都会有一个 messagePump 不断轮询）。</p>
+<pre style="background-color:#fff"><span style="color:#000;font-weight:bold">func</span> (t <span style="color:#000;font-weight:bold">*</span>Topic) <span style="color:#900;font-weight:bold">messagePump</span>() {
+	t.<span style="color:#900;font-weight:bold">RLock</span>()
+	<span style="color:#000;font-weight:bold">for</span> _, c <span style="color:#000;font-weight:bold">:=</span> <span style="color:#000;font-weight:bold">range</span> t.channelMap {
+		chans = <span style="color:#0086b3">append</span>(chans, c)
 	}
-	t.<span style="color:#008b45">RUnlock</span>()
-	<span style="color:#8b008b;font-weight:bold">for</span> {
-		<span style="color:#8b008b;font-weight:bold">select</span> {
-		<span style="color:#8b008b;font-weight:bold">case</span> msg = &lt;-memoryMsgChan:  <span style="color:#228b22">//t.memoryMsgChan
-</span><span style="color:#228b22"></span>		<span style="color:#8b008b;font-weight:bold">case</span> buf = &lt;-backendChan:    <span style="color:#228b22">//t.backend
-</span><span style="color:#228b22"></span>			msg, err = <span style="color:#008b45">decodeMessage</span>(buf)
-			<span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>		<span style="color:#8b008b;font-weight:bold">case</span> <span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>		<span style="color:#8b008b;font-weight:bold">case</span> &lt;-t.exitChan:
-			<span style="color:#8b008b;font-weight:bold">goto</span> exit
+	t.<span style="color:#900;font-weight:bold">RUnlock</span>()
+	<span style="color:#000;font-weight:bold">for</span> {
+		<span style="color:#000;font-weight:bold">select</span> {
+		<span style="color:#000;font-weight:bold">case</span> msg = <span style="color:#000;font-weight:bold">&lt;-</span>memoryMsgChan:  <span style="color:#998;font-style:italic">//t.memoryMsgChan
+</span><span style="color:#998;font-style:italic"></span>		<span style="color:#000;font-weight:bold">case</span> buf = <span style="color:#000;font-weight:bold">&lt;-</span>backendChan:    <span style="color:#998;font-style:italic">//t.backend
+</span><span style="color:#998;font-style:italic"></span>			msg, err = <span style="color:#900;font-weight:bold">decodeMessage</span>(buf)
+			<span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>		<span style="color:#000;font-weight:bold">case</span> <span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>		<span style="color:#000;font-weight:bold">case</span> <span style="color:#000;font-weight:bold">&lt;-</span>t.exitChan:
+			<span style="color:#000;font-weight:bold">goto</span> exit
 		}
 
-		<span style="color:#8b008b;font-weight:bold">for</span> i, channel := <span style="color:#8b008b;font-weight:bold">range</span> chans {
-			chanMsg := msg
-			<span style="color:#228b22">// copy the message because each channel
-</span><span style="color:#228b22"></span>			<span style="color:#228b22">// needs a unique instance but...
-</span><span style="color:#228b22"></span>			<span style="color:#228b22">// fastpath to avoid copy if its the first channel
-</span><span style="color:#228b22"></span>			<span style="color:#228b22">// (the topic already created the first copy)
-</span><span style="color:#228b22"></span>			<span style="color:#8b008b;font-weight:bold">if</span> i &gt; <span style="color:#b452cd">0</span> {
-				chanMsg = <span style="color:#008b45">NewMessage</span>(msg.ID, msg.Body)
+		<span style="color:#000;font-weight:bold">for</span> i, channel <span style="color:#000;font-weight:bold">:=</span> <span style="color:#000;font-weight:bold">range</span> chans {
+			chanMsg <span style="color:#000;font-weight:bold">:=</span> msg
+			<span style="color:#998;font-style:italic">// copy the message because each channel
+</span><span style="color:#998;font-style:italic"></span>			<span style="color:#998;font-style:italic">// needs a unique instance but...
+</span><span style="color:#998;font-style:italic"></span>			<span style="color:#998;font-style:italic">// fastpath to avoid copy if its the first channel
+</span><span style="color:#998;font-style:italic"></span>			<span style="color:#998;font-style:italic">// (the topic already created the first copy)
+</span><span style="color:#998;font-style:italic"></span>			<span style="color:#000;font-weight:bold">if</span> i &gt; <span style="color:#099">0</span> {
+				chanMsg = <span style="color:#900;font-weight:bold">NewMessage</span>(msg.ID, msg.Body)
 				chanMsg.Timestamp = msg.Timestamp
 				chanMsg.deferred = msg.deferred
 			}
-			<span style="color:#8b008b;font-weight:bold">if</span> chanMsg.deferred != <span style="color:#b452cd">0</span> {
-				channel.<span style="color:#008b45">PutMessageDeferred</span>(chanMsg, chanMsg.deferred)
-				<span style="color:#8b008b;font-weight:bold">continue</span>
+			<span style="color:#000;font-weight:bold">if</span> chanMsg.deferred <span style="color:#000;font-weight:bold">!=</span> <span style="color:#099">0</span> {
+				channel.<span style="color:#900;font-weight:bold">PutMessageDeferred</span>(chanMsg, chanMsg.deferred)
+				<span style="color:#000;font-weight:bold">continue</span>
 			}
-			err := channel.<span style="color:#008b45">PutMessage</span>(chanMsg)
+			err <span style="color:#000;font-weight:bold">:=</span> channel.<span style="color:#900;font-weight:bold">PutMessage</span>(chanMsg)
 		}
 	}
 }
-</code></pre></div><p>上面我们可以看到，消息的主要来源有两个地方 memoryMsgChan 和 backendChan 。每当收到消息后会投递到当前 topic 下面所有的 channel（这就是为什么两个consumer 订阅同一个消息，不同的 channel 都会收到同一条消息的原因）。如果只有一个 channel 消息会直接投递，多个 channel 会拷贝一份再投递。</p>
+</pre><p>上面我们可以看到，消息的主要来源有两个地方 memoryMsgChan 和 backendChan 。每当收到消息后会投递到当前 topic 下面所有的 channel（这就是为什么两个consumer 订阅同一个消息，不同的 channel 都会收到同一条消息的原因）。如果只有一个 channel 消息会直接投递，多个 channel 会拷贝一份再投递。</p>
 <p>我们先来看看 backendChan 的消息是如何过来的。diskqueue 里面会维护一个读写文件的 ioLoop，这里面会接收一条消息并写到文件或者从文件里读一条消息并投递出去。</p>
-<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#8b008b;font-weight:bold">func</span> (d *diskQueue) <span style="color:#008b45">ioLoop</span>() {
-	<span style="color:#8b008b;font-weight:bold">var</span> dataRead []<span style="color:#00688b;font-weight:bold">byte</span>
-	<span style="color:#8b008b;font-weight:bold">var</span> err <span style="color:#00688b;font-weight:bold">error</span>
-	<span style="color:#8b008b;font-weight:bold">var</span> count <span style="color:#00688b;font-weight:bold">int64</span>
-	<span style="color:#8b008b;font-weight:bold">var</span> r <span style="color:#8b008b;font-weight:bold">chan</span> []<span style="color:#00688b;font-weight:bold">byte</span>
+<pre style="background-color:#fff"><span style="color:#000;font-weight:bold">func</span> (d <span style="color:#000;font-weight:bold">*</span>diskQueue) <span style="color:#900;font-weight:bold">ioLoop</span>() {
+	<span style="color:#000;font-weight:bold">var</span> dataRead []<span style="color:#458;font-weight:bold">byte</span>
+	<span style="color:#000;font-weight:bold">var</span> err <span style="color:#458;font-weight:bold">error</span>
+	<span style="color:#000;font-weight:bold">var</span> count <span style="color:#458;font-weight:bold">int64</span>
+	<span style="color:#000;font-weight:bold">var</span> r <span style="color:#000;font-weight:bold">chan</span> []<span style="color:#458;font-weight:bold">byte</span>
 
-	syncTicker := time.<span style="color:#008b45">NewTicker</span>(d.syncTimeout)
+	syncTicker <span style="color:#000;font-weight:bold">:=</span> time.<span style="color:#900;font-weight:bold">NewTicker</span>(d.syncTimeout)
 
-	<span style="color:#8b008b;font-weight:bold">for</span> {
-		<span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>		<span style="color:#8b008b;font-weight:bold">if</span> (d.readFileNum &lt; d.writeFileNum) || (d.readPos &lt; d.writePos) {
-			dataRead, err = d.<span style="color:#008b45">readOne</span>()
-			<span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>			r = d.readChan
-		} <span style="color:#8b008b;font-weight:bold">else</span> {
-			r = <span style="color:#8b008b;font-weight:bold">nil</span>
+	<span style="color:#000;font-weight:bold">for</span> {
+		<span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>		<span style="color:#000;font-weight:bold">if</span> (d.readFileNum &lt; d.writeFileNum) <span style="color:#000;font-weight:bold">||</span> (d.readPos &lt; d.writePos) {
+			dataRead, err = d.<span style="color:#900;font-weight:bold">readOne</span>()
+			<span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>			r = d.readChan
+		} <span style="color:#000;font-weight:bold">else</span> {
+			r = <span style="color:#000;font-weight:bold">nil</span>
 		}
 
-		<span style="color:#8b008b;font-weight:bold">select</span> {
-		<span style="color:#8b008b;font-weight:bold">case</span> r &lt;- dataRead:  <span style="color:#228b22">//把消息投递出去
-</span><span style="color:#228b22"></span>			count++
-			<span style="color:#228b22">// moveForward sets needSync flag if a file is removed
-</span><span style="color:#228b22"></span>			d.<span style="color:#008b45">moveForward</span>()
-		<span style="color:#8b008b;font-weight:bold">case</span> dataWrite := &lt;-d.writeChan:   <span style="color:#228b22">//把消息写到文件
-</span><span style="color:#228b22"></span>			count++
-			d.writeResponseChan &lt;- d.<span style="color:#008b45">writeOne</span>(dataWrite)
-		<span style="color:#8b008b;font-weight:bold">case</span> &lt;-d.exitChan:
-			<span style="color:#8b008b;font-weight:bold">goto</span> exit
+		<span style="color:#000;font-weight:bold">select</span> {
+		<span style="color:#000;font-weight:bold">case</span> r <span style="color:#000;font-weight:bold">&lt;-</span> dataRead:  <span style="color:#998;font-style:italic">//把消息投递出去
+</span><span style="color:#998;font-style:italic"></span>			count<span style="color:#000;font-weight:bold">++</span>
+			<span style="color:#998;font-style:italic">// moveForward sets needSync flag if a file is removed
+</span><span style="color:#998;font-style:italic"></span>			d.<span style="color:#900;font-weight:bold">moveForward</span>()
+		<span style="color:#000;font-weight:bold">case</span> dataWrite <span style="color:#000;font-weight:bold">:=</span> <span style="color:#000;font-weight:bold">&lt;-</span>d.writeChan:   <span style="color:#998;font-style:italic">//把消息写到文件
+</span><span style="color:#998;font-style:italic"></span>			count<span style="color:#000;font-weight:bold">++</span>
+			d.writeResponseChan <span style="color:#000;font-weight:bold">&lt;-</span> d.<span style="color:#900;font-weight:bold">writeOne</span>(dataWrite)
+		<span style="color:#000;font-weight:bold">case</span> <span style="color:#000;font-weight:bold">&lt;-</span>d.exitChan:
+			<span style="color:#000;font-weight:bold">goto</span> exit
 		}
 	}
 }
-</code></pre></div><p>我们再来看看 TCP 数据流过来的消息是怎样进到 topic 里面来的。</p>
-<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#8b008b;font-weight:bold">func</span> (p *protocolV2) <span style="color:#008b45">IOLoop</span>(conn net.Conn) <span style="color:#00688b;font-weight:bold">error</span> {
-	<span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>    response, err = p.<span style="color:#008b45">Exec</span>(client, params)
-    <span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>}
-<span style="color:#8b008b;font-weight:bold">func</span> (p *protocolV2) <span style="color:#008b45">Exec</span>(client *clientV2, params [][]<span style="color:#00688b;font-weight:bold">byte</span>) ([]<span style="color:#00688b;font-weight:bold">byte</span>, <span style="color:#00688b;font-weight:bold">error</span>) {
-    <span style="color:#8b008b;font-weight:bold">switch</span>{
-    <span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>	<span style="color:#8b008b;font-weight:bold">case</span> bytes.<span style="color:#008b45">Equal</span>(params[<span style="color:#b452cd">0</span>], []<span style="color:#658b00">byte</span>(<span style="color:#cd5555">&#34;PUB&#34;</span>)):
-		<span style="color:#8b008b;font-weight:bold">return</span> p.<span style="color:#008b45">PUB</span>(client, params)
+</pre><p>我们再来看看 TCP 数据流过来的消息是怎样进到 topic 里面来的。</p>
+<pre style="background-color:#fff"><span style="color:#000;font-weight:bold">func</span> (p <span style="color:#000;font-weight:bold">*</span>protocolV2) <span style="color:#900;font-weight:bold">IOLoop</span>(conn net.Conn) <span style="color:#458;font-weight:bold">error</span> {
+	<span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>    response, err = p.<span style="color:#900;font-weight:bold">Exec</span>(client, params)
+    <span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>}
+<span style="color:#000;font-weight:bold">func</span> (p <span style="color:#000;font-weight:bold">*</span>protocolV2) <span style="color:#900;font-weight:bold">Exec</span>(client <span style="color:#000;font-weight:bold">*</span>clientV2, params [][]<span style="color:#458;font-weight:bold">byte</span>) ([]<span style="color:#458;font-weight:bold">byte</span>, <span style="color:#458;font-weight:bold">error</span>) {
+    <span style="color:#000;font-weight:bold">switch</span>{
+    <span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>	<span style="color:#000;font-weight:bold">case</span> bytes.<span style="color:#900;font-weight:bold">Equal</span>(params[<span style="color:#099">0</span>], []<span style="color:#0086b3">byte</span>(<span style="color:#d14">&#34;PUB&#34;</span>)):
+		<span style="color:#000;font-weight:bold">return</span> p.<span style="color:#900;font-weight:bold">PUB</span>(client, params)
     }
 }
-<span style="color:#8b008b;font-weight:bold">func</span> (p *protocolV2) <span style="color:#008b45">PUB</span>(client *clientV2, params [][]<span style="color:#00688b;font-weight:bold">byte</span>) ([]<span style="color:#00688b;font-weight:bold">byte</span>, <span style="color:#00688b;font-weight:bold">error</span>) {
-    <span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>    topic := p.ctx.nsqd.<span style="color:#008b45">GetTopic</span>(topicName)
-	msg := <span style="color:#008b45">NewMessage</span>(topic.<span style="color:#008b45">GenerateID</span>(), messageBody)
-	err = topic.<span style="color:#008b45">PutMessage</span>(msg)
-    <span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>}
-<span style="color:#228b22">// PutMessage writes a Message to the queue
-</span><span style="color:#228b22"></span><span style="color:#8b008b;font-weight:bold">func</span> (t *Topic) <span style="color:#008b45">PutMessage</span>(m *Message) <span style="color:#00688b;font-weight:bold">error</span> {
-	<span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>	err := t.<span style="color:#008b45">put</span>(m)
-	<span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>	<span style="color:#8b008b;font-weight:bold">return</span> <span style="color:#8b008b;font-weight:bold">nil</span>
+<span style="color:#000;font-weight:bold">func</span> (p <span style="color:#000;font-weight:bold">*</span>protocolV2) <span style="color:#900;font-weight:bold">PUB</span>(client <span style="color:#000;font-weight:bold">*</span>clientV2, params [][]<span style="color:#458;font-weight:bold">byte</span>) ([]<span style="color:#458;font-weight:bold">byte</span>, <span style="color:#458;font-weight:bold">error</span>) {
+    <span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>    topic <span style="color:#000;font-weight:bold">:=</span> p.ctx.nsqd.<span style="color:#900;font-weight:bold">GetTopic</span>(topicName)
+	msg <span style="color:#000;font-weight:bold">:=</span> <span style="color:#900;font-weight:bold">NewMessage</span>(topic.<span style="color:#900;font-weight:bold">GenerateID</span>(), messageBody)
+	err = topic.<span style="color:#900;font-weight:bold">PutMessage</span>(msg)
+    <span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>}
+<span style="color:#998;font-style:italic">// PutMessage writes a Message to the queue
+</span><span style="color:#998;font-style:italic"></span><span style="color:#000;font-weight:bold">func</span> (t <span style="color:#000;font-weight:bold">*</span>Topic) <span style="color:#900;font-weight:bold">PutMessage</span>(m <span style="color:#000;font-weight:bold">*</span>Message) <span style="color:#458;font-weight:bold">error</span> {
+	<span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>	err <span style="color:#000;font-weight:bold">:=</span> t.<span style="color:#900;font-weight:bold">put</span>(m)
+	<span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>	<span style="color:#000;font-weight:bold">return</span> <span style="color:#000;font-weight:bold">nil</span>
 }
-<span style="color:#8b008b;font-weight:bold">func</span> (t *Topic) <span style="color:#008b45">put</span>(m *Message) <span style="color:#00688b;font-weight:bold">error</span> {
-	<span style="color:#8b008b;font-weight:bold">select</span> {
-	<span style="color:#8b008b;font-weight:bold">case</span> t.memoryMsgChan &lt;- m:
-	<span style="color:#8b008b;font-weight:bold">default</span>:
-        <span style="color:#228b22">//....
-</span><span style="color:#228b22"></span>		err := <span style="color:#008b45">writeMessageToBackend</span>(b, m, t.backend)
-		<span style="color:#008b45">bufferPoolPut</span>(b)
-		t.ctx.nsqd.<span style="color:#008b45">SetHealth</span>(err)
+<span style="color:#000;font-weight:bold">func</span> (t <span style="color:#000;font-weight:bold">*</span>Topic) <span style="color:#900;font-weight:bold">put</span>(m <span style="color:#000;font-weight:bold">*</span>Message) <span style="color:#458;font-weight:bold">error</span> {
+	<span style="color:#000;font-weight:bold">select</span> {
+	<span style="color:#000;font-weight:bold">case</span> t.memoryMsgChan <span style="color:#000;font-weight:bold">&lt;-</span> m:
+	<span style="color:#000;font-weight:bold">default</span>:
+        <span style="color:#998;font-style:italic">//....
+</span><span style="color:#998;font-style:italic"></span>		err <span style="color:#000;font-weight:bold">:=</span> <span style="color:#900;font-weight:bold">writeMessageToBackend</span>(b, m, t.backend)
+		<span style="color:#900;font-weight:bold">bufferPoolPut</span>(b)
+		t.ctx.nsqd.<span style="color:#900;font-weight:bold">SetHealth</span>(err)
 	}
-	<span style="color:#8b008b;font-weight:bold">return</span> <span style="color:#8b008b;font-weight:bold">nil</span>
+	<span style="color:#000;font-weight:bold">return</span> <span style="color:#000;font-weight:bold">nil</span>
 }
 
-</code></pre></div><p>以上我们可以看到，消息从 TCP 过来后，经过解码后获取全局的 nsqd 实例找到对应的 topic 进行投递。topic 会找到它下面的 channel 投递（topic 的 pump message 会轮询 memoryMsgChan ）， 如果失败会保存到 backend 里面（就是 diskqueue）。	另外就是 flush 操作也会把 memoryChan 里的消息写到 disk 里面。</p>
-<h2 id="channel">Channel</h2>
+</pre><p>以上我们可以看到，消息从 TCP 过来后，经过解码后获取全局的 nsqd 实例找到对应的 topic 进行投递。topic 会找到它下面的 channel 投递（topic 的 pump message 会轮询 memoryMsgChan ）， 如果失败会保存到 backend 里面（就是 diskqueue）。	另外就是 flush 操作也会把 memoryChan 里的消息写到 disk 里面。</p>
+<h2>Channel</h2>
 <p>一个 Channel 里面的消息有两种类型，一种是延迟消息，另一种是普通的消息。我们在 nsq 的 client 接口可以看到两种不同消息有不同的 publish 接口。每种消息分别用一个 hash 表和一个优先队列存储在内存中。下文会详细提到两种不同数据结构的作用。</p>
 <p>以下是 channel 内部的数据结构。</p>
-<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#8b008b;font-weight:bold">type</span> Channel <span style="color:#8b008b;font-weight:bold">struct</span> {
-	<span style="color:#228b22">// 64bit atomic vars need to be first for proper alignment on 32bit platforms
-</span><span style="color:#228b22"></span>	requeueCount <span style="color:#00688b;font-weight:bold">uint64</span>   <span style="color:#228b22">//重新入队的消息条目数
-</span><span style="color:#228b22"></span>	messageCount <span style="color:#00688b;font-weight:bold">uint64</span>   <span style="color:#228b22">//进入 Channel 的消息总数
-</span><span style="color:#228b22"></span>	timeoutCount <span style="color:#00688b;font-weight:bold">uint64</span>	  <span style="color:#228b22">//超时的消息数
-</span><span style="color:#228b22"></span>
-	sync.RWMutex		  <span style="color:#228b22">//全局 channel 读写锁
-</span><span style="color:#228b22"></span>
-	topicName <span style="color:#00688b;font-weight:bold">string</span>      <span style="color:#228b22">//每个 channel 都和一个 topic 相关联
-</span><span style="color:#228b22"></span>	name      <span style="color:#00688b;font-weight:bold">string</span>      <span style="color:#228b22">//channel 名字
-</span><span style="color:#228b22"></span>	ctx       *context    <span style="color:#228b22">//全局 nsq 实例变量
-</span><span style="color:#228b22"></span>
-	backend BackendQueue  <span style="color:#228b22">//消息备份队列
-</span><span style="color:#228b22"></span>
-	memoryMsgChan <span style="color:#8b008b;font-weight:bold">chan</span> *Message   <span style="color:#228b22">//内存队列，消息进入 channel 的入口。
-</span><span style="color:#228b22"></span>	exitFlag      <span style="color:#00688b;font-weight:bold">int32</span>				<span style="color:#228b22">//退出标志
-</span><span style="color:#228b22"></span>	exitMutex     sync.RWMutex		<span style="color:#228b22">//退出信号
-</span><span style="color:#228b22"></span>
-	<span style="color:#228b22">// state tracking
-</span><span style="color:#228b22"></span>	clients        <span style="color:#8b008b;font-weight:bold">map</span>[<span style="color:#00688b;font-weight:bold">int64</span>]Consumer    <span style="color:#228b22">//因为不需要关注生产者，这里的 clients 全是 consumer.
-</span><span style="color:#228b22"></span>	paused         <span style="color:#00688b;font-weight:bold">int32</span>				 <span style="color:#228b22">//暂停接收消息
-</span><span style="color:#228b22"></span>	ephemeral      <span style="color:#00688b;font-weight:bold">bool</span>					 <span style="color:#228b22">//不备份标志
-</span><span style="color:#228b22"></span>	deleteCallback <span style="color:#8b008b;font-weight:bold">func</span>(*Channel)		 <span style="color:#228b22">//删除 channel 回调
-</span><span style="color:#228b22"></span>	deleter        sync.Once			 <span style="color:#228b22">//删除锁
-</span><span style="color:#228b22"></span>
-	<span style="color:#228b22">// Stats tracking
-</span><span style="color:#228b22"></span>	e2eProcessingLatencyStream *quantile.Quantile   <span style="color:#228b22">//状态报告
-</span><span style="color:#228b22"></span>
-	<span style="color:#228b22">// TODO: these can be DRYd up
-</span><span style="color:#228b22"></span>	deferredMessages <span style="color:#8b008b;font-weight:bold">map</span>[MessageID]*pqueue.Item   <span style="color:#228b22">//延迟消息
-</span><span style="color:#228b22"></span>	deferredPQ       pqueue.PriorityQueue		  <span style="color:#228b22">//延迟消息队列
-</span><span style="color:#228b22"></span>	deferredMutex    sync.Mutex					  <span style="color:#228b22">//延迟队列锁
-</span><span style="color:#228b22"></span>	inFlightMessages <span style="color:#8b008b;font-weight:bold">map</span>[MessageID]*Message		  <span style="color:#228b22">//待发送的消息
-</span><span style="color:#228b22"></span>	inFlightPQ       inFlightPqueue				  <span style="color:#228b22">//待发送的队列
-</span><span style="color:#228b22"></span>	inFlightMutex    sync.Mutex					  <span style="color:#228b22">//发送队列锁
-</span><span style="color:#228b22"></span>}
-</code></pre></div><p>Channel 只负责接收数据并发出去，消息发出去前会备份到队列，出错会备份到文件。它只做消息的临时的存储地，不做任何其他的事情。所有它内部没有 goroutine 循环做轮询的事情。下面这张官方的图是描述 channel 的形态，这里的 goroutine 是指其他模块里面的 goroutine 循环。</p>
-<p><img src="http://www.leyafo.com/images/nsq_server_channle.png" alt="img"></p>
+<pre style="background-color:#fff"><span style="color:#000;font-weight:bold">type</span> Channel <span style="color:#000;font-weight:bold">struct</span> {
+	<span style="color:#998;font-style:italic">// 64bit atomic vars need to be first for proper alignment on 32bit platforms
+</span><span style="color:#998;font-style:italic"></span>	requeueCount <span style="color:#458;font-weight:bold">uint64</span>   <span style="color:#998;font-style:italic">//重新入队的消息条目数
+</span><span style="color:#998;font-style:italic"></span>	messageCount <span style="color:#458;font-weight:bold">uint64</span>   <span style="color:#998;font-style:italic">//进入 Channel 的消息总数
+</span><span style="color:#998;font-style:italic"></span>	timeoutCount <span style="color:#458;font-weight:bold">uint64</span>	  <span style="color:#998;font-style:italic">//超时的消息数
+</span><span style="color:#998;font-style:italic"></span>
+	sync.RWMutex		  <span style="color:#998;font-style:italic">//全局 channel 读写锁
+</span><span style="color:#998;font-style:italic"></span>
+	topicName <span style="color:#458;font-weight:bold">string</span>      <span style="color:#998;font-style:italic">//每个 channel 都和一个 topic 相关联
+</span><span style="color:#998;font-style:italic"></span>	name      <span style="color:#458;font-weight:bold">string</span>      <span style="color:#998;font-style:italic">//channel 名字
+</span><span style="color:#998;font-style:italic"></span>	ctx       <span style="color:#000;font-weight:bold">*</span>context    <span style="color:#998;font-style:italic">//全局 nsq 实例变量
+</span><span style="color:#998;font-style:italic"></span>
+	backend BackendQueue  <span style="color:#998;font-style:italic">//消息备份队列
+</span><span style="color:#998;font-style:italic"></span>
+	memoryMsgChan <span style="color:#000;font-weight:bold">chan</span> <span style="color:#000;font-weight:bold">*</span>Message   <span style="color:#998;font-style:italic">//内存队列，消息进入 channel 的入口。
+</span><span style="color:#998;font-style:italic"></span>	exitFlag      <span style="color:#458;font-weight:bold">int32</span>				<span style="color:#998;font-style:italic">//退出标志
+</span><span style="color:#998;font-style:italic"></span>	exitMutex     sync.RWMutex		<span style="color:#998;font-style:italic">//退出信号
+</span><span style="color:#998;font-style:italic"></span>
+	<span style="color:#998;font-style:italic">// state tracking
+</span><span style="color:#998;font-style:italic"></span>	clients        <span style="color:#000;font-weight:bold">map</span>[<span style="color:#458;font-weight:bold">int64</span>]Consumer    <span style="color:#998;font-style:italic">//因为不需要关注生产者，这里的 clients 全是 consumer.
+</span><span style="color:#998;font-style:italic"></span>	paused         <span style="color:#458;font-weight:bold">int32</span>				 <span style="color:#998;font-style:italic">//暂停接收消息
+</span><span style="color:#998;font-style:italic"></span>	ephemeral      <span style="color:#458;font-weight:bold">bool</span>					 <span style="color:#998;font-style:italic">//不备份标志
+</span><span style="color:#998;font-style:italic"></span>	deleteCallback <span style="color:#000;font-weight:bold">func</span>(<span style="color:#000;font-weight:bold">*</span>Channel)		 <span style="color:#998;font-style:italic">//删除 channel 回调
+</span><span style="color:#998;font-style:italic"></span>	deleter        sync.Once			 <span style="color:#998;font-style:italic">//删除锁
+</span><span style="color:#998;font-style:italic"></span>
+	<span style="color:#998;font-style:italic">// Stats tracking
+</span><span style="color:#998;font-style:italic"></span>	e2eProcessingLatencyStream <span style="color:#000;font-weight:bold">*</span>quantile.Quantile   <span style="color:#998;font-style:italic">//状态报告
+</span><span style="color:#998;font-style:italic"></span>
+	<span style="color:#998;font-style:italic">// TODO: these can be DRYd up
+</span><span style="color:#998;font-style:italic"></span>	deferredMessages <span style="color:#000;font-weight:bold">map</span>[MessageID]<span style="color:#000;font-weight:bold">*</span>pqueue.Item   <span style="color:#998;font-style:italic">//延迟消息
+</span><span style="color:#998;font-style:italic"></span>	deferredPQ       pqueue.PriorityQueue		  <span style="color:#998;font-style:italic">//延迟消息队列
+</span><span style="color:#998;font-style:italic"></span>	deferredMutex    sync.Mutex					  <span style="color:#998;font-style:italic">//延迟队列锁
+</span><span style="color:#998;font-style:italic"></span>	inFlightMessages <span style="color:#000;font-weight:bold">map</span>[MessageID]<span style="color:#000;font-weight:bold">*</span>Message		  <span style="color:#998;font-style:italic">//待发送的消息
+</span><span style="color:#998;font-style:italic"></span>	inFlightPQ       inFlightPqueue				  <span style="color:#998;font-style:italic">//待发送的队列
+</span><span style="color:#998;font-style:italic"></span>	inFlightMutex    sync.Mutex					  <span style="color:#998;font-style:italic">//发送队列锁
+</span><span style="color:#998;font-style:italic"></span>}
+</pre><p>Channel 只负责接收数据并发出去，消息发出去前会备份到队列，出错会备份到文件。它只做消息的临时的存储地，不做任何其他的事情。所有它内部没有 goroutine 循环做轮询的事情。下面这张官方的图是描述 channel 的形态，这里的 goroutine 是指其他模块里面的 goroutine 循环。</p>
+<p><img src="/images/nsq_server_channle.png" alt="img" /></p>
 <p>在 nsq 与客户端建立连接后，每个客户端通过 sub 指令与 nsq 建立一条 channel 通道，每条消息通过 pub 指令投递进来，进来后会通过全局的 nsq instance 找到这条消息的 topic 并投递进来。从上面的 topic 的工作流我们可以看到消息最终还是进入到对应的 channel 里面。在 protocol 里面的 pummessage 这个 goroutine 里面通过从对应的客户端拿出 channel（在 sub 指令时建立的），并从 channel 里面的 memoryMsgChan 这个 go channel 里面拿消息出来，并最终通过投递给远程的 client。</p>
 <p>以下是这一系列流程的代码：</p>
-<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#8b008b;font-weight:bold">func</span> (p *protocolV2) <span style="color:#008b45">SUB</span>(client *clientV2, params [][]<span style="color:#00688b;font-weight:bold">byte</span>) ([]<span style="color:#00688b;font-weight:bold">byte</span>, <span style="color:#00688b;font-weight:bold">error</span>) {
-	<span style="color:#8b008b;font-weight:bold">var</span> channel *Channel
-	<span style="color:#8b008b;font-weight:bold">for</span> {
-        <span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>		topic := p.ctx.nsqd.<span style="color:#008b45">GetTopic</span>(topicName) <span style="color:#228b22">//获取对应的 topic
-</span><span style="color:#228b22"></span>		channel = topic.<span style="color:#008b45">GetChannel</span>(channelName) <span style="color:#228b22">//获取 topic 下面的 channel
-</span><span style="color:#228b22"></span>		channel.<span style="color:#008b45">AddClient</span>(client.ID, client)
-		<span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>		<span style="color:#8b008b;font-weight:bold">break</span>
+<pre style="background-color:#fff"><span style="color:#000;font-weight:bold">func</span> (p <span style="color:#000;font-weight:bold">*</span>protocolV2) <span style="color:#900;font-weight:bold">SUB</span>(client <span style="color:#000;font-weight:bold">*</span>clientV2, params [][]<span style="color:#458;font-weight:bold">byte</span>) ([]<span style="color:#458;font-weight:bold">byte</span>, <span style="color:#458;font-weight:bold">error</span>) {
+	<span style="color:#000;font-weight:bold">var</span> channel <span style="color:#000;font-weight:bold">*</span>Channel
+	<span style="color:#000;font-weight:bold">for</span> {
+        <span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>		topic <span style="color:#000;font-weight:bold">:=</span> p.ctx.nsqd.<span style="color:#900;font-weight:bold">GetTopic</span>(topicName) <span style="color:#998;font-style:italic">//获取对应的 topic
+</span><span style="color:#998;font-style:italic"></span>		channel = topic.<span style="color:#900;font-weight:bold">GetChannel</span>(channelName) <span style="color:#998;font-style:italic">//获取 topic 下面的 channel
+</span><span style="color:#998;font-style:italic"></span>		channel.<span style="color:#900;font-weight:bold">AddClient</span>(client.ID, client)
+		<span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>		<span style="color:#000;font-weight:bold">break</span>
 	}
-	<span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>	client.Channel = channel
-	<span style="color:#228b22">// update message pump
-</span><span style="color:#228b22"></span>	client.SubEventChan &lt;- channel
+	<span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>	client.Channel = channel
+	<span style="color:#998;font-style:italic">// update message pump
+</span><span style="color:#998;font-style:italic"></span>	client.SubEventChan <span style="color:#000;font-weight:bold">&lt;-</span> channel
 }
-<span style="color:#8b008b;font-weight:bold">func</span> (p *protocolV2) <span style="color:#008b45">messagePump</span>(client *clientV2, startedChan <span style="color:#8b008b;font-weight:bold">chan</span> <span style="color:#00688b;font-weight:bold">bool</span>) {
-    <span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>    <span style="color:#8b008b;font-weight:bold">var</span> memoryMsgChan <span style="color:#8b008b;font-weight:bold">chan</span> *Message
-    <span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>    <span style="color:#8b008b;font-weight:bold">for</span>{
-        <span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>    	memoryMsgChan = subChannel.memoryMsgChan
-        <span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>        <span style="color:#8b008b;font-weight:bold">select</span> {
-        <span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>        <span style="color:#8b008b;font-weight:bold">case</span> subChannel = &lt;-subEventChan:
-        <span style="color:#8b008b;font-weight:bold">case</span> msg := &lt;-memoryMsgChan:
-            <span style="color:#228b22">//发送前先放到队列里面去。
-</span><span style="color:#228b22"></span>            subChannel.<span style="color:#008b45">StartInFlightTimeout</span>(msg, client.ID, msgTimeout)
-            client.<span style="color:#008b45">SendingMessage</span>()
-            err = p.<span style="color:#008b45">SendMessage</span>(client, msg)
-            <span style="color:#8b008b;font-weight:bold">if</span> err != <span style="color:#8b008b;font-weight:bold">nil</span> {
-                <span style="color:#8b008b;font-weight:bold">goto</span> exit
+<span style="color:#000;font-weight:bold">func</span> (p <span style="color:#000;font-weight:bold">*</span>protocolV2) <span style="color:#900;font-weight:bold">messagePump</span>(client <span style="color:#000;font-weight:bold">*</span>clientV2, startedChan <span style="color:#000;font-weight:bold">chan</span> <span style="color:#458;font-weight:bold">bool</span>) {
+    <span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>    <span style="color:#000;font-weight:bold">var</span> memoryMsgChan <span style="color:#000;font-weight:bold">chan</span> <span style="color:#000;font-weight:bold">*</span>Message
+    <span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>    <span style="color:#000;font-weight:bold">for</span>{
+        <span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>    	memoryMsgChan = subChannel.memoryMsgChan
+        <span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>        <span style="color:#000;font-weight:bold">select</span> {
+        <span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>        <span style="color:#000;font-weight:bold">case</span> subChannel = <span style="color:#000;font-weight:bold">&lt;-</span>subEventChan:
+        <span style="color:#000;font-weight:bold">case</span> msg <span style="color:#000;font-weight:bold">:=</span> <span style="color:#000;font-weight:bold">&lt;-</span>memoryMsgChan:
+            <span style="color:#998;font-style:italic">//发送前先放到队列里面去。
+</span><span style="color:#998;font-style:italic"></span>            subChannel.<span style="color:#900;font-weight:bold">StartInFlightTimeout</span>(msg, client.ID, msgTimeout)
+            client.<span style="color:#900;font-weight:bold">SendingMessage</span>()
+            err = p.<span style="color:#900;font-weight:bold">SendMessage</span>(client, msg)
+            <span style="color:#000;font-weight:bold">if</span> err <span style="color:#000;font-weight:bold">!=</span> <span style="color:#000;font-weight:bold">nil</span> {
+                <span style="color:#000;font-weight:bold">goto</span> exit
             }
-            flushed = <span style="color:#8b008b;font-weight:bold">false</span>
+            flushed = <span style="color:#000;font-weight:bold">false</span>
         }
     }
 }
-</code></pre></div><p>消息发给客户端后，并不会丢弃，因为有可能会发送失败，从上面的 StartInFlightTimeout 函数我们就能知道这一点。StartInFlightTimeout 就涉及了前面提到的同时用 hash 表和优先队列存储消息。这里使用优先队列的原因是因为在消息重发的机制里面需要根据时间上的优先级重新发送消息。另外就是消息需要 client 返回 FIN 指令才能删除并丢弃掉。 nsq 每当收到一条消息后会马上投递出去，或者是备份到文件里面（channel 和 topic 的Putmessage 都有对应的实现）。</p>
+</pre><p>消息发给客户端后，并不会丢弃，因为有可能会发送失败，从上面的 StartInFlightTimeout 函数我们就能知道这一点。StartInFlightTimeout 就涉及了前面提到的同时用 hash 表和优先队列存储消息。这里使用优先队列的原因是因为在消息重发的机制里面需要根据时间上的优先级重新发送消息。另外就是消息需要 client 返回 FIN 指令才能删除并丢弃掉。 nsq 每当收到一条消息后会马上投递出去，或者是备份到文件里面（channel 和 topic 的Putmessage 都有对应的实现）。</p>
 <p>这里有一点比较迷惑的是 pqueue.PriorityQueue 和 inFlightPqueue 是一摸一样的队列，功能上的实现也是一样的，为什么要用两个，我也要去问问官方是怎么回事。</p>
 <p>以下是 StartInFlightTimeout 具体实现</p>
-<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#8b008b;font-weight:bold">func</span> (c *Channel) <span style="color:#008b45">StartInFlightTimeout</span>(msg *Message, clientID <span style="color:#00688b;font-weight:bold">int64</span>, timeout time.Duration) <span style="color:#00688b;font-weight:bold">error</span> {
-	<span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>	msg.pri = now.<span style="color:#008b45">Add</span>(timeout).<span style="color:#008b45">UnixNano</span>() <span style="color:#228b22">//这里的 now 就是消息往客户端开始发送的时间点
-</span><span style="color:#228b22"></span>	err := c.<span style="color:#008b45">pushInFlightMessage</span>(msg)	  <span style="color:#228b22">//写到 hash 表
-</span><span style="color:#228b22"></span>	<span style="color:#8b008b;font-weight:bold">if</span> err != <span style="color:#8b008b;font-weight:bold">nil</span> {
-		<span style="color:#8b008b;font-weight:bold">return</span> err
+<pre style="background-color:#fff"><span style="color:#000;font-weight:bold">func</span> (c <span style="color:#000;font-weight:bold">*</span>Channel) <span style="color:#900;font-weight:bold">StartInFlightTimeout</span>(msg <span style="color:#000;font-weight:bold">*</span>Message, clientID <span style="color:#458;font-weight:bold">int64</span>, timeout time.Duration) <span style="color:#458;font-weight:bold">error</span> {
+	<span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>	msg.pri = now.<span style="color:#900;font-weight:bold">Add</span>(timeout).<span style="color:#900;font-weight:bold">UnixNano</span>() <span style="color:#998;font-style:italic">//这里的 now 就是消息往客户端开始发送的时间点
+</span><span style="color:#998;font-style:italic"></span>	err <span style="color:#000;font-weight:bold">:=</span> c.<span style="color:#900;font-weight:bold">pushInFlightMessage</span>(msg)	  <span style="color:#998;font-style:italic">//写到 hash 表
+</span><span style="color:#998;font-style:italic"></span>	<span style="color:#000;font-weight:bold">if</span> err <span style="color:#000;font-weight:bold">!=</span> <span style="color:#000;font-weight:bold">nil</span> {
+		<span style="color:#000;font-weight:bold">return</span> err
 	}
-	c.<span style="color:#008b45">addToInFlightPQ</span>(msg)				 <span style="color:#228b22">//写到优先队列
-</span><span style="color:#228b22"></span>	<span style="color:#8b008b;font-weight:bold">return</span> <span style="color:#8b008b;font-weight:bold">nil</span>
+	c.<span style="color:#900;font-weight:bold">addToInFlightPQ</span>(msg)				 <span style="color:#998;font-style:italic">//写到优先队列
+</span><span style="color:#998;font-style:italic"></span>	<span style="color:#000;font-weight:bold">return</span> <span style="color:#000;font-weight:bold">nil</span>
 }
-</code></pre></div><p>我们可以通过  FIN 指令看看如何从队列删除一条消息。</p>
-<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#228b22">//p.Exec(client, params)
-</span><span style="color:#228b22"></span><span style="color:#8b008b;font-weight:bold">switch</span> {
-	<span style="color:#8b008b;font-weight:bold">case</span> bytes.<span style="color:#008b45">Equal</span>(params[<span style="color:#b452cd">0</span>], []<span style="color:#658b00">byte</span>(<span style="color:#cd5555">&#34;FIN&#34;</span>)):
-		<span style="color:#8b008b;font-weight:bold">return</span> p.<span style="color:#008b45">FIN</span>(client, params)
-        <span style="color:#228b22">//....
-</span><span style="color:#228b22"></span>    }
-<span style="color:#228b22">//p.FIN(client, params)
-</span><span style="color:#228b22"></span>client.Channel.<span style="color:#008b45">FinishMessage</span>(client.ID, *id)
-<span style="color:#228b22">//channel.FinishMessage
-</span><span style="color:#228b22"></span><span style="color:#8b008b;font-weight:bold">func</span> (c *Channel) <span style="color:#008b45">FinishMessage</span>(clientID <span style="color:#00688b;font-weight:bold">int64</span>, id MessageID) <span style="color:#00688b;font-weight:bold">error</span> {
-	msg, err := c.<span style="color:#008b45">popInFlightMessage</span>(clientID, id)
-    <span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>	c.<span style="color:#008b45">removeFromInFlightPQ</span>(msg)
-	<span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>}
+</pre><p>我们可以通过  FIN 指令看看如何从队列删除一条消息。</p>
+<pre style="background-color:#fff"><span style="color:#998;font-style:italic">//p.Exec(client, params)
+</span><span style="color:#998;font-style:italic"></span><span style="color:#000;font-weight:bold">switch</span> {
+	<span style="color:#000;font-weight:bold">case</span> bytes.<span style="color:#900;font-weight:bold">Equal</span>(params[<span style="color:#099">0</span>], []<span style="color:#0086b3">byte</span>(<span style="color:#d14">&#34;FIN&#34;</span>)):
+		<span style="color:#000;font-weight:bold">return</span> p.<span style="color:#900;font-weight:bold">FIN</span>(client, params)
+        <span style="color:#998;font-style:italic">//....
+</span><span style="color:#998;font-style:italic"></span>    }
+<span style="color:#998;font-style:italic">//p.FIN(client, params)
+</span><span style="color:#998;font-style:italic"></span>client.Channel.<span style="color:#900;font-weight:bold">FinishMessage</span>(client.ID, <span style="color:#000;font-weight:bold">*</span>id)
+<span style="color:#998;font-style:italic">//channel.FinishMessage
+</span><span style="color:#998;font-style:italic"></span><span style="color:#000;font-weight:bold">func</span> (c <span style="color:#000;font-weight:bold">*</span>Channel) <span style="color:#900;font-weight:bold">FinishMessage</span>(clientID <span style="color:#458;font-weight:bold">int64</span>, id MessageID) <span style="color:#458;font-weight:bold">error</span> {
+	msg, err <span style="color:#000;font-weight:bold">:=</span> c.<span style="color:#900;font-weight:bold">popInFlightMessage</span>(clientID, id)
+    <span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>	c.<span style="color:#900;font-weight:bold">removeFromInFlightPQ</span>(msg)
+	<span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>}
 
-<span style="color:#8b008b;font-weight:bold">func</span> (c *Channel) <span style="color:#008b45">popInFlightMessage</span>(clientID <span style="color:#00688b;font-weight:bold">int64</span>, id MessageID) (*Message, <span style="color:#00688b;font-weight:bold">error</span>) {
-	c.inFlightMutex.<span style="color:#008b45">Lock</span>()
-	msg, ok := c.inFlightMessages[id]
-	<span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>	<span style="color:#658b00">delete</span>(c.inFlightMessages, id)
-	c.inFlightMutex.<span style="color:#008b45">Unlock</span>()
-	<span style="color:#8b008b;font-weight:bold">return</span> msg, <span style="color:#8b008b;font-weight:bold">nil</span>
+<span style="color:#000;font-weight:bold">func</span> (c <span style="color:#000;font-weight:bold">*</span>Channel) <span style="color:#900;font-weight:bold">popInFlightMessage</span>(clientID <span style="color:#458;font-weight:bold">int64</span>, id MessageID) (<span style="color:#000;font-weight:bold">*</span>Message, <span style="color:#458;font-weight:bold">error</span>) {
+	c.inFlightMutex.<span style="color:#900;font-weight:bold">Lock</span>()
+	msg, ok <span style="color:#000;font-weight:bold">:=</span> c.inFlightMessages[id]
+	<span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>	<span style="color:#0086b3">delete</span>(c.inFlightMessages, id)
+	c.inFlightMutex.<span style="color:#900;font-weight:bold">Unlock</span>()
+	<span style="color:#000;font-weight:bold">return</span> msg, <span style="color:#000;font-weight:bold">nil</span>
 }
 
-<span style="color:#8b008b;font-weight:bold">func</span> (c *Channel) <span style="color:#008b45">removeFromInFlightPQ</span>(msg *Message) {
-	c.inFlightMutex.<span style="color:#008b45">Lock</span>()
-	c.inFlightPQ.<span style="color:#008b45">Remove</span>(msg.index)
-	c.inFlightMutex.<span style="color:#008b45">Unlock</span>()
+<span style="color:#000;font-weight:bold">func</span> (c <span style="color:#000;font-weight:bold">*</span>Channel) <span style="color:#900;font-weight:bold">removeFromInFlightPQ</span>(msg <span style="color:#000;font-weight:bold">*</span>Message) {
+	c.inFlightMutex.<span style="color:#900;font-weight:bold">Lock</span>()
+	c.inFlightPQ.<span style="color:#900;font-weight:bold">Remove</span>(msg.index)
+	c.inFlightMutex.<span style="color:#900;font-weight:bold">Unlock</span>()
 }
-</code></pre></div><h2 id="清理过期消息">清理过期消息</h2>
-<p>接下来我们在回到 NSQ 的 Main 里面看看另一个重要的 goroutine - queueScanLoop。如果你刚刚上手开始看 nsq 的源码，深入这个函数去读会有一些迷惑，因为它前面有一个复杂 <strong>Redis&rsquo;s probabilistic expiration</strong> 算法，这个算法我现在也解释不清楚，我们先跳过就把它当成一个定时器好了。</p>
+</pre><h2>清理过期消息</h2>
+<p>接下来我们在回到 NSQ 的 Main 里面看看另一个重要的 goroutine - queueScanLoop。如果你刚刚上手开始看 nsq 的源码，深入这个函数去读会有一些迷惑，因为它前面有一个复杂 <strong>Redis's probabilistic expiration</strong> 算法，这个算法我现在也解释不清楚，我们先跳过就把它当成一个定时器好了。</p>
 <p>queueScanLoop 里面会每隔一段时间获取所有的 channel 并调用 resizePool，这里的 Pool 指的就是 channel 里面的消息队列。resizePool 实际上做的就是根据超时时间重新发送 channel 里面的 inFlightMessage 和 DeferredMessage 里面的消息。</p>
-<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#8b008b;font-weight:bold">func</span> (n *NSQD) <span style="color:#008b45">queueScanLoop</span>() {
-    <span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>    n.<span style="color:#008b45">resizePool</span>(<span style="color:#658b00">len</span>(channels), workCh, responseCh, closeCh)
-    <span style="color:#228b22">//...
-</span><span style="color:#228b22"></span>}
-<span style="color:#8b008b;font-weight:bold">func</span> (n *NSQD) <span style="color:#008b45">resizePool</span>(num <span style="color:#00688b;font-weight:bold">int</span>, workCh <span style="color:#8b008b;font-weight:bold">chan</span> *Channel, responseCh <span style="color:#8b008b;font-weight:bold">chan</span> <span style="color:#00688b;font-weight:bold">bool</span>, closeCh <span style="color:#8b008b;font-weight:bold">chan</span> <span style="color:#00688b;font-weight:bold">int</span>) {
-    n.waitGroup.<span style="color:#008b45">Wrap</span>(<span style="color:#8b008b;font-weight:bold">func</span>() {
-        n.<span style="color:#008b45">queueScanWorker</span>(workCh, responseCh, closeCh)
+<pre style="background-color:#fff"><span style="color:#000;font-weight:bold">func</span> (n <span style="color:#000;font-weight:bold">*</span>NSQD) <span style="color:#900;font-weight:bold">queueScanLoop</span>() {
+    <span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>    n.<span style="color:#900;font-weight:bold">resizePool</span>(<span style="color:#0086b3">len</span>(channels), workCh, responseCh, closeCh)
+    <span style="color:#998;font-style:italic">//...
+</span><span style="color:#998;font-style:italic"></span>}
+<span style="color:#000;font-weight:bold">func</span> (n <span style="color:#000;font-weight:bold">*</span>NSQD) <span style="color:#900;font-weight:bold">resizePool</span>(num <span style="color:#458;font-weight:bold">int</span>, workCh <span style="color:#000;font-weight:bold">chan</span> <span style="color:#000;font-weight:bold">*</span>Channel, responseCh <span style="color:#000;font-weight:bold">chan</span> <span style="color:#458;font-weight:bold">bool</span>, closeCh <span style="color:#000;font-weight:bold">chan</span> <span style="color:#458;font-weight:bold">int</span>) {
+    n.waitGroup.<span style="color:#900;font-weight:bold">Wrap</span>(<span style="color:#000;font-weight:bold">func</span>() {
+        n.<span style="color:#900;font-weight:bold">queueScanWorker</span>(workCh, responseCh, closeCh)
     })
 }
-<span style="color:#8b008b;font-weight:bold">func</span> (n *NSQD) <span style="color:#008b45">queueScanWorker</span>(workCh <span style="color:#8b008b;font-weight:bold">chan</span> *Channel, responseCh <span style="color:#8b008b;font-weight:bold">chan</span> <span style="color:#00688b;font-weight:bold">bool</span>, closeCh <span style="color:#8b008b;font-weight:bold">chan</span> <span style="color:#00688b;font-weight:bold">int</span>) {
-	<span style="color:#8b008b;font-weight:bold">for</span> {
-		<span style="color:#8b008b;font-weight:bold">select</span> {
-		<span style="color:#8b008b;font-weight:bold">case</span> c := &lt;-workCh:
-			now := time.<span style="color:#008b45">Now</span>().<span style="color:#008b45">UnixNano</span>()
-			dirty := <span style="color:#8b008b;font-weight:bold">false</span>
-			<span style="color:#8b008b;font-weight:bold">if</span> c.<span style="color:#008b45">processInFlightQueue</span>(now) {
-				dirty = <span style="color:#8b008b;font-weight:bold">true</span>
+<span style="color:#000;font-weight:bold">func</span> (n <span style="color:#000;font-weight:bold">*</span>NSQD) <span style="color:#900;font-weight:bold">queueScanWorker</span>(workCh <span style="color:#000;font-weight:bold">chan</span> <span style="color:#000;font-weight:bold">*</span>Channel, responseCh <span style="color:#000;font-weight:bold">chan</span> <span style="color:#458;font-weight:bold">bool</span>, closeCh <span style="color:#000;font-weight:bold">chan</span> <span style="color:#458;font-weight:bold">int</span>) {
+	<span style="color:#000;font-weight:bold">for</span> {
+		<span style="color:#000;font-weight:bold">select</span> {
+		<span style="color:#000;font-weight:bold">case</span> c <span style="color:#000;font-weight:bold">:=</span> <span style="color:#000;font-weight:bold">&lt;-</span>workCh:
+			now <span style="color:#000;font-weight:bold">:=</span> time.<span style="color:#900;font-weight:bold">Now</span>().<span style="color:#900;font-weight:bold">UnixNano</span>()
+			dirty <span style="color:#000;font-weight:bold">:=</span> <span style="color:#000;font-weight:bold">false</span>
+			<span style="color:#000;font-weight:bold">if</span> c.<span style="color:#900;font-weight:bold">processInFlightQueue</span>(now) {
+				dirty = <span style="color:#000;font-weight:bold">true</span>
 			}
-			<span style="color:#8b008b;font-weight:bold">if</span> c.<span style="color:#008b45">processDeferredQueue</span>(now) {
-				dirty = <span style="color:#8b008b;font-weight:bold">true</span>
+			<span style="color:#000;font-weight:bold">if</span> c.<span style="color:#900;font-weight:bold">processDeferredQueue</span>(now) {
+				dirty = <span style="color:#000;font-weight:bold">true</span>
 			}
-			responseCh &lt;- dirty
-		<span style="color:#8b008b;font-weight:bold">case</span> &lt;-closeCh:
-			<span style="color:#8b008b;font-weight:bold">return</span>
+			responseCh <span style="color:#000;font-weight:bold">&lt;-</span> dirty
+		<span style="color:#000;font-weight:bold">case</span> <span style="color:#000;font-weight:bold">&lt;-</span>closeCh:
+			<span style="color:#000;font-weight:bold">return</span>
 		}
 	}
 }
 
-<span style="color:#8b008b;font-weight:bold">func</span> (c *Channel) <span style="color:#008b45">processInFlightQueue</span>(t <span style="color:#00688b;font-weight:bold">int64</span>) <span style="color:#00688b;font-weight:bold">bool</span> {
-	c.exitMutex.<span style="color:#008b45">RLock</span>()
-	<span style="color:#8b008b;font-weight:bold">defer</span> c.exitMutex.<span style="color:#008b45">RUnlock</span>()
-	dirty := <span style="color:#8b008b;font-weight:bold">false</span>
-	<span style="color:#8b008b;font-weight:bold">for</span> {
-		c.inFlightMutex.<span style="color:#008b45">Lock</span>()
-		msg, _ := c.inFlightPQ.<span style="color:#008b45">PeekAndShift</span>(t) <span style="color:#228b22">//根据超时拿出队列里面的消息。
-</span><span style="color:#228b22"></span>		c.inFlightMutex.<span style="color:#008b45">Unlock</span>()
+<span style="color:#000;font-weight:bold">func</span> (c <span style="color:#000;font-weight:bold">*</span>Channel) <span style="color:#900;font-weight:bold">processInFlightQueue</span>(t <span style="color:#458;font-weight:bold">int64</span>) <span style="color:#458;font-weight:bold">bool</span> {
+	c.exitMutex.<span style="color:#900;font-weight:bold">RLock</span>()
+	<span style="color:#000;font-weight:bold">defer</span> c.exitMutex.<span style="color:#900;font-weight:bold">RUnlock</span>()
+	dirty <span style="color:#000;font-weight:bold">:=</span> <span style="color:#000;font-weight:bold">false</span>
+	<span style="color:#000;font-weight:bold">for</span> {
+		c.inFlightMutex.<span style="color:#900;font-weight:bold">Lock</span>()
+		msg, _ <span style="color:#000;font-weight:bold">:=</span> c.inFlightPQ.<span style="color:#900;font-weight:bold">PeekAndShift</span>(t) <span style="color:#998;font-style:italic">//根据超时拿出队列里面的消息。
+</span><span style="color:#998;font-style:italic"></span>		c.inFlightMutex.<span style="color:#900;font-weight:bold">Unlock</span>()
 
-		<span style="color:#8b008b;font-weight:bold">if</span> msg == <span style="color:#8b008b;font-weight:bold">nil</span> {
-			<span style="color:#8b008b;font-weight:bold">goto</span> exit
+		<span style="color:#000;font-weight:bold">if</span> msg <span style="color:#000;font-weight:bold">==</span> <span style="color:#000;font-weight:bold">nil</span> {
+			<span style="color:#000;font-weight:bold">goto</span> exit
 		}
-		dirty = <span style="color:#8b008b;font-weight:bold">true</span>
+		dirty = <span style="color:#000;font-weight:bold">true</span>
 
-		_, err := c.<span style="color:#008b45">popInFlightMessage</span>(msg.clientID, msg.ID) <span style="color:#228b22">//删除 hash 表里面的消息
-</span><span style="color:#228b22"></span>		<span style="color:#8b008b;font-weight:bold">if</span> err != <span style="color:#8b008b;font-weight:bold">nil</span> {
-			<span style="color:#8b008b;font-weight:bold">goto</span> exit
+		_, err <span style="color:#000;font-weight:bold">:=</span> c.<span style="color:#900;font-weight:bold">popInFlightMessage</span>(msg.clientID, msg.ID) <span style="color:#998;font-style:italic">//删除 hash 表里面的消息
+</span><span style="color:#998;font-style:italic"></span>		<span style="color:#000;font-weight:bold">if</span> err <span style="color:#000;font-weight:bold">!=</span> <span style="color:#000;font-weight:bold">nil</span> {
+			<span style="color:#000;font-weight:bold">goto</span> exit
 		}
-		atomic.<span style="color:#008b45">AddUint64</span>(&amp;c.timeoutCount, <span style="color:#b452cd">1</span>)
-		c.<span style="color:#008b45">RLock</span>()
-		client, ok := c.clients[msg.clientID]
-		c.<span style="color:#008b45">RUnlock</span>()
-		<span style="color:#8b008b;font-weight:bold">if</span> ok {
-			client.<span style="color:#008b45">TimedOutMessage</span>()
+		atomic.<span style="color:#900;font-weight:bold">AddUint64</span>(<span style="color:#000;font-weight:bold">&amp;</span>c.timeoutCount, <span style="color:#099">1</span>)
+		c.<span style="color:#900;font-weight:bold">RLock</span>()
+		client, ok <span style="color:#000;font-weight:bold">:=</span> c.clients[msg.clientID]
+		c.<span style="color:#900;font-weight:bold">RUnlock</span>()
+		<span style="color:#000;font-weight:bold">if</span> ok {
+			client.<span style="color:#900;font-weight:bold">TimedOutMessage</span>()
 		}
-		c.<span style="color:#008b45">put</span>(msg) <span style="color:#228b22">//把消息投递出去。
-</span><span style="color:#228b22"></span>	}
+		c.<span style="color:#900;font-weight:bold">put</span>(msg) <span style="color:#998;font-style:italic">//把消息投递出去。
+</span><span style="color:#998;font-style:italic"></span>	}
 
 exit:
-	<span style="color:#8b008b;font-weight:bold">return</span> dirty 
+	<span style="color:#000;font-weight:bold">return</span> dirty 
 }
-<span style="color:#228b22">//c.processDeferredQueue(now) 和 processInFlightQueue 做的事情是一样的。
-</span></code></pre></div><p>这里要注意的是，如果客户端始终不回复消息是否处理完成，那么这个消息会不断的出队入队重复循环。</p>
-<h2 id="小结">小结</h2>
+<span style="color:#998;font-style:italic">//c.processDeferredQueue(now) 和 processInFlightQueue 做的事情是一样的。
+</span></pre><p>这里要注意的是，如果客户端始终不回复消息是否处理完成，那么这个消息会不断的出队入队重复循环。</p>
+<h2>小结</h2>
 <p>以上就是整个 NSQ 服务端的源码分析，在这里可以稍微总结下它的工作流。</p>
 <p>nsq server 启动监听一个端口，并且经此与 client 建立一个 TCP 长连接。每个连接都会有一个 goroutine 轮询 TCP 过来的消息，这时会为这个连接和客户端建立一个 ioloop，里面有两个独立的 goroutine 分别负责读和写。消息通过 pub 指令进入 nsq，其对应的 topic 会负责转发到相应 channel 的 memeryMsgChan(go-channel) 里面。每个 client 的 ioloop 通过 channel 的 memeryMsgChan(go-channel) 拿到消息并发出去。当客户端处理完消息回应 Fin 指令过来后，原来进入队列备份的消息就会被丢弃掉。</p>
 
-<div class="comments">
-  <hr class="hr-middle-text" data-content="COMMENTS">
-  <script src="https://utteranc.es/client.js" repo="leyafo/leyafo.github.io" issue-term="title" label="Commnets" theme="github-light" crossorigin="anonymous" async >
-  </script>
-</div>
     </article>
-  </div>
+
+    <div class="comments">
+        <hr class="hr-middle-text" data-content="COMMENTS">
+        <script src="https://utteranc.es/client.js" repo="leyafo/leyafo.github.io" issue-term="title" label="Commnets" theme="github-light" crossorigin="anonymous" async >
+        </script>
+    </div>
+<script>
+    document.querySelectorAll("pre").forEach(function (i) {
+        i.removeAttribute("style")
+    })
+</script>
 </body>
 </html>

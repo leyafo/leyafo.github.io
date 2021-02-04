@@ -1,193 +1,152 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
 
+<html lang="zh-cn">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  
-  <meta name="generator" content="Hugo 0.71.0" />
-
-  
-
-  
-
-  
-  <title>GUI 跨平台解决方案－2017</title>
-  
-
-  <style>
-body {
-  color: #000000;
-  line-height: 1.6em;
-  padding: 1em;
-  margin: auto;
-  max-width: 72em;
-  background: #fefefe;
-  font-family: Fira Code,Monaco,Consolas,Ubuntu Mono,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,monospace,sans-serif;
-}
-
-nav {
-    margin-bottom: 20px;
-}
-a:visited{
-  color: grey;
-}
-
-.custom-navbar {
-  margin-bottom: 1em;
-  height: 60px;
-}
-
-.custom-navbar a {
-  display: inline-block; 
-  padding: 18px 0;
-  margin-right: 1em; 
-  font-weight: bold; 
-}
-
-.custom-navbar a:hover,
-.custom-navbar a:focus {
-  text-decoration: none; 
-}
-
-@media print {
-  .custom-navbar {
-    display: none;
-  }
-}
-
-article {
-  padding-bottom: 1em;
-}
-
-img {
-  max-width: 100%;
-}
-
-
-body {
-  background-color: #fff;
-}
-
-
-
-body {
-  color: #212529;
-}
-
-
-
-a {
-  color: #007bff;
-}
-
-
-
-a:hover,
-a:focus {
-  color: #0056b3;
-}
-
-
-
-.custom-navbar {
-  background-color: #212529;
-}
-
-
-
-.custom-navbar a {
-  color: rgba(255,255,255,.75);
-}
-
-
-
-.custom-navbar a:hover,
-.custom-navbar a:focus {
-  color: rgba(255,255,255,1);
-}
-
-
-
-
-
-
-.comments{
-    text-align: center;
-    margin-top: 20px;
-    padding: 5px 10px;
-    font-size: .8rem;
-    text-transform: uppercase;
-    text-decoration: none;
-    letter-spacing: .1em;
-    z-index: 1;
-}
-
-.utterances{
-  max-width: 100%;
-}
-
-
-.hr-middle-text{
-  line-height: 1em;
-  position: relative;
-  outline: 0;
-  border: 0;
-  color: black;
-  text-align: center;
-  height: 1.5em;
-  opacity: .5;
-}
-.hr-middle-text:before {
-    content: '';
+    <meta charset="UTF-8">
+    <title>GUI 跨平台解决方案－2017</title>
     
-    
-    
-    background: linear-gradient(to right, transparent, black, transparent);
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 100%;
-    height: 1px;
-}
-.hr-middle-text:after{
-    content: attr(data-content);
-    position: relative;
-    display: inline-block;
-    color: black;
+<style>
+        body {
+            color: #000000;
+            line-height: 1.6em;
+            padding: 1em;
+            margin: auto;
+            max-width: 72em;
+            background: #fefefe;
+            font-family: Fira Code,Monaco,Consolas,Ubuntu Mono,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,monospace,sans-serif;
+        }
+        blockquote {
+            background: #f9f9f9;
+            border-left: 10px solid #ccc;
+            margin: 1.5em 10px;
+            padding: 0.5em 10px;
+            quotes: "\201C""\201D""\2018""\2019";
+        }
+        blockquote:before {
+            color: #ccc;
+            content: open-quote;
+            font-size: 4em;
+            line-height: 0.1em;
+            margin-right: 0.25em;
+            vertical-align: -0.4em;
+        }
+        blockquote p {
+            display: inline;
+        }
+        em{
+            color: grey;
+        }
 
-    padding: 0 .5em;
-    line-height: 1.5em;
-    
-    
-    background-color: #fcfcfa;
-}
+        pre{
+            background-color: #eed;
+        }
+        code{
+            background-color: #eed;
+        }
+        nav {
+            margin-bottom: 20px;
+        }
+        small{
+            font-size: smaller;
+        }
+        a {
+            color: #007bff;
+        }
 
+        a:hover,
+        a:focus {
+            color: #0056b3;
+        }
+
+        a:visited{
+            color: grey;
+        }
+
+        article {
+            padding-bottom: 1em;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        body {
+            background-color: #fff;
+            color: #212529;
+        }
+
+        .comments{
+            text-align: center;
+            margin-top: 20px;
+            padding: 5px 10px;
+            font-size: .8rem;
+            text-transform: uppercase;
+            text-decoration: none;
+            letter-spacing: .1em;
+            z-index: 1;
+        }
+
+        .utterances{
+            max-width: 100%;
+        }
+        .hr-middle-text{
+            line-height: 1em;
+            position: relative;
+            outline: 0;
+            border: 0;
+            color: black;
+            text-align: center;
+            height: 1.5em;
+            opacity: .5;
+        }
+        .hr-middle-text:before {
+            content: '';
+            background: linear-gradient(to right, transparent, black, transparent);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+        }
+        .hr-middle-text:after{
+            content: attr(data-content);
+            position: relative;
+            display: inline-block;
+            color: black;
+            padding: 0 .5em;
+            line-height: 1.5em;
+            background-color: #fcfcfa;
+        }
 </style>
 
+    
+<!-- Google Analytics -->
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-188913654-2', 'auto');
+    ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+
+
 </head>
-
-
 <body>
-  <header>
-<nav>
-  [ <a class="nav-btn" href="http://www.leyafo.com/">Home</a> ] 
-  [ <a class="nav-btn" href="http://www.leyafo.com/about.html">About</a> ] 
-  [ <a class="nav-btn" href="http://www.leyafo.com/contact.html">Contact</a> ] 
-</nav>
+    
+<header>
+    <nav>
+        [ <a class="nav-btn" href="/">Home</a> ]
+        [ <a class="nav-btn" href="/about.html">About</a> ]
+        [ <a class="nav-btn" href="/contact.html">Contact</a> ]
+    </nav>
 </header>
-  
-  <div>
+
+
     <article>
-      <h1>GUI 跨平台解决方案－2017</h1>
-<p>
-  <small class="text-secondary">
-  
-  
-  July 18, 2017
-  </small>
-  
-</p>
+        <h1>GUI 跨平台解决方案－2017</h1>
 <p>这几天我想山寨一个 <a href="http://notational.net/">Notational Velocity</a>。它的代码开源了，但年久失修。里面的 Objective-C 代码非常难读。Notational Velocity 我用起来非常舒服，我想让它能更通用一些，而不仅仅封闭在 Mac 平台。于是就打起了山寨它的主意。于是我便开始着手调研现在的跨平台 GUI 方案。</p>
 <p>GUI 是客户端软件最基础，最必需的组件。现在 web 几乎统一了跨平台 GUI 解决方案。但如果你需要做与操作系统打交道的软件，你仍然无可避免的要去解决 GUI 跨平台的问题。
 GUI 是阻止客户端软件跨平台最大的问题之一。这也是为什么现在为什么这么多软件全部 web 化的原因之一。</p>
@@ -203,12 +162,17 @@ GUI 是阻止客户端软件跨平台最大的问题之一。这也是为什么�
 <p>我这几天仔细看了 <a href="https://github.com/andlabs/libui">libui</a> 这个项目。本来考虑使用它来做为 GUI 实现，但随着我使用的过程中深入理解，才发现 <a href="https://github.com/andlabs/libui">libui</a> 真的只是一个试验品，拿来做点可用的东西非常难。<a href="https://github.com/andlabs/libui">libui</a> 它的实现方式就是使用 C 语言设计一层很薄的 API，底层调用的是不同平台的 native GUI。用 C 语言实现的好处是可以 binding 到不同的语言中去。<a href="https://github.com/andlabs/libui">libui</a> 的问题在于它只针对一些基础的控件做了包装。虽然调用了操作系统原生的控件，但如果要使用一些稍微复杂一点的控件它却无法实现。由于不同的操作系统 GUI 交互式不一样的，它也无法很好在这方面做兼容去实现一些稍微复杂的交互。</p>
 <p>综上所述，GUI 跨平台这个问题现在仍然没有太好的方案。如果要用户体验好，必需要考虑把代码的 GUI 相关部分单独剥离出来，然后为不同的平台单独写一份 GUI 相关的代码（也就是手动再做一遍像 <a href="https://github.com/andlabs/libui">libui</a> 这样的封装）。就像 Photoshop 这种大型软件在 Windows 和 Mac 上做不同的实现一样。</p>
 
-<div class="comments">
-  <hr class="hr-middle-text" data-content="COMMENTS">
-  <script src="https://utteranc.es/client.js" repo="leyafo/leyafo.github.io" issue-term="title" label="Commnets" theme="github-light" crossorigin="anonymous" async >
-  </script>
-</div>
     </article>
-  </div>
+
+    <div class="comments">
+        <hr class="hr-middle-text" data-content="COMMENTS">
+        <script src="https://utteranc.es/client.js" repo="leyafo/leyafo.github.io" issue-term="title" label="Commnets" theme="github-light" crossorigin="anonymous" async >
+        </script>
+    </div>
+<script>
+    document.querySelectorAll("pre").forEach(function (i) {
+        i.removeAttribute("style")
+    })
+</script>
 </body>
 </html>
