@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>为什么 PAAS (paltform as a service) 是伪需求？</title>
+    
+<style>
+        body {
+            color: #000000;
+            line-height: 1.6em;
+            padding: 1em;
+            margin: auto;
+            max-width: 72em;
+            background: #fefefe;
+            font-family: Fira Code,Monaco,Consolas,Ubuntu Mono,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,monospace,sans-serif;
+        }
+        blockquote {
+            background: #f9f9f9;
+            border-left: 10px solid #ccc;
+            margin: 1.5em 10px;
+            padding: 0.5em 10px;
+            quotes: "\201C""\201D""\2018""\2019";
+        }
+        blockquote:before {
+            color: #ccc;
+            content: open-quote;
+            font-size: 4em;
+            line-height: 0.1em;
+            margin-right: 0.25em;
+            vertical-align: -0.4em;
+        }
+        blockquote p {
+            display: inline;
+        }
+        em{
+            color: grey;
+        }
+
+        pre{
+            background-color: #eed;
+        }
+        code{
+            background-color: #eed;
+        }
+        nav {
+            margin-bottom: 20px;
+        }
+        small{
+            font-size: smaller;
+        }
+        a {
+            color: #007bff;
+        }
+
+        a:hover,
+        a:focus {
+            color: #0056b3;
+        }
+
+        a:visited{
+            color: grey;
+        }
+
+        article {
+            padding-bottom: 1em;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        body {
+            background-color: #fff;
+            color: #212529;
+        }
+
+        .comments{
+            text-align: center;
+            margin-top: 20px;
+            padding: 5px 10px;
+            font-size: .8rem;
+            text-transform: uppercase;
+            text-decoration: none;
+            letter-spacing: .1em;
+            z-index: 1;
+        }
+
+        .utterances{
+            max-width: 100%;
+        }
+        .hr-middle-text{
+            line-height: 1em;
+            position: relative;
+            outline: 0;
+            border: 0;
+            color: black;
+            text-align: center;
+            height: 1.5em;
+            opacity: .5;
+        }
+        .hr-middle-text:before {
+            content: '';
+            background: linear-gradient(to right, transparent, black, transparent);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+        }
+        .hr-middle-text:after{
+            content: attr(data-content);
+            position: relative;
+            display: inline-block;
+            color: black;
+            padding: 0 .5em;
+            line-height: 1.5em;
+            background-color: #fcfcfa;
+        }
+</style>
+
+    
+<!-- Google Analytics -->
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-188913654-2', 'auto');
+    ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+
+
+</head>
+<body>
+    
+<header>
+    <nav>
+        [ <a class="nav-btn" href="/">Home</a> ]
+        [ <a class="nav-btn" href="/el/">English Learning</a> ]
+    </nav>
+</header>
+
+
+    <article>
+        <h1>为什么 PAAS (paltform as a service) 是伪需求？</h1>
+<p>试想一下你的开发团队需要一款 MQ(message queue) 服务，你是去买现成的云计算厂商的 MQ 服务还是自己买个 VPS(Virtual Private Server) 去安装一个 MQ 的服务呢？如果是买一个 MQ 的服务你如何确定这个 MQ 的服务是你现在团队需要的 MQ 服务？你如何确保从云计算厂家那里买过来的 MQ 服务是可靠的？ <br />
+如果你选择自己搭建一个 MQ 服务，在 2019 年你还会选择从头安装一个 MQ 服务吗？你会选用 docker 还是 k8s 去 setup 你的服务吗？ <br />
+你的开发环境，运行环境，测试环境，生产环境各自都有很多不一样的地方，如果和快速的把这几个测试环境 setup 起来？你是选用现有云计算提供的 paas 云服务，还是自己在公司内网的服务器搭建一套 k8s,线上再搭建一套。<br />
+如果每个团队的成员都需要一个开发环境怎么办？怎么快速的 setup 起来？<br />
+如果你购买的 paas 服务出问题了，你要怎么解决？是直接找云计算厂商解决起来比较靠谱，还是自己了解清楚每一个细节比较靠谱？关键的业务涉及到计费，公司收入，你会交给别人去管理吗？你的公司增长的速度和技术支出的速度以同样的速度增加，你是自己培养一支技术团队，还是把命根子交到别人手里？</p>
+<p>以上问题就是我们做一个互联网服务经常遇到的问题。在快和可靠之间我们必须要有所取舍。对于技术的选型关键不在技术，而是在业务。当你的业务增长过快或者过慢的时候用现成的 paas 服务无论如何都不是好的选择。如果你的业务复杂，研发的周期长，自己做一套简化部署和运维的 k8s 是非常有必要的。</p>
+<p>这就是现在的 paas 服务面临的尴尬境地，它的运维成本比 iaas 要低，扩容成本比 iaas 的服务要高，比 k8s 要更复杂。在关键的业务上（数据库，message queue） 你如果不吃透它，难道要把自己的命根子（收入）交到别人那里去？</p>
+
+    </article>
+
+    <div class="comments">
+        <hr class="hr-middle-text" data-content="COMMENTS">
+        <script src="https://utteranc.es/client.js" repo="leyafo/leyafo.github.io" issue-term="title" label="Commnets" theme="github-light" crossorigin="anonymous" async >
+        </script>
+    </div>
+<script>
+    document.querySelectorAll("pre").forEach(function (i) {
+        i.removeAttribute("style")
+    })
+</script>
+</body>
+</html>

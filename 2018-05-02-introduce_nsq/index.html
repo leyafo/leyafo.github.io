@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>NSQ 简介</title>
+    
+<style>
+        body {
+            color: #000000;
+            line-height: 1.6em;
+            padding: 1em;
+            margin: auto;
+            max-width: 72em;
+            background: #fefefe;
+            font-family: Fira Code,Monaco,Consolas,Ubuntu Mono,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,monospace,sans-serif;
+        }
+        blockquote {
+            background: #f9f9f9;
+            border-left: 10px solid #ccc;
+            margin: 1.5em 10px;
+            padding: 0.5em 10px;
+            quotes: "\201C""\201D""\2018""\2019";
+        }
+        blockquote:before {
+            color: #ccc;
+            content: open-quote;
+            font-size: 4em;
+            line-height: 0.1em;
+            margin-right: 0.25em;
+            vertical-align: -0.4em;
+        }
+        blockquote p {
+            display: inline;
+        }
+        em{
+            color: grey;
+        }
+
+        pre{
+            background-color: #eed;
+        }
+        code{
+            background-color: #eed;
+        }
+        nav {
+            margin-bottom: 20px;
+        }
+        small{
+            font-size: smaller;
+        }
+        a {
+            color: #007bff;
+        }
+
+        a:hover,
+        a:focus {
+            color: #0056b3;
+        }
+
+        a:visited{
+            color: grey;
+        }
+
+        article {
+            padding-bottom: 1em;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        body {
+            background-color: #fff;
+            color: #212529;
+        }
+
+        .comments{
+            text-align: center;
+            margin-top: 20px;
+            padding: 5px 10px;
+            font-size: .8rem;
+            text-transform: uppercase;
+            text-decoration: none;
+            letter-spacing: .1em;
+            z-index: 1;
+        }
+
+        .utterances{
+            max-width: 100%;
+        }
+        .hr-middle-text{
+            line-height: 1em;
+            position: relative;
+            outline: 0;
+            border: 0;
+            color: black;
+            text-align: center;
+            height: 1.5em;
+            opacity: .5;
+        }
+        .hr-middle-text:before {
+            content: '';
+            background: linear-gradient(to right, transparent, black, transparent);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+        }
+        .hr-middle-text:after{
+            content: attr(data-content);
+            position: relative;
+            display: inline-block;
+            color: black;
+            padding: 0 .5em;
+            line-height: 1.5em;
+            background-color: #fcfcfa;
+        }
+</style>
+
+    
+<!-- Google Analytics -->
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-188913654-2', 'auto');
+    ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+
+
+</head>
+<body>
+    
+<header>
+    <nav>
+        [ <a class="nav-btn" href="/">Home</a> ]
+        [ <a class="nav-btn" href="/el/">English Learning</a> ]
+    </nav>
+</header>
+
+
+    <article>
+        <h1>NSQ 简介</h1>
+<p>在一般的 HTTP 后台系统中如果使用大量使用同步 API 调用一个长时间的任务时会拖慢整个系统的承载能力。在流量不大的情况下，我们可以把利用像 Redis 这样的缓存系统自行设计一个简单 producer / consumer 模式的消息队列。做好这个组件我们需要考虑到的问题有：</p>
+<p>1.多个线程抢占一个资源时加锁的问题。</p>
+<p>2.保证每个消息都能执行一次。</p>
+<p>3.保证这个组件不会因为突发流量高峰而宕机。</p>
+<p>要解决这三个问题并不容易，如果需要大规模的任务处理，横向扩展，分布式，预防单点故障等一系列需要解决的问题并不少。这时候选用一个久经考验的消息队列系统是非常好的选择。</p>
+<p>NSQ 是一个实时消息推送平台。它具有分布式，水平扩展，低延时，防止单点故障等特性。与类似 RubbitMQ, ZeroMQ 等分布式队列一样，主要用于解决异步高并发消息的推送与处理。与其他分布式队列不同的是，NSQ 没有类似 brokers 的中间节点，无中心的特性可以让它无缝添加一个节点。</p>
+<p>按组件分类，NSQ 主要可以分为三大块，分别是：<br />
+<strong>nsqd</strong> （核心组件）用于接收与分发消息，处理通信协议。</p>
+<p><strong>nsqlookupd</strong> 用于查找并定位多个 nsqd，管理多个 nsqd 之间的拓扑信息。它不负责处理任何数据的传输与处理。</p>
+<p><strong>producer / consumer</strong> 消息的生产与发送者，这是用户功能具体实现的地方。每当一个消息由生产者发送到整个 NSQ 网络中，会有一个对应 consumer 负责与 NSQ 通信并处理这个消息。</p>
+<p>下图是这三个组件之间的拓扑关系：</p>
+<p><img src="/images/NSQTopologies.png" alt="NSQTopologies" /></p>
+<p>nsqlookupd 用于连接 consumer 和 nsqd，它作的工作类似于寻址，帮助 nsqd 找到对应的 consumer 处理消息。</p>
+<p>在这里有个地方非常值得注意，就是 producer 没有通过 nsqlookupd 去找对应的对应的 nsq 节点发送消息。而是直接通过一个 nsqd 发送，这么设计的原因是：</p>
+<ol>
+<li>producer 只要负责把消息投递出去，系统的并发处理压力全在 consumer 这一端。再多的 producer 发消息都不会影响 consumer 的运行效率。</li>
+<li>如果 producer 通过 nsqlookupd 寻址找 nsqd，会产生鸡生蛋蛋生鸡的问题。</li>
+<li>配置更简单，横向扩展要更容易。</li>
+</ol>
+<p>更多详细情参见<a href="https://github.com/nsqio/nsq/issues/159">这里</a>。</p>
+<p>基于发布／订阅模式，每个消息会属于一个 topic，每个 consumer 会订阅一个 topic 用来处理同一类的消息。每个 topic 会有一个对应的 channel (此 channel 非彼 channel)。为了防止堵塞，多个 consumer 可以共享一个 channel 来处理消息。如果一个 topic 经由多个 channel 发出去，那么这个 topic 相关的全部 messages 会经由 多个 channel 重复发送，这一点在使用时一定要注意。</p>
+<p>另外就是 consumer 执行的任务注意幂等性，为了“保证每个任务都被执行一次”，就有可能会重复的发送消息或者任务执行失败后重试，在这样的条件下，每个任务执行的次数就有可能达到一次以上。</p>
+
+    </article>
+
+    <div class="comments">
+        <hr class="hr-middle-text" data-content="COMMENTS">
+        <script src="https://utteranc.es/client.js" repo="leyafo/leyafo.github.io" issue-term="title" label="Commnets" theme="github-light" crossorigin="anonymous" async >
+        </script>
+    </div>
+<script>
+    document.querySelectorAll("pre").forEach(function (i) {
+        i.removeAttribute("style")
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>各种锁的原理，你要了解的都在这里。</title>
+    
+<style>
+        body {
+            color: #000000;
+            line-height: 1.6em;
+            padding: 1em;
+            margin: auto;
+            max-width: 72em;
+            background: #fefefe;
+            font-family: Fira Code,Monaco,Consolas,Ubuntu Mono,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,monospace,sans-serif;
+        }
+        blockquote {
+            background: #f9f9f9;
+            border-left: 10px solid #ccc;
+            margin: 1.5em 10px;
+            padding: 0.5em 10px;
+            quotes: "\201C""\201D""\2018""\2019";
+        }
+        blockquote:before {
+            color: #ccc;
+            content: open-quote;
+            font-size: 4em;
+            line-height: 0.1em;
+            margin-right: 0.25em;
+            vertical-align: -0.4em;
+        }
+        blockquote p {
+            display: inline;
+        }
+        em{
+            color: grey;
+        }
+
+        pre{
+            background-color: #eed;
+        }
+        code{
+            background-color: #eed;
+        }
+        nav {
+            margin-bottom: 20px;
+        }
+        small{
+            font-size: smaller;
+        }
+        a {
+            color: #007bff;
+        }
+
+        a:hover,
+        a:focus {
+            color: #0056b3;
+        }
+
+        a:visited{
+            color: grey;
+        }
+
+        article {
+            padding-bottom: 1em;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        body {
+            background-color: #fff;
+            color: #212529;
+        }
+
+        .comments{
+            text-align: center;
+            margin-top: 20px;
+            padding: 5px 10px;
+            font-size: .8rem;
+            text-transform: uppercase;
+            text-decoration: none;
+            letter-spacing: .1em;
+            z-index: 1;
+        }
+
+        .utterances{
+            max-width: 100%;
+        }
+        .hr-middle-text{
+            line-height: 1em;
+            position: relative;
+            outline: 0;
+            border: 0;
+            color: black;
+            text-align: center;
+            height: 1.5em;
+            opacity: .5;
+        }
+        .hr-middle-text:before {
+            content: '';
+            background: linear-gradient(to right, transparent, black, transparent);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+        }
+        .hr-middle-text:after{
+            content: attr(data-content);
+            position: relative;
+            display: inline-block;
+            color: black;
+            padding: 0 .5em;
+            line-height: 1.5em;
+            background-color: #fcfcfa;
+        }
+</style>
+
+    
+<!-- Google Analytics -->
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-188913654-2', 'auto');
+    ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+
+
+</head>
+<body>
+    
+<header>
+    <nav>
+        [ <a class="nav-btn" href="/">Home</a> ]
+        [ <a class="nav-btn" href="/el/">English Learning</a> ]
+    </nav>
+</header>
+
+
+    <article>
+        <h1>各种锁的原理，你要了解的都在这里。</h1>
+<p>在并发编程中，锁是非常见的防止 race condition 情况的发生。race condtion 是计算机运行中一种常见的状态。例如我们写下表达式 <code>i = i+1</code> 时， CPU 执行会首先把变量 i 从寄存器里取出来，再进行加 1 的操作，最后再把结果放回到寄存器中。这个操作需要三步，会产生资源访问的状态不一致。以下是 <code>i = i + 1</code> 并发时产生状态不一致的情况。</p>
+<pre style="background-color:#fff"><span style="color:#900;font-weight:bold">T0</span>: producer execute register1 <span style="color:#000;font-weight:bold">=</span> count {register1 <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">5</span>}
+<span style="color:#900;font-weight:bold">T1</span>: producer execute register1 <span style="color:#000;font-weight:bold">=</span> register1 <span style="color:#000;font-weight:bold">+</span> <span style="color:#099">1</span> {register1 <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">6</span>}
+<span style="color:#900;font-weight:bold">T2</span>: consumer execute register2 <span style="color:#000;font-weight:bold">=</span> count {register2 <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">5</span>}
+<span style="color:#900;font-weight:bold">T3</span>: consumer execute register2 <span style="color:#000;font-weight:bold">=</span> register2 <span style="color:#a61717;background-color:#e3d2d2">−</span> <span style="color:#099">1</span> {register2 <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">4</span>}
+<span style="color:#900;font-weight:bold">T4</span>: producer execute count <span style="color:#000;font-weight:bold">=</span> register1 {count <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">6</span>}
+<span style="color:#900;font-weight:bold">T5</span>: consumer execute count <span style="color:#000;font-weight:bold">=</span> register2 {count <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">4</span>}
+</pre><p>当并发执行以上代码时，我们会得到两个截然不同的结果。这就是 race condition。要解决这个问题我们需要保证两个并发执行的单元最终得到一致的结果，解决方法就是让一个执行单元执行完所有相关后再让另一个执行单元执行。我们把这块执行的单元称作临界区，以下就是 <code>i = i+1</code> 的临界区。</p>
+<pre style="background-color:#fff"><span style="color:#900;font-weight:bold">T0</span>: producer execute register1 <span style="color:#000;font-weight:bold">=</span> count {register1 <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">5</span>}
+<span style="color:#900;font-weight:bold">T1</span>: producer execute register1 <span style="color:#000;font-weight:bold">=</span> register1 <span style="color:#000;font-weight:bold">+</span> <span style="color:#099">1</span> {register1 <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">6</span>}
+<span style="color:#900;font-weight:bold">T4</span>: producer execute count <span style="color:#000;font-weight:bold">=</span> register1 {count <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">6</span>}
+</pre><p>一个临界区通常又如下几个特点：</p>
+<ol>
+<li>只能由一个执行单元在里面执行代码。</li>
+<li>一个执行单元要进入临界区必须要等其他的执行单元执行完。</li>
+<li>执行单元不能一直呆在临界区，必须要出来，否者其他的执行单元就无法进入临界区。<br />
+以上的三个特点我们用锁来保证，让一段需要 n 步的操作合并成无可拆分的一步操作。我们把这个操作称为原子操作。</li>
+</ol>
+<h2>算法锁</h2>
+<p>为了保证临界区所需要的这三个特性，我们可以由算法来实现一个锁，作为临界区的资源保护用。下面我们有请 Peterson 老哥为我们演示一下如何徒手不靠任何硬件指令撸出一把锁。这位老哥的思路非常清晰，主要就是设定一个标志，然和再设定一个互斥的标志用来防止两个执行单元去争抢一个临界区。下面是 peterson 老师的徒手算法锁。</p>
+<pre style="background-color:#fff">    <span style="color:#458;font-weight:bold">int</span> turn; <span style="color:#998;font-style:italic">//turn can be 0 or 1 those are execute sectors
+</span><span style="color:#998;font-style:italic"></span>    <span style="color:#458;font-weight:bold">bool</span> flag[<span style="color:#099">2</span>]; 
+    <span style="color:#000;font-weight:bold">while</span> (<span style="color:#0086b3">true</span>) {
+        flag[i] <span style="color:#000;font-weight:bold">=</span> <span style="color:#0086b3">true</span>;
+        turn <span style="color:#000;font-weight:bold">=</span> j;  
+        <span style="color:#000;font-weight:bold">while</span> (flag[j] <span style="color:#000;font-weight:bold">&amp;&amp;</span> turn <span style="color:#000;font-weight:bold">==</span> j)
+            ;
+        <span style="color:#998;font-style:italic">/* critical section */</span>
+        flag[i] <span style="color:#000;font-weight:bold">=</span> <span style="color:#0086b3">false</span>;
+        <span style="color:#998;font-style:italic">/*remainder section */</span>
+    }
+</pre><p>以上的算法我们主要关注 flag 和 trun。其中 flag 表示当前谁准备进入，turn 表示当前谁正在临界区里面，主要用于互斥访问。flag 和 turn 保证临界区的互斥访问和等待。最后的 <code>flag[i]=false</code> 让临界区的资源让位。</p>
+<h2>硬件指令锁</h2>
+<p>硬件指令锁主要是 TAS(test and set) 和 CAS(compare and swap)。TAS 还有个名字叫 (TSL) test and lock 它的操作具有原子性，通过在进入临界区之前把一个变量值设为 true 来实现保护临界区的效果。我们单纯的看 TAS 指令并不那么好理解，如果我们把它放到具体的应用场景里就能很清晰的明白 TAS 指令的作用。</p>
+<pre style="background-color:#fff">    <span style="color:#458;font-weight:bold">bool</span> <span style="color:#900;font-weight:bold">test_and_set</span>(<span style="color:#458;font-weight:bold">bool</span> <span style="color:#000;font-weight:bold">*</span>target) {
+        <span style="color:#458;font-weight:bold">bool</span> rv <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">*</span>target;
+        <span style="color:#000;font-weight:bold">*</span>target <span style="color:#000;font-weight:bold">=</span> <span style="color:#0086b3">true</span>;
+        <span style="color:#000;font-weight:bold">return</span> rv;
+    }
+    <span style="color:#458;font-weight:bold">void</span> <span style="color:#900;font-weight:bold">foo</span>(){
+        <span style="color:#458;font-weight:bold">bool</span> locked;
+        <span style="color:#000;font-weight:bold">while</span>(test_and_set(locked))
+            ;
+        <span style="color:#998;font-style:italic">/* critical secion */</span>
+        locked <span style="color:#000;font-weight:bold">=</span> <span style="color:#0086b3">false</span>;    
+    }
+</pre><p>另一个指令是 CAS(compare and swap)，它通过原子操作交换两个变量的值来达到对变量的修改。我们可以把它看作是 <code>i = i+1 </code> 这个表达式的原子操作版本。它的实现类似如下：</p>
+<pre style="background-color:#fff"><span style="color:#458;font-weight:bold">int</span> compare and <span style="color:#900;font-weight:bold">swap</span>(<span style="color:#458;font-weight:bold">int</span> <span style="color:#000;font-weight:bold">*</span>value, <span style="color:#458;font-weight:bold">int</span> expected, <span style="color:#458;font-weight:bold">int</span> new_value) {
+    <span style="color:#458;font-weight:bold">int</span> temp <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">*</span>value;
+    <span style="color:#000;font-weight:bold">if</span> (<span style="color:#000;font-weight:bold">*</span>value <span style="color:#000;font-weight:bold">==</span> expected)
+        <span style="color:#000;font-weight:bold">*</span>value <span style="color:#000;font-weight:bold">=</span> new_value;
+    <span style="color:#000;font-weight:bold">return</span> temp;
+}
+</pre><p>CAS 指令是我们对变量做修改非常常见的，尤其是在需要对变量进行修改的场景，例如：<code>increment(int *i)</code> 这样对 i 进行自增的操作种。</p>
+<p>接下来我们介绍几种基于 CAS 和 TAS 实现的锁。</p>
+<h1>Mutex</h1>
+<p>在一些线程库里面，mutex 是最简单的一种锁，也是最常见的锁。它的作用主要是对一段临界区上锁，对其他试图访问已经上锁的资源禁止访问。因此 mutex 也叫互斥锁，它的是英文单词 mutual exclustion 的缩写。mutex 可以使用 SAS 或 CAS 来实现。实现的细节主要有两种类型：</p>
+<ol>
+<li>spin lock。如果一个执行单元锁住了一块资源，另一个执行单元试图进入会一直轮询知道获取到锁为止。它的实现很像我们上面使用 TAS 的场景。</li>
+</ol>
+<pre style="background-color:#fff">    <span style="color:#458;font-weight:bold">bool</span> locked;
+    <span style="color:#458;font-weight:bold">void</span> <span style="color:#900;font-weight:bold">lock</span>(){
+        <span style="color:#000;font-weight:bold">while</span>(test_and_set(locked))
+            ;
+    }
+
+    <span style="color:#458;font-weight:bold">void</span> <span style="color:#900;font-weight:bold">unlock</span>(){
+        locked <span style="color:#000;font-weight:bold">=</span> <span style="color:#0086b3">false</span>
+    }
+</pre><ol start="2">
+<li>另一种类型的 mutex 是通过让试图获取的锁的执行单元进入到一个等待队列里排队，当锁用完了以后再把等待的执行单元拿出来获取锁并继续执行。</li>
+</ol>
+<pre style="background-color:#fff">    <span style="color:#458;font-weight:bold">bool</span> locked;
+    <span style="color:#458;font-weight:bold">void</span> <span style="color:#900;font-weight:bold">lock</span>(){
+        <span style="color:#000;font-weight:bold">if</span>(test_and_set(locked)){
+            <span style="color:#998;font-style:italic">//把当前的执行单元加入到等待队列
+</span><span style="color:#998;font-style:italic"></span>            add_process_to_waitlist(current_pocess)
+            sleep()
+        }
+    }
+
+    <span style="color:#458;font-weight:bold">void</span> <span style="color:#900;font-weight:bold">unlock</span>(){
+        locked <span style="color:#000;font-weight:bold">=</span> <span style="color:#0086b3">false</span>
+        <span style="color:#998;font-style:italic">//唤醒休眠的线程
+</span><span style="color:#998;font-style:italic"></span>        wakeup_process()
+    }
+</pre><ol start="3">
+<li>另外 mutex 还有一种非常简单的实现，就是在加锁时关闭中断，这种方式在单核心的系统中式有效的，对于多核心的操作系统来说是无效的，因为两个核心并不依赖中断并发。</li>
+</ol>
+<pre style="background-color:#fff">    <span style="color:#458;font-weight:bold">void</span> <span style="color:#900;font-weight:bold">lock</span>(){
+        <span style="color:#998;font-style:italic">//disable interrupts;
+</span><span style="color:#998;font-style:italic"></span>    }
+
+    <span style="color:#458;font-weight:bold">void</span> <span style="color:#900;font-weight:bold">unlock</span>(){
+        <span style="color:#998;font-style:italic">//enable interrupts;
+</span><span style="color:#998;font-style:italic"></span>    }
+</pre><h1>Semaphores</h1>
+<p>semaphore 和 mutex 非常像。他们唯一的不同之处就在于 semaphore 可以让多个执行单元进入临界区，而 mutex 只能让一个单元进入临界区。</p>
+<pre style="background-color:#fff">    <span style="color:#458;font-weight:bold">int</span> S
+    <span style="color:#458;font-weight:bold">void</span> <span style="color:#900;font-weight:bold">lock</span>(){
+        <span style="color:#000;font-weight:bold">while</span>( S <span style="color:#000;font-weight:bold">&lt;=</span> <span style="color:#099">0</span>)
+            ;  <span style="color:#998;font-style:italic">//busy wait
+</span><span style="color:#998;font-style:italic"></span>    }
+
+    <span style="color:#458;font-weight:bold">void</span> <span style="color:#900;font-weight:bold">unlock</span>(){
+        S<span style="color:#000;font-weight:bold">++</span>
+    }
+</pre><p>由于以上的实现的等待属于空转的忙等待，因此一般的 semphore 会像 mutex 那样加入一个 wait list，让等待的执行单元进入等待，解锁时再唤醒等待的执行单元。</p>
+<pre style="background-color:#fff"><span style="color:#000;font-weight:bold">typedef</span> <span style="color:#000;font-weight:bold">struct</span> {
+    <span style="color:#458;font-weight:bold">int</span> value;
+    <span style="color:#000;font-weight:bold">struct</span> process <span style="color:#000;font-weight:bold">*</span>list;
+} semaphore;
+
+<span style="color:#458;font-weight:bold">void</span> <span style="color:#900;font-weight:bold">lock</span>(semaphore <span style="color:#000;font-weight:bold">*</span>S) {
+    S<span style="color:#000;font-weight:bold">-&gt;</span>value<span style="color:#000;font-weight:bold">--</span>;
+    <span style="color:#000;font-weight:bold">if</span> (S<span style="color:#000;font-weight:bold">-&gt;</span>value <span style="color:#000;font-weight:bold">&lt;</span> <span style="color:#099">0</span>) {
+    <span style="color:#998;font-style:italic">//add this process to S-&gt;list;
+</span><span style="color:#998;font-style:italic"></span>    sleep();
+    }
+}
+
+<span style="color:#458;font-weight:bold">void</span> <span style="color:#900;font-weight:bold">unlock</span>(semaphore <span style="color:#000;font-weight:bold">*</span>S){
+    S<span style="color:#000;font-weight:bold">-&gt;</span>value<span style="color:#000;font-weight:bold">++</span>;
+    <span style="color:#000;font-weight:bold">if</span> (S<span style="color:#000;font-weight:bold">-&gt;</span>value <span style="color:#000;font-weight:bold">&lt;=</span> <span style="color:#099">0</span>) {
+    <span style="color:#998;font-style:italic">//remove a process P from S-&gt;list;
+</span><span style="color:#998;font-style:italic"></span>    wakeup(P);
+    }
+}
+</pre><p>我们可以看到，如果我们把 sempahore 里面的 value 换成一个 bool 的二元值就是一个 mutex 的实现。</p>
+
+    </article>
+
+    <div class="comments">
+        <hr class="hr-middle-text" data-content="COMMENTS">
+        <script src="https://utteranc.es/client.js" repo="leyafo/leyafo.github.io" issue-term="title" label="Commnets" theme="github-light" crossorigin="anonymous" async >
+        </script>
+    </div>
+<script>
+    document.querySelectorAll("pre").forEach(function (i) {
+        i.removeAttribute("style")
+    })
+</script>
+</body>
+</html>
