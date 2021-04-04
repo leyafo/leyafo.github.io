@@ -148,13 +148,13 @@
     <article>
         <h1>Understanding the dependence in Makefile</h1>
 <h2>Introduction</h2>
-<p><code>make</code> is a simple and useful tool that allows you building your own code projects. It can be used in any programming language. It's also used in coding for repetitive computer tasks. For example, if you have multiple shell tasks that listed one by one. You can use <code>make</code> to organize your work flow.</p>
-<p>If you've downloaded some open source code or joined a new project as a developer. To run the entire project, you have to start building it first. Nearly all open source projects have a <code>Makefile</code> for organizing code. The <code>Makefile</code> is not easy to understand. The <code>Makefile</code> official manual is so long it's hard to understand. You can't modify the <code>Makefile</code> for your mind if you're a newbie. You can then Google the <code>Makefile</code> tutorial and copy&amp;paste some codes within your <code>Makefile</code>. But you don't know how <code>Makefile</code> works, you just let your code run.</p>
-<p>This post will take you 10 minutes to understand the <code>make</code> core concepts. Afterwards, you will create your own <code>Makefile</code> to do some basic tasks and figure out how <code>make</code> works.</p>
+<p><code>make</code> is a simple and useful tool which controls the building of your source code. It can be used in any programming language. It's also can be used for reducing the repetitive tasks. For example, if you have multiple shell tasks that listed one by one. You can use <code>make</code> to organize the workflow.</p>
+<p>If you've downloaded an open-source project or joined a new project as a developer. To run the entire project, you have to start building it first. Nearly all open-source projects have a <code>Makefile</code> for organizing code. But the <code>Makefile</code> is not easy to understand. Its official manual is so long and hard to understand. It's difficult to modify a <code>Makefile</code> for you want if you're a newbie. Indeed, you can Google the <code>Makefile</code> tutorial and then copy&amp;paste some codes within your <code>Makefile</code>. Even though you don't know how <code>Makefile</code> works, your code running.</p>
+<p>This post will take you 10 minutes to understand the <code>make</code> core conception. Afterwards, you will create your own <code>Makefile</code> to run some basic tasks and figured out how <code>make</code> works.</p>
 <h2>Core conception</h2>
-<p><strong>Dependence</strong> is the <code>make</code>'s core. Understanding this is the most important principle in <code>make</code>. In the <code>Makefile</code> every task depends on another prerequisites that can be files, tasks, or some other form of rules. If you want to do a task, you must define your target and its prerequisites. We call this a dependence. A simple <code>Makefile</code> consists of &quot;dependencies&quot; with the following shape:</p>
+<p><strong>Dependence</strong> is the <code>make</code>'s core conception. Understanding the dependence is the most important principle in <code>make</code>. In the <code>Makefile</code> every task depends on other prerequisites, which can be files, tasks, or some other form of rules. If you want to run a task, you must define the target and prerequisites. We call this a dependence. A simple <code>Makefile</code> consists of &quot;dependencies&quot; with the following shape:</p>
 <pre style="background-color:#fff"><span style="color:#900;font-weight:bold">foo</span><span style="color:#000;font-weight:bold">:</span> bar
-</pre><p>The above <code>Makefile</code> is do nothing, because you <code>bar</code> target is undefined. Target should depend on a defined prerequisite or just define how it works. The following target is a defined to run <code>echo</code> command.</p>
+</pre><p>The above <code>Makefile</code> do nothing because the <code>bar</code> target is undefined. Target should be depend on a defined prerequisite or be defined how it works. The following target defined to run <code>echo</code> command.</p>
 <pre style="background-color:#fff"><span style="color:#900;font-weight:bold">foo</span><span style="color:#000;font-weight:bold">:</span>
     <span style="color:#0086b3">echo</span> <span style="color:#d14">&#34;hello world&#34;</span>  <span style="color:#998;font-style:italic">#noticed: you must use &#39;tab&#39; to start this line.</span>
 </pre><h2>A realistic example</h2>
@@ -165,22 +165,22 @@
 ├── main.c
 ├── socket.c
 ├── socket.h
-</pre><p>In our project, we have the following dependencies:<br />
+</pre><p>In our project, we have the following dependent relationships:<br />
 <code>http.c</code> include <code>http.h</code> and <code>socket.h</code><br />
 <code>socket.c</code> include <code>socket.h</code><br />
 <code>main.c</code> include <code>socket.h</code> and <code>http.h</code>.</p>
-<p>To build an executing file using <code>gcc</code>, we must compile the source to the object and then link them to the be an executing file. we must compile the object first. Here are our rules:</p>
+<p>To build an executing file with <code>gcc</code>, we must compile the source code for the object and then linked them to an executing file. Here are our rules:</p>
 <pre style="background-color:#fff"><span style="color:#900;font-weight:bold">http.o</span><span style="color:#000;font-weight:bold">:</span> http.c http.h socket.h
     gcc -c http.c
 <span style="color:#900;font-weight:bold">socket.o</span><span style="color:#000;font-weight:bold">:</span> socket.h
     gcc -c socket.c
 <span style="color:#900;font-weight:bold">main.o</span><span style="color:#000;font-weight:bold">:</span> main.c http.h socket.h
     gcc -c main.c
-</pre><p>Link all object files to be a execute file:</p>
+</pre><p>Link all object files to an execute file:</p>
 <pre><code>exe: http.o socket.o main.o
     gcc -o exe http.o socket.o main.o
 </code></pre>
-<p>Now, you can type <code>make exe</code> to build your own project.</p>
+<p>Now, typing <code>make exe</code> to build your own project.</p>
 
     </article>
 
