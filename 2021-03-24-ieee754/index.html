@@ -147,7 +147,7 @@
 
     <article>
         <h1>Representing float number in computer</h1>
-<p>Some stupid results always occured in caculating the value of two float numbers. For example, in javscript, <code>0.1+0.2=0.30000000000000004</code>. This wild result is the feature of the float number while representing in computer, which is not a bug. Storing float number in computer has to encode and decode, the algorithm is not the same as integer. IEEE754 is wildely used in computer, and use a formular to encode and decode float number.</p>
+<p>Some stupid results always occurred in calculating the value of two float numbers. For example, in JavaScript, <code>0.1+0.2=0.30000000000000004</code>. This wild result is the feature of the float number while representing in computer, which is not a bug. Storing float number in computer has to encode and decode, the algorithm is not the same as integer. IEEE754 is wildly used in computer, which use a formular to encode and decode float number.</p>
 <pre style="background-color:#fff">Sign <span style="color:#000;font-weight:bold">*</span> Exponent <span style="color:#000;font-weight:bold">*</span> Fraction 
 </pre><p>We can apply this formular to convert a decimal number 3.14 to:<br />
 (-1) * 10<sup>-2</sup> * 314</p>
@@ -155,13 +155,13 @@
 <pre><code>[1bit][8bits][23bits]
 [-1]  [2]    [314]
 </code></pre>
-<p>The same idea applies in IEEE754, but it has a little bit differences. IEEE754 based on power 2 and the fraction part must convert to binary. The fracation number always started with 1.xxxx, and it multiply the <strong>Exponent</strong> to get the decimal. The formular can be applied to:<br />
+<p>The same idea applies in IEEE754, but it has a little bit difference. IEEE754 based on power 2 and the fraction part must convert to binary. The fraction number always started with 1.xxxx, and it multiply the <strong>Exponent</strong> to get the decimal. The formular can be applied to:<br />
 Sign * 2<sup>n</sup> * (1+Fraction)</p>
 <p>First of all, we should divide 3.14 by 2, to get the <strong>Exponent</strong>.<br />
 3.14 = 3.14 / 2 = 1.57 * 2<sup>1</sup></p>
 <p>Next, we can apply the formular to:<br />
 (-1) * 2<sup>1</sup> * (1+0.57)<br />
-For convention, we don't need to store the base number 2 and the integer 1 in the fraction. Unfortunately, 0.57 is not a binary number. The next step, We have to convert 0.57 to binary. The caculating is simple, multiply it with 2, if the result large than 1 and set 1 to binary bit, if not, set 0. We can convert 0.57 to:</p>
+For convention, we don't need to store the base number 2 and the integer 1 in the fraction. Unfortunately, 0.57 is not a binary number. The next step, we have to convert 0.57 to binary. The calculating is simple, multiply it with 2, if the result large than 1 and set 1 to binary bit, if not, set 0. We can convert 0.57 to:</p>
 <pre><code>0.57 * 2 = 1.14  | 1
 0.14 * 2 = 0.28  | 1
 0.28 * 2 = 0.56  | 0
@@ -174,27 +174,29 @@ For convention, we don't need to store the base number 2 and the integer 1 in th
 </code></pre>
 <p>This processing is infinity and finally get a approximate value. We will get the result 10010001111010111000011 to fill into the fraction part.<br />
 The next step is to fill the <strong>Exponent</strong> part. IEEE754 use a bias number(127) to represent -126 ~ 127 range in a 8bits binary number. If we want to store 2<sup>1</sup>, we must add bias number 127 and then convert 128 to binary 1000000.<br />
-The third part is Sign, is the same as integer, 1 means negative and 0 means postive. Finally, we can store -3.14 in a float binary as three parts as:</p>
+The third part is Sign, is the same as integer, 1 means negative and 0 means positive. Finally, we can store -3.14 in a float binary as three parts as:</p>
 <pre style="background-color:#fff"><span style="color:#099">1</span>     <span style="color:#099">10000000</span>   <span style="color:#099">10010001111010111000011</span>
 Sign  Exponent   Fraction
 </pre><h2>Converting IEEE754 to decimal</h2>
 <p>We can apply the same formular <code>Sign * Exponent * (1+Fraction)</code> to convert the above binary result to decimal. The first step is to divide it to three parts.</p>
 <pre style="background-color:#fff"><span style="color:#099">1</span>     <span style="color:#099">10000000</span>   <span style="color:#099">10010001111010111000011</span>
 Sign  Exponent   Fraction
-</pre><p>We can map the Sign and Exponent in a simple way, but the fraction parts that we should convert each bit to mutiply 2<sup>-n</sup>. So we can convert the fraction part to:<br />
+</pre><p>We can map the Sign and Exponent in a simple way, but the fraction parts that we should convert each bit to multiply 2<sup>-n</sup>. So, we can convert the fraction part to:<br />
 10010001111010111000011 = 1x2<sup>-1</sup>+0x2<sup>-2</sup>+0x2<sup>-3</sup>+1x2<sup>-4</sup> +....+ 1x2<sup>-23</sup> = 0.57</p>
-<p>Finally, we can apply the formular to caculate the decimal:<br />
+<p>Finally, we can apply the formular to calculate the decimal:<br />
 <strong>(-1) * 2<sup>128-127</sup> * (1+0.57)  = 3.14</strong></p>
 <h2>The puzzles</h2>
-<p>There are two puzzles in IEEE754:<br />
-1.Why does IEEE754 use a bias number? <br />
-2.Why does IEEE754 use power 2 instead of power 10?<br />
-For converting a negative number, integer use the first bit to indicate the sign, the same method applies in IEEE754. In the exponent part, we can still apply this method, but IEEE754 use a bias number to represent the negative number. When we need to compare two float numbers, storing exponent parts like integer must decode first and then compare them. Using a bias number can avoid decoding. For example, we want to compare 3.14 and -3.14. Their binary are represting:</p>
+<p>There are two puzzles in IEEE754:</p>
+<ol>
+<li>Why does IEEE754 use a bias number?</li>
+<li>Why does IEEE754 use power 2 instead of power 10?<br />
+For converting a negative number, integer use the first bit to indicate the sign, the same method applies in IEEE754. In the exponent part, we can still apply this method, but IEEE754 use a bias number to represent the negative number. When we need to compare two float numbers, storing exponent parts like integer must decode first and then compare them. Using a bias number can avoid decoding. For example, we want to compare 3.14 and -3.14. Their binary is representing:</li>
+</ol>
 <pre><code>11000000010010001111010111000011
 10111111010010001111010111000011
 </code></pre>
 <p>We can compare them directly and don't need to decode them first.</p>
-<p>IEEE754 use power 2 trade off the time and space against the precision. Because Caculating power 2 is fast than power 10, and storing the fraction to binary can reduce the space. For example, if we want to store 0.5, storing decimal to binary must occupy 3 bit. If we convert it to binary dicrectly, we just need to occupy one bit:</p>
+<p>IEEE754 use power 2 trade off the time and space against the precision. Because Calculating power 2 is fast than power 10, and storing the fraction to binary can reduce the space. For example, if we want to store 0.5, storing decimal to binary must occupy 3 bits. If we convert it to binary directly, we just need to occupy one bit:</p>
 <pre style="background-color:#fff"><span style="color:#099">101</span>  <span style="color:#998;font-style:italic">//decimal fraction
 </span><span style="color:#998;font-style:italic"></span><span style="color:#099">1</span>    <span style="color:#998;font-style:italic">//binary fraction
 </span></pre>
