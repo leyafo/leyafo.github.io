@@ -3,6 +3,7 @@
 <html lang="zh-cn">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/favicon.ico" />
     <title>Light & Truth</title>
     
@@ -11,6 +12,7 @@
             color: #000000;
             line-height: 1.6em;
             padding: 1em;
+            box-sizing: border-box;
             margin: auto;
             max-width: 72em;
             background: #fefefe;
@@ -118,19 +120,82 @@
             line-height: 1.5em;
             background-color: #fcfcfa;
         }
+
+        /* _nav style */
+        .navbar-item::before {
+            content: "[ ";
+        }
+        .navbar-item::after {
+            content: " ]"
+        }
+        @media screen and (min-width: 300px) and (max-width: 700px) {
+            .navbar {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .navbar-item {
+                flex: 1;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+            }
+            
+            .nav-btn {
+                flex: 1;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                text-align: center;
+            }
+        }
+        /* _nav style end */
+
+        /* index style */
+        .posts-item {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        @media screen and (min-width: 300px) and (max-width: 700px) {
+            .posts-item {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-around;
+                margin-bottom: 10px;
+            }
+            .posts-item > a {
+                display: inline-block;
+                width: 70%;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+            .posts-item > small {
+                flex: 1;
+                text-align: right;
+            }
+        }
+        /* index style end */
 </style>
 
     
 <!-- Google Analytics -->
+
 <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
+
     ga('create', 'UA-188913654-2', 'auto');
     ga('send', 'pageview');
 </script>
+
 <!-- End Google Analytics -->
 
 
@@ -139,75 +204,64 @@
 <body>
     
 <header>
-    <nav>
-        [ <a class="nav-btn" href="/">Home</a> ]
-        [ <a class="nav-btn" href="/el/">English Learning</a> ]
-        [ <a class="nav-btn" href="/ct/">Chinese Thinking</a> ]
+    <nav class="navbar">
+        <span class="navbar-item"><a class="nav-btn" href="/">Home</a></span>
+        <span class="navbar-item"><a class="nav-btn" href="/el/">English Learning</a></span>
+        <span class="navbar-item"><a class="nav-btn" href="/ct/">Chinese Thinking</a></span>
     </nav>
 </header>
 
-
-    <article>
+    <article class="posts">
         
-        <p>
+        <div class="posts-item">
             <a href="/el/2021-05-02-my-english-learning-experiences-full">我的英语学习经验 - 完整版</a>
-            <br />
             <small>2021-05-02</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/el/2021-05-01-my-english-learning-experiences">我的英语学习经验 - 朗读</a>
-            <br />
             <small>2021-05-01</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/el/2021-04-29-my-english-learning-experiences">我的英语学习经验 - 写作</a>
-            <br />
             <small>2021-04-29</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/el/2021-04-26-my-english-learning-experiences">我的英语学习经验 - 词典</a>
-            <br />
             <small>2021-04-26</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/el/2021-04-21-my-english-learning-expriences">我的英语学习经验 - 如何读</a>
-            <br />
             <small>2021-04-21</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/el/2021-04-20-my-english-learning-experiences">我的英语学习经验</a>
-            <br />
             <small>2021-04-20</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/el/2021-03-13-the-limited-vocabulary-is-not-a-problem">The limited vocabulary is not a problem</a>
-            <br />
             <small>2021-03-13</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/el/2021-03-11-how-to-build-an-interrogative-sentence">How to build an interrogative sentence</a>
-            <br />
             <small>2021-03-11</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/el/2021-02-19-what-differences-between-make-build">What's the differences between make, build, construct, assemble, erect, create, put up and form?</a>
-            <br />
             <small>2021-02-19</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/el/2021-02-14-how-to-describe-finish">How to describe something you have finished</a>
-            <br />
             <small>2021-02-14</small>
-        </p>
+        </div>
         
     </article>
 </body>

@@ -3,6 +3,7 @@
 <html lang="zh-cn">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/favicon.ico" />
     <title>Light & Truth</title>
     
@@ -11,6 +12,7 @@
             color: #000000;
             line-height: 1.6em;
             padding: 1em;
+            box-sizing: border-box;
             margin: auto;
             max-width: 72em;
             background: #fefefe;
@@ -118,19 +120,82 @@
             line-height: 1.5em;
             background-color: #fcfcfa;
         }
+
+        /* _nav style */
+        .navbar-item::before {
+            content: "[ ";
+        }
+        .navbar-item::after {
+            content: " ]"
+        }
+        @media screen and (min-width: 300px) and (max-width: 700px) {
+            .navbar {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .navbar-item {
+                flex: 1;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+            }
+            
+            .nav-btn {
+                flex: 1;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                text-align: center;
+            }
+        }
+        /* _nav style end */
+
+        /* index style */
+        .posts-item {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        @media screen and (min-width: 300px) and (max-width: 700px) {
+            .posts-item {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-around;
+                margin-bottom: 10px;
+            }
+            .posts-item > a {
+                display: inline-block;
+                width: 70%;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+            .posts-item > small {
+                flex: 1;
+                text-align: right;
+            }
+        }
+        /* index style end */
 </style>
 
     
 <!-- Google Analytics -->
+
 <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
+
     ga('create', 'UA-188913654-2', 'auto');
     ga('send', 'pageview');
 </script>
+
 <!-- End Google Analytics -->
 
 
@@ -139,195 +204,164 @@
 <body>
     
 <header>
-    <nav>
-        [ <a class="nav-btn" href="/">Home</a> ]
-        [ <a class="nav-btn" href="/el/">English Learning</a> ]
-        [ <a class="nav-btn" href="/ct/">Chinese Thinking</a> ]
+    <nav class="navbar">
+        <span class="navbar-item"><a class="nav-btn" href="/">Home</a></span>
+        <span class="navbar-item"><a class="nav-btn" href="/el/">English Learning</a></span>
+        <span class="navbar-item"><a class="nav-btn" href="/ct/">Chinese Thinking</a></span>
     </nav>
 </header>
 
-
-    <article>
+    <article class="posts">
         
-        <p>
+        <div class="posts-item">
             <a href="/2021-03-24-ieee754">Representing float number in computer</a>
-            <br />
             <small>2021-03-24</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2021-01-09-understanding-utf8">Understanding the UTF-8</a>
-            <br />
             <small>2021-01-09</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2020-05-07-understanding-dependence-in-makefile">Understanding the dependence in Makefile</a>
-            <br />
             <small>2020-05-07</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2019-11-25-golang-errors">go 语言错误处理</a>
-            <br />
             <small>2019-11-25</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2019-09-24-why-paas-are-anti-requirements">为什么 PAAS (paltform as a service) 是伪需求？</a>
-            <br />
             <small>2019-09-24</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2019-09-24-how-to-use-golang-interface">golang interface 要怎么用？</a>
-            <br />
             <small>2019-09-24</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2019-09-03-lock-mechanism">各种锁的原理，你要了解的都在这里。</a>
-            <br />
             <small>2019-09-03</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2019-09-03-an-api-problem-myth">一个 API 设计问题带来的思考</a>
-            <br />
             <small>2019-09-03</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2019-04-16-how-to-made-project-use-C.md">如何用 C 语言做项目?</a>
-            <br />
             <small>2019-04-16</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2018-05-07-nsq_server_code_reading">NSQ 服务端源码剖析</a>
-            <br />
             <small>2018-05-07</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2018-05-05-nsq_client_code_reading">nsq client 源码剖析</a>
-            <br />
             <small>2018-05-05</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2018-05-02-introduce_nsq">NSQ 简介</a>
-            <br />
             <small>2018-05-02</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2018-04-06-golang-writes-http-api">HTTP API golang 的选择</a>
-            <br />
             <small>2018-04-06</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2018-01-17-simple-logical">简单逻辑学</a>
-            <br />
             <small>2018-01-17</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2017-12-24-systemic-learning">如何利用互联网学习？</a>
-            <br />
             <small>2017-12-24</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2017-09-07-go-db-crud">go 语言操作数据库 CRUD</a>
-            <br />
             <small>2017-09-07</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2017-08-04-go-currency">go 并发</a>
-            <br />
             <small>2017-08-04</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2017-07-30-development-document">文档！文档！</a>
-            <br />
             <small>2017-07-30</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2017-07-18-cross-platform-gui-solution-2017">GUI 跨平台解决方案－2017</a>
-            <br />
             <small>2017-07-18</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2017-06-26-english-pronunciation">我如何学习英语发音</a>
-            <br />
             <small>2017-06-26</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2017-06-21-whats-notebook-we-need">我需要什么样的笔记软件？</a>
-            <br />
             <small>2017-06-21</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2017-06-19-avoid-these-35-habits">避开这 35 个坏习惯让你的代码可维护</a>
-            <br />
             <small>2017-06-19</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2017-03-19-divsion-back-and-frond-end">前后端分离实践</a>
-            <br />
             <small>2017-03-19</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2016-07-13-development-notes-1-count-problems">Count 问题</a>
-            <br />
             <small>2016-07-13</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2016-05-16-about-test">关于测试</a>
-            <br />
             <small>2016-05-16</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2014-10-27-a-red-black-tree-implementation">理解红黑树</a>
-            <br />
             <small>2014-10-27</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2014-02-09-avl-tree-implementation">avl 树的实现</a>
-            <br />
             <small>2014-02-09</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2013-11-26-the-best-practical-vim">vim 最佳实践</a>
-            <br />
             <small>2013-11-26</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2013-11-23-tail-recursion-optimization">尾递归优化</a>
-            <br />
             <small>2013-11-23</small>
-        </p>
+        </div>
         
-        <p>
+        <div class="posts-item">
             <a href="/2013-11-08-python-memory-management">Python内存管理</a>
-            <br />
             <small>2013-11-08</small>
-        </p>
+        </div>
         
     </article>
 </body>
