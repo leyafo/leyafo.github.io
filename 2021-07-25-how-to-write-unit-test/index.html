@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to write unit test</title>
+    
+<style>
+        body {
+            color: #000000;
+            line-height: 1.6em;
+            padding: 1em;
+            box-sizing: border-box;
+            margin: auto;
+            max-width: 72em;
+            background: #fefefe;
+            font-family: Fira Code,Monaco,Consolas,Ubuntu Mono,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,monospace,sans-serif;
+        }
+        blockquote {
+            background: #f9f9f9;
+            border-left: 10px solid #ccc;
+            margin: 1.5em 10px;
+            padding: 0.5em 10px;
+            quotes: "\201C""\201D""\2018""\2019";
+        }
+        blockquote:before {
+            color: #ccc;
+            content: open-quote;
+            font-size: 4em;
+            line-height: 0.1em;
+            margin-right: 0.25em;
+            vertical-align: -0.4em;
+        }
+        blockquote p {
+            display: inline;
+        }
+        em{
+            color: grey;
+        }
+
+        pre{
+            background-color: #eed;
+        }
+        code{
+            background-color: #eed;
+        }
+        nav {
+            margin-bottom: 20px;
+        }
+        small{
+            font-size: smaller;
+        }
+        a {
+            color: #007bff;
+        }
+
+        a:hover,
+        a:focus {
+            color: #0056b3;
+        }
+
+        a:visited{
+            color: grey;
+        }
+
+        article {
+            padding-bottom: 1em;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        body {
+            background-color: #fff;
+            color: #212529;
+        }
+
+        .comments{
+            text-align: center;
+            margin-top: 20px;
+            padding: 5px 10px;
+            font-size: .8rem;
+            text-transform: uppercase;
+            text-decoration: none;
+            letter-spacing: .1em;
+            z-index: 1;
+        }
+
+        .utterances{
+            max-width: 100%;
+        }
+        .hr-middle-text{
+            line-height: 1em;
+            position: relative;
+            outline: 0;
+            border: 0;
+            color: black;
+            text-align: center;
+            height: 1.5em;
+            opacity: .5;
+        }
+        .hr-middle-text:before {
+            content: '';
+            background: linear-gradient(to right, transparent, black, transparent);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+        }
+        .hr-middle-text:after{
+            content: attr(data-content);
+            position: relative;
+            display: inline-block;
+            color: black;
+            padding: 0 .5em;
+            line-height: 1.5em;
+            background-color: #fcfcfa;
+        }
+
+        /* _nav style */
+        .navbar-item::before {
+            content: "[ ";
+        }
+        .navbar-item::after {
+            content: " ]"
+        }
+        @media screen and (min-width: 300px) and (max-width: 700px) {
+            .navbar {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .navbar-item {
+                flex: 1;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+            }
+            
+            .nav-btn {
+                flex: 1;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                text-align: center;
+            }
+        }
+        /* _nav style end */
+
+        /* index style */
+        .posts-item {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        @media screen and (min-width: 300px) and (max-width: 700px) {
+            .posts-item {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-around;
+                margin-bottom: 10px;
+            }
+            .posts-item > a {
+                display: inline-block;
+                width: 70%;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+            .posts-item > small {
+                flex: 1;
+                text-align: right;
+            }
+            article{
+                letter-spacing: -0.003em;
+                line-height: 28px;
+                font-size: 18px;
+                word-wrap: break-word;
+            }
+        }
+        /* index style end */
+</style>
+
+    
+<!-- Google Analytics -->
+
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+
+    ga('create', 'UA-188913654-2', 'auto');
+    ga('send', 'pageview');
+</script>
+
+<!-- End Google Analytics -->
+
+
+</head>
+<body>
+    
+<header>
+    <nav class="navbar">
+        <span class="navbar-item"><a class="nav-btn" href="/">Home</a></span>
+        <span class="navbar-item"><a class="nav-btn" href="/el/">English Learning</a></span>
+        <span class="navbar-item"><a class="nav-btn" href="/ct/">Chinese Thinking</a></span>
+    </nav>
+</header>
+
+    <article>
+        <h1>How to write unit test</h1>
+<p>Using code to test code is harder than running a program manually.</p>
+<p>Suppose you have finished some CRUD code, you want to verify the code is
+running correctly. Your code might be like this:</p>
+<pre style="background-color:#fff"><span style="color:#000;font-weight:bold">func</span> <span style="color:#900;font-weight:bold">foo</span>(user, post, arrayOfComments)<span style="color:#458;font-weight:bold">error</span>{
+    <span style="color:#900;font-weight:bold">createUser</span>(user)
+    <span style="color:#900;font-weight:bold">createPost</span>(user.id, post)
+    <span style="color:#900;font-weight:bold">createComments</span>(post.id, arrayOfComments)
+}
+</pre><p>How to test the <code>foo</code> function?</p>
+<p>To ensure the function <code>foo</code> working correctly, we can build &amp; run, and then
+trigger the function <code>foo</code>. Before running it, we should have a test
+environment that has the database connection and imported dependencies code as
+the same as the production. And we must construct the relation of the <code>user</code>,
+<code>post</code> and <code>comment</code>.</p>
+<p>The <code>foo</code> function is not a stand-alone function, it must call the other
+<code>create</code> functions. After calling <code>foo</code>, we need to check the database record has
+been created successfully. Our unit test might like:</p>
+<pre style="background-color:#fff"><span style="color:#000;font-weight:bold">func</span> <span style="color:#900;font-weight:bold">testFoo</span>(){
+    err <span style="color:#000;font-weight:bold">:=</span> <span style="color:#900;font-weight:bold">foo</span>(user, post, arrayOfComments)<span style="color:#998;font-style:italic">//call foo
+</span><span style="color:#998;font-style:italic"></span>    <span style="color:#900;font-weight:bold">assert</span>(err<span style="color:#000;font-weight:bold">==</span><span style="color:#000;font-weight:bold">nil</span>)
+    <span style="color:#900;font-weight:bold">ensure_created</span>(user)
+    <span style="color:#900;font-weight:bold">ensure_created</span>(post)
+    <span style="color:#900;font-weight:bold">ensure_created</span>(arrayOfComments)
+}
+</pre><p>Does it make sense?<br />
+No.<br />
+The affection for the database is not showing in foo's
+output. Our test case should not check the database. It's not the
+responsibility of the <code>foo</code>. We need to check the <code>foo</code> result and write
+some extra test cases for the other <code>create</code> functions.</p>
+<pre style="background-color:#fff"><span style="color:#000;font-weight:bold">func</span> <span style="color:#900;font-weight:bold">testFoo</span>(){
+    err <span style="color:#000;font-weight:bold">:=</span> <span style="color:#900;font-weight:bold">foo</span>(user, post, arrayOfComments)<span style="color:#998;font-style:italic">//call foo
+</span><span style="color:#998;font-style:italic"></span>    <span style="color:#900;font-weight:bold">assert</span>(err<span style="color:#000;font-weight:bold">==</span><span style="color:#000;font-weight:bold">nil</span>)
+}
+
+<span style="color:#000;font-weight:bold">func</span> <span style="color:#900;font-weight:bold">TestUserCreate</span>(){
+    <span style="color:#900;font-weight:bold">createUser</span>(user)
+    <span style="color:#900;font-weight:bold">ensure_created</span>(user)
+}
+<span style="color:#000;font-weight:bold">func</span> <span style="color:#900;font-weight:bold">TestPostCreate</span>(){
+    <span style="color:#900;font-weight:bold">createPost</span>(post)
+    <span style="color:#900;font-weight:bold">ensure_created</span>(post)
+}
+<span style="color:#000;font-weight:bold">func</span> <span style="color:#900;font-weight:bold">TestCreateComments</span>(){
+    <span style="color:#900;font-weight:bold">createComments</span>(post.id, arrayOfComments)
+    <span style="color:#900;font-weight:bold">ensure_created</span>(arrayOfComments)
+}
+</pre><p>Setting up a test environment is not easy. Because the code of our development might be:</p>
+<ul>
+<li>Code has been written by others whom you don't know and can't talk with them face to face.</li>
+<li>Code has so many messes and traps that you can't refactor immediately.</li>
+<li>You don't know why the dirty code had been written like this.</li>
+<li>The codebase has so many dependencies so that you must build&amp;run all code.</li>
+</ul>
+<p>In these situations, We didn't have so many choices, we might just as well
+write the simple calling test code:</p>
+<pre style="background-color:#fff"><span style="color:#000;font-weight:bold">func</span> <span style="color:#900;font-weight:bold">testFoo</span>(){
+    err <span style="color:#000;font-weight:bold">:=</span> <span style="color:#900;font-weight:bold">foo</span>(user, post, arrayOfComments)<span style="color:#998;font-style:italic">//call foo
+</span><span style="color:#998;font-style:italic"></span>    <span style="color:#900;font-weight:bold">assert</span>(err<span style="color:#000;font-weight:bold">==</span><span style="color:#000;font-weight:bold">nil</span>)
+}
+</pre><p>Does it has problems?<br />
+No.<br />
+Is it perfect?<br />
+No.</p>
+<p>But it's better than no test, and the next time when you want to change the
+code or test it again, you can use this code repeatedly. Your code now is
+running independently. Even we just calling the foo, but it's worth writing
+the simple test case. It means we have a tiny running environment for our code.
+We don't need to build&amp;run all code. This is the first step to construct the
+unit test environment.</p>
+<p>Building and running code by hand is easy, but it's just one-time work.  Using
+the unit test, you can build the fake data to run a function thousands of times
+with thousands kind of data types easily. The manual test just running at this
+time, we must construct the same test case again on the next time. It's not
+obeying the DRY(Don't repeat yourself) principle.</p>
+<pre style="background-color:#fff"><span style="color:#000;font-weight:bold">func</span> <span style="color:#900;font-weight:bold">testFoo</span>(){
+    <span style="color:#000;font-weight:bold">for</span> i<span style="color:#000;font-weight:bold">:=</span><span style="color:#099">0</span>; i&lt; <span style="color:#099">1000</span> i<span style="color:#000;font-weight:bold">++</span>{ <span style="color:#998;font-style:italic">//how to use your hand running a case 1000 times easily?
+</span><span style="color:#998;font-style:italic"></span>        err <span style="color:#000;font-weight:bold">:=</span> <span style="color:#900;font-weight:bold">foo</span>(user, post, arrayOfComments)
+        <span style="color:#900;font-weight:bold">assert</span>(err<span style="color:#000;font-weight:bold">==</span><span style="color:#000;font-weight:bold">nil</span>)
+    }
+}
+</pre><p>When I used to test my API with Postman, I'd always want the unit test can test
+my API automatically, and cleaning the database after all tests have been passed.
+This thought was wrong, test the calling chain with the unit test is not
+appropriate. I should find other tools to automate the scheduling. The
+unit test should be a small unit, not for the functions pipeline.  In addition,
+You should not maintain the unit test running order. You should keep the
+unit test being simplicity and small.</p>
+<p>If you code coupled with each other, divide it for several modules or functions
+for writing the unit test easily.  If you can't decouple your code, just write
+the testing code for core features.</p>
+<p>The automatic running of unit tests is not important, reusing the testing code
+is more important. That's why I didn't like TDD(test-driven development).
+Because code writing is not hard and does not need to spend too much time. Most
+of our time has been spending on requirement understanding and code debugging.
+TDD suppose you have known what you do and write the test before your
+production code. Sometimes you didn't understand the final requirement.
+For this purpose, your code should be easy to change(ETC). Your testing code is
+not the experiment code, it's like the production code and should keep
+readable, maintainable and flexible. It's the parts of your production.</p>
+<p>When I tried to resolve the leet-code problems, it gave me feedback on the
+power of unit tests and forced me to write the code correctly. The runnable
+code is easy to write, but correct code is so hard to write. I found that if
+you only think about the running of your code, your code will not have been
+written solidly and abstractly. For passing all of the unit tests in leetcode,
+I must think about every possible branch of running.  It's a good way to
+improve my coding skills. But the leetcode problems have the explicit
+input/output. When we are building the software, it's very rare to see the
+explicit input/output.  The client's requirement is hard to understand
+completely, the requirement might have been changed tomorrow. Our hardware,
+network, and other components might not work at any time. Running our code
+correctly today and rerunning tomorrow is enough.</p>
+
+    </article>
+
+    
+<div class="comments">
+    <hr class="hr-middle-text" data-content="COMMENTS">
+    <script src="https://utteranc.es/client.js" repo="leyafo/leyafo.github.io" issue-term="title" label="Commnets" theme="github-light" crossorigin="anonymous" async >
+    </script>
+</div>
+
+<script>
+    document.querySelectorAll("pre").forEach(function (i) {
+        i.removeAttribute("style")
+    })
+</script>
+</body>
+</html>
