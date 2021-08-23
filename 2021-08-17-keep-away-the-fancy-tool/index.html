@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keep away from the fancy tools</title>
+    
+<style>
+        body {
+            color: #000000;
+            line-height: 1.6em;
+            padding: 1em;
+            box-sizing: border-box;
+            margin: auto;
+            max-width: 72em;
+            background: #fefefe;
+            font-family: Fira Code,Monaco,Consolas,Ubuntu Mono,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,monospace,sans-serif;
+        }
+        blockquote {
+            background: #f9f9f9;
+            border-left: 10px solid #ccc;
+            margin: 1.5em 10px;
+            padding: 0.5em 10px;
+            quotes: "\201C""\201D""\2018""\2019";
+        }
+        blockquote:before {
+            color: #ccc;
+            content: open-quote;
+            font-size: 4em;
+            line-height: 0.1em;
+            margin-right: 0.25em;
+            vertical-align: -0.4em;
+        }
+        blockquote p {
+            display: inline;
+        }
+        em{
+            color: grey;
+        }
+
+        pre{
+            background-color: #eed;
+        }
+        code{
+            background-color: #eed;
+        }
+        nav {
+            margin-bottom: 20px;
+        }
+        small{
+            font-size: smaller;
+        }
+        a {
+            color: #007bff;
+        }
+
+        a:hover,
+        a:focus {
+            color: #0056b3;
+        }
+
+        a:visited{
+            color: grey;
+        }
+
+        article {
+            padding-bottom: 1em;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        body {
+            background-color: #fff;
+            color: #212529;
+        }
+
+        .comments{
+            text-align: center;
+            margin-top: 20px;
+            padding: 5px 10px;
+            font-size: .8rem;
+            text-transform: uppercase;
+            text-decoration: none;
+            letter-spacing: .1em;
+            z-index: 1;
+        }
+
+        .utterances{
+            max-width: 100%;
+        }
+        .hr-middle-text{
+            line-height: 1em;
+            position: relative;
+            outline: 0;
+            border: 0;
+            color: black;
+            text-align: center;
+            height: 1.5em;
+            opacity: .5;
+        }
+        .hr-middle-text:before {
+            content: '';
+            background: linear-gradient(to right, transparent, black, transparent);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+        }
+        .hr-middle-text:after{
+            content: attr(data-content);
+            position: relative;
+            display: inline-block;
+            color: black;
+            padding: 0 .5em;
+            line-height: 1.5em;
+            background-color: #fcfcfa;
+        }
+
+        /* _nav style */
+        .navbar-item::before {
+            content: "[ ";
+        }
+        .navbar-item::after {
+            content: " ]"
+        }
+        @media screen and (min-width: 300px) and (max-width: 700px) {
+            .navbar {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .navbar-item {
+                flex: 1;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+            }
+            
+            .nav-btn {
+                flex: 1;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                text-align: center;
+            }
+        }
+        /* _nav style end */
+
+        /* index style */
+        .posts-item {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        @media screen and (min-width: 300px) and (max-width: 700px) {
+            .posts-item {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-around;
+                margin-bottom: 10px;
+            }
+            .posts-item > a {
+                display: inline-block;
+                width: 70%;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+            .posts-item > small {
+                flex: 1;
+                text-align: right;
+            }
+            article{
+                letter-spacing: -0.003em;
+                line-height: 28px;
+                font-size: 18px;
+                word-wrap: break-word;
+            }
+        }
+        /* index style end */
+</style>
+
+    
+<!-- Google Analytics -->
+
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+
+    ga('create', 'UA-188913654-2', 'auto');
+    ga('send', 'pageview');
+</script>
+
+<!-- End Google Analytics -->
+
+
+</head>
+<body>
+    
+<header>
+    <nav class="navbar">
+        <span class="navbar-item"><a class="nav-btn" href="/">Home</a></span>
+        <span class="navbar-item"><a class="nav-btn" href="/el/">English Learning</a></span>
+        <span class="navbar-item"><a class="nav-btn" href="/ct/">Chinese Thinking</a></span>
+    </nav>
+</header>
+
+    <article>
+        <h1>Keep away from the fancy tools</h1>
+<p>I've been using macOS for about 8 years. When I first bought a Macbook, I was attracted by Apple's industrial design, and afterward I bought so many Apple products and recommended Apple to my family and my friends. Apple's products are so good, their quality and after-sales service better than other brand products. The appearance of Apple's devices is beautiful.</p>
+<p>The entire iOS ecosystem is so closed. You can't install the application without Appstore in your iPhone, and the software distribution has fully controlled by AppStore. The payment cornered the users and developers so that Apple share the profit in between. (The crazy things that they want share the Wechat article rewards). You might say: &quot;It's none of my business, I just want a beautiful device and keep away from the garbage APP, and my information should not leak to the public&quot;. Can these expectations be true? Do you really escape the big data watching your iPhone? Even though Apple said that they reject the FBI's demand to scan the victim's iPhone. But they want to limit the spread of Child Sexual Abuse Material (CSAM) recently. It must scan the user's photo in iCloud. They said that they want to protect children from the abuse content. They promise they would not read the source photos, or use some hash-magic technologies to avoid scanning the source photos.</p>
+<p>Do you really trust Apple's CSAM policy?
+I don't trust them. I don't care about the hash-technologies whether are powerful or not. My data is mine, not owned by anyone or any organization. What I stored, it's my freedom. I spend the money to buy a device, which must be fully controlled by me.</p>
+<p>During these years, Apple doesn't just publish the CSAM policy, they had many tactics that benefit for business, and users do not see obviously.<br />
+Apples' M1 CPU is so fast and powerful. They are selling the M1 Macbook with 8G or 16G memory, which is a half-built machine. As we know, many smartphones have 8G running memory and the Electron APP has been spreading everywhere today, a computer with 8G or 16G memory is not enough. That's why many Macbook users complained that their Macbook writes too much disk for swap.<br />
+They removed 3.5mm earphones and recommended you buy the Bluetooth Airpods. But its energy cannot be exchanged. You must buy new Airpods every two years.<br />
+They welded the disk and memory that you cannot upgrade them by yourself. If you want to upgrade, you must pay an expensive price to customize.<br />
+They removed all interfaces and do not adapt USB type-C to iPhone, you must buy the expensive accessories.<br />
+If you need to fix your device, you must go to the Genis bar and Apple wants you to shop at the glasshouse to buy apple's production unintentionally.</p>
+<p>There are so many options that you can leave the expensive Apple devices, such as Windows, Android, and Linux. They are growing so much in recent years. I bought a PC 3 years ago and used to coding for usual. If you are a common user, there is no need to spend too much money to buy expensive Apple devices without privacy.</p>
+<p>Microsoft made many tools for development in recent years. e.g. VSCode and WSL. But every operating system has its weaknesses. Windows is still not a development-friendly system. If I have some problems in WSL, I can't search the problems through the Internet to fix them by myself, because Windows is not an open-source system. When I used to Coding on Windows, it still had so many troubles. Especially developing in WSL2, it has so many unknown and unreasonable problems that can not be fixed by myself. So, I switched my development to Linux. The Linux Desktop is still unperfect and has so many tiny bugs, but it is so friendly for development. Some problems can be avoided to use some software. If the software is not necessary, I choose to avoid to install. Most of my time is spending on the Web browser and command line. If the web browser works well, it means I can listen to music, watch videos and read the text. It also means that the Electron Application can work well in Linux. We don't need to worry about there are not having enough Applications that supported Linux. When you switched to Linux, I recommend you avoid the configurations and try to make everything works perfectly. You should tolerate some bugs and some small problems. And try to learn some skills for maintaining your machine by yourself. You should know that software running stably is more important than it has fancy appearances.</p>
+<p>When I start to use the open-source system, I felt that I'm the host of my tools, not the guest of some big companies(I'm still not to trust Microsoft). Using a closed system, I don't have the freedom to install the software. I can't remove software clearly and don't know where the spider Application has hidden in the corner to scan my device and collecting my personal information for Ads. Some organizations might use the tools to make profits in the big data center quietly. To fully control a device is so important and it is natural for us. Even though we can't guarantee the open-source software will give us absolute security, but if it has security problems, the community would tell us what had happened and no such big organization would hide the problems for us.</p>
+<p>Linux gave me more choices than Windows, I can buy my computer as a laptop, tiny PC, mini PC, or big PC, their price is so cheap. Linux doesn't need to run with too many hardware resources, I don't need to worry about my computer would be running slowly after some years. And I can upgrade the hardware freely and fix some simple problems by myself. It seems like my father bought a TV that can be used for more than ten years. Sometimes my father was so curious about the internal and want to fix the machine, he can open it up and fix some simple problems by himself, even he can't fix the complicated problems well. Replacing an electronic device every two years is not normal. There is no free lunch in the world. The fancy tools must take many resources to make. They give you free or cheap software, they must make the money from elsewhere(your personal data or other privacy).</p>
+<p>I don't recommend you replace the operating system with Linux right now. Some business software is still not friendly for Linux, and Linux has many traps that unprofessional user can handle it well. But if you don't need to depend on some special software, or use the web browser on the computer most of the time, Linux can work well. You should give yourself more choices. Choosing an open-source system can support your favorite hardware and you can fix some problems freely. You should think about whether you really need some software or watching the smartphone so often every day. Life should be simple and time is our most valuable resource, we should use our time in the most important area.</p>
+
+    </article>
+
+    
+<div class="comments">
+    <hr class="hr-middle-text" data-content="COMMENTS">
+    <script src="https://utteranc.es/client.js" repo="leyafo/leyafo.github.io" issue-term="title" label="Commnets" theme="github-light" crossorigin="anonymous" async >
+    </script>
+</div>
+
+<script>
+    document.querySelectorAll("pre").forEach(function (i) {
+        i.removeAttribute("style")
+    })
+</script>
+</body>
+</html>
