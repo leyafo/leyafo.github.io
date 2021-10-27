@@ -218,15 +218,15 @@
     <article>
         <h1>How GFS works</h1>
 <p>Google File System is a storage distributed systems designed for high performance, fault tolerance, and high availability while running on inexpensive commodity hardware. We have seen many distributed systems such as HDFS, Ceph, S3 applied in industry. GFS is the first distributed storage system applied in industry. It not only get the basic ideas of distribution, sharding, fault-tolerance but also scaled hugely and created on real-world experience. It applied the single master and weak consistency successfully.</p>
-<p>Though entail GFS architecture is simple, the GFS paper is not hard to read. If you understand it well, you will know how a simple distributed storage systems works. It also can be your first step to learning distributed systems.</p>
+<p>Though entire GFS architecture is simple, the GFS paper is not hard to read. If you understand it well, you will know how a simple distributed storage systems works. It also can be your first step to learning distributed systems.</p>
 <h2>Architecture</h2>
 <p>GFS has three major components: Client, Master and Chunkserver. GFS split a file into multiple chunks and saved into Chunkserver. Master stored metadata in memory, which contains each chunk's location information. Metadata operation uses Binlog and Checkpoint for backup and accident crash resuming.</p>
 <p>When client writes a file to GFS, the client first asks Master about which Chunkserver can store this file. The Master will return the metadata to the client. The client split the file into chunks and send them to Chunkserver that metadata pointed to.</p>
 <p>The read processing is the same as writing. Get the metadata, then read each chunk from Chunkserver and finally combine chunks with a file.</p>
-<p>For figuring out the entail architecture, you just need to know the relationship among Client, Master and Chunkserver.</p>
+<p>For figuring out the entire architecture, you just need to know the relationship among Client, Master and Chunkserver.</p>
 <p><img src="/images/gfs-figure1.png" alt="fig1" /></p>
 <h2>Consistency model</h2>
-<p>Data Consistency is the key in distributed storage systems. It affected the entail architecture design. For understanding the consistency model well, we must know what is the exact consistency problem in the system, why is the key problem, how does it affect the entail architecture design.</p>
+<p>Data Consistency is the key in distributed storage systems. It affected the entire architecture design. For understanding the consistency model well, we must know what is the exact consistency problem in the system, why is the key problem, how does it affect the entire architecture design.</p>
 <p>Consistency problem is the same as a race condition in the operating system. If we access a variable via different threads, we might get different values at different times.</p>
 <pre><code>A----set x = 1
 B----set x = 2
@@ -249,7 +249,7 @@ C----get x = ?  in B
 </ol>
 <p>First of all, there is no such solution that can handle the order of writing perfectly. When we set x in different nodes at different times, we cannot sync the order. Because the order is based on time, there is no such way to sync time precisely between two nodes. The network communication itself has imprecise latency. When we want data stored safely. We don't have other choices, we must write a copy in different ways(such as datacenter, rack, node, disk). The replica strategy is the root of the consistent problem. If data has been written in different nodes, we cannot avoid the inconsistent problem(question 2). As you know with the 'imprecise latency', we don't have the precise mechanism to sync two nodes. If we want to perform the consistent problem, we should reduce the writing in one node and then sync the replica to the other nodes. That's why GFS designed chunkserver as primary and secondaries.</p>
 <h2>GFS consistency guarantees</h2>
-<p>The primary receives the data first and then sends it to other secondaries. This mechanism makes the consistency problem in GFS became a single node concurrency problem. The entail Architecture served this simple consistency model. For performing the consistency problem, GFS guaranteed some consistency mutations.</p>
+<p>The primary receives the data first and then sends it to other secondaries. This mechanism makes the consistency problem in GFS became a single node concurrency problem. The entire Architecture served this simple consistency model. For performing the consistency problem, GFS guaranteed some consistency mutations.</p>
 <p><img src="/images/gfs-table1.png" alt="consistency guarantees" /></p>
 <p><strong>Consistent</strong>: all clients will always see the same data.<br />
 <strong>Defined</strong>:  A region is defined after a file data mutation if it is consistent and clients will see what the mutation writes in its entirety(implication consistent)<br />
@@ -360,7 +360,7 @@ The replacement should restore the information that the dead master knew, and th
 <p><strong>Who/what decides the master is dead, and must be replaced?  Could the master replicas ping the master, take over if no response?</strong><br />
 The monitor decides the master is dead or not. It takes over the dead master, restart the master or switch to a shadow-master(read-only).</p>
 <p><strong>What happens if the entire building suffers a power failure?  And then power is restored, and all servers reboot.</strong><br />
-The master will restore its metadata, reconnect to chunkservers and reconstruct the entail system.</p>
+The master will restore its metadata, reconnect to chunkservers and reconstruct the entire system.</p>
 <p><strong>Is there <em>any</em> circumstance in which GFS will break the guarantee?</strong>   <em>answered by teacher</em><br />
 All master replicas permanently lose state (permanent disk failure). Could be worse: result will be &quot;no answer&quot;, not &quot;incorrect data&quot;. &quot;fail-stop&quot;<br />
 All chunkservers holding the chunk permanently lose disk content.<br />
