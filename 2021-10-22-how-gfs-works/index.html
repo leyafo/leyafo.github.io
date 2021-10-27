@@ -217,7 +217,7 @@
 
     <article>
         <h1>How GFS works</h1>
-<p>Google File System is a storage distributed systems designed for high performance, fault tolerance, and high availability while running on inexpensive commodity hardware. We have seen many distributed systems such as HDFS, Ceph, S3 applied in industry. GFS is the first distributed storage system applied in industry. It not only get the basic ideas of distribution, sharding, fault-tolerance but also scaled hugely and created on real-world experience. It applied the single master and weak consistency successfully.</p>
+<p>Google File System is a distributed storage systems designed for high performance, fault tolerance, and high availability while running on inexpensive commodity hardware. We have seen many distributed systems such as HDFS, Ceph, S3 applied in industry. GFS is the first distributed storage system applied in industry. It not only get the basic ideas of distribution, sharding, fault-tolerance but also scaled hugely and created on real-world experience. It applied the single master and weak consistency successfully.</p>
 <p>Though entire GFS architecture is simple, the GFS paper is not hard to read. If you understand it well, you will know how a simple distributed storage systems works. It also can be your first step to learning distributed systems.</p>
 <h2>Architecture</h2>
 <p>GFS has three major components: Client, Master and Chunkserver. GFS split a file into multiple chunks and saved into Chunkserver. Master stored metadata in memory, which contains each chunk's location information. Metadata operation uses Binlog and Checkpoint for backup and accident crash resuming.</p>
