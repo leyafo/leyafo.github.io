@@ -217,10 +217,10 @@
 
     <article>
         <h1>How GFS works</h1>
-<p>Google File System is a distributed storage systems designed for high performance, fault tolerance, and high availability while running on inexpensive commodity hardware. We have seen many distributed systems such as HDFS, Ceph, S3 applied in industry. GFS is the first distributed storage system applied in industry. It not only get the basic ideas of distribution, sharding, fault-tolerance but also scaled hugely and created on real-world experience. It applied the single master and weak consistency successfully.</p>
-<p>Though entire GFS architecture is simple, the GFS paper is not hard to read. If you understand it well, you will know how a simple distributed storage systems works. It also can be your first step to learning distributed systems.</p>
+<p>Google File System is a distributed storage systems designed for high performance, fault tolerance, and high availability while running on inexpensive commodity hardware. We have seen many distributed systems such as HDFS, Ceph, S3 applied in industry. GFS is the first distributed storage system used in industry. It not only got the basic ideas of distribution, sharding, fault-tolerance but also scaled hugely and created on real-world experience. It successfully applied the single master and weak consistency.</p>
+<p>Despite the simplicity of the whole GFS architecture, the GFS paper is not hard to read. If you understand it well, you will know how a simple distributed storage systems works. It can also be your first step to learning distributed systems.</p>
 <h2>Architecture</h2>
-<p>GFS has three major components: Client, Master and Chunkserver. GFS split a file into multiple chunks and saved into Chunkserver. Master stored metadata in memory, which contains each chunk's location information. Metadata operation uses Binlog and Checkpoint for backup and accident crash resuming.</p>
+<p>GFS has three major components: Client, Master and Chunkserver. GFS split a file into multiple chunks and saved it into Chunkserver. Master stored metadata in memory, which contains each chunk's location information. Metadata operation uses Binlog and Checkpoint for backup and accident crash resuming.</p>
 <p>When client writes a file to GFS, the client first asks Master about which Chunkserver can store this file. The Master will return the metadata to the client. The client split the file into chunks and send them to Chunkserver that metadata pointed to.</p>
 <p>The read processing is the same as writing. Get the metadata, then read each chunk from Chunkserver and finally combine chunks with a file.</p>
 <p>For figuring out the entire architecture, you just need to know the relationship among Client, Master and Chunkserver.</p>
