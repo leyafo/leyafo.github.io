@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GFS works</title>
+    
+<style>
+        body {
+            color: #000000;
+            line-height: 1.6em;
+            padding: 1em;
+            box-sizing: border-box;
+            margin: auto;
+            max-width: 72em;
+            background: #fefefe;
+            font-family: Fira Code,Monaco,Consolas,Ubuntu Mono,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,monospace,sans-serif;
+        }
+        blockquote {
+            background: #f9f9f9;
+            border-left: 10px solid #ccc;
+            margin: 1.5em 10px;
+            padding: 0.5em 10px;
+            quotes: "\201C""\201D""\2018""\2019";
+        }
+        blockquote:before {
+            color: #ccc;
+            content: open-quote;
+            font-size: 4em;
+            line-height: 0.1em;
+            margin-right: 0.25em;
+            vertical-align: -0.4em;
+        }
+        blockquote p {
+            display: inline;
+        }
+        em{
+            color: grey;
+        }
+
+        pre{
+            background-color: #eed;
+        }
+        code{
+            background-color: #eed;
+        }
+        nav {
+            margin-bottom: 20px;
+        }
+        small{
+            font-size: smaller;
+        }
+        a {
+            color: #007bff;
+        }
+
+        a:hover,
+        a:focus {
+            color: #0056b3;
+        }
+
+        a:visited{
+            color: grey;
+        }
+
+        article {
+            padding-bottom: 1em;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        body {
+            background-color: #fff;
+            color: #212529;
+        }
+
+        .comments{
+            text-align: center;
+            margin-top: 20px;
+            padding: 5px 10px;
+            font-size: .8rem;
+            text-transform: uppercase;
+            text-decoration: none;
+            letter-spacing: .1em;
+            z-index: 1;
+        }
+
+        .utterances{
+            max-width: 100%;
+        }
+        .hr-middle-text{
+            line-height: 1em;
+            position: relative;
+            outline: 0;
+            border: 0;
+            color: black;
+            text-align: center;
+            height: 1.5em;
+            opacity: .5;
+        }
+        .hr-middle-text:before {
+            content: '';
+            background: linear-gradient(to right, transparent, black, transparent);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+        }
+        .hr-middle-text:after{
+            content: attr(data-content);
+            position: relative;
+            display: inline-block;
+            color: black;
+            padding: 0 .5em;
+            line-height: 1.5em;
+            background-color: #fcfcfa;
+        }
+
+        /* _nav style */
+        .navbar-item::before {
+            content: "[ ";
+        }
+        .navbar-item::after {
+            content: " ]"
+        }
+        @media screen and (min-width: 300px) and (max-width: 700px) {
+            .navbar {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .navbar-item {
+                flex: 1;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+            }
+            
+            .nav-btn {
+                flex: 1;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                text-align: center;
+            }
+        }
+        /* _nav style end */
+
+        /* index style */
+        .posts-item {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        @media screen and (min-width: 300px) and (max-width: 700px) {
+            .posts-item {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-around;
+                margin-bottom: 10px;
+            }
+            .posts-item > a {
+                display: inline-block;
+                width: 70%;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+            .posts-item > small {
+                flex: 1;
+                text-align: right;
+            }
+            article{
+                letter-spacing: -0.003em;
+                line-height: 28px;
+                font-size: 18px;
+                word-wrap: break-word;
+            }
+        }
+        /* index style end */
+</style>
+
+    
+<!-- Google Analytics -->
+
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+
+    ga('create', 'UA-188913654-2', 'auto');
+    ga('send', 'pageview');
+</script>
+
+<!-- End Google Analytics -->
+
+
+</head>
+<body>
+    
+<header>
+    <nav class="navbar">
+        <span class="navbar-item"><a class="nav-btn" href="/">Home</a></span>
+        <span class="navbar-item"><a class="nav-btn" href="/el/">English Learning</a></span>
+        <span class="navbar-item"><a class="nav-btn" href="/ct/">Chinese Thinking</a></span>
+    </nav>
+</header>
+
+    <article>
+        <h1>How GFS works</h1>
+<p>Google File System is a storage distributed systems designed for high performance, fault tolerance, and high availability while running on inexpensive commodity hardware. We have seen many distributed systems such as HDFS, Ceph, S3 applied in industry. GFS is the first distributed storage system applied in industry. It not only get the basic ideas of distribution, sharding, fault-tolerance but also scaled hugely and created on real-world experience. It applied the single master and weak consistency successfully.</p>
+<p>Though entail GFS architecture is simple, the GFS paper is not hard to read. If you understand it well, you will know how a simple distributed storage systems works. It also can be your first step to learning distributed systems.</p>
+<h2>Architecture</h2>
+<p>GFS has three major components: Client, Master and Chunkserver. GFS split a file into multiple chunks and saved into Chunkserver. Master stored metadata in memory, which contains each chunk's location information. Metadata operation uses Binlog and Checkpoint for backup and accident crash resuming.</p>
+<p>When client writes a file to GFS, the client first asks Master about which Chunkserver can store this file. The Master will return the metadata to the client. The client split the file into chunks and send them to Chunkserver that metadata pointed to.</p>
+<p>The read processing is the same as writing. Get the metadata, then read each chunk from Chunkserver and finally combine chunks with a file.</p>
+<p>For figuring out the entail architecture, you just need to know the relationship among Client, Master and Chunkserver.</p>
+<p><img src="/images/gfs-figure1.png" alt="fig1" /></p>
+<h2>Consistency model</h2>
+<p>Data Consistency is the key in distributed storage systems. It affected the entail architecture design. For understanding the consistency model well, we must know what is the exact consistency problem in the system, why is the key problem, how does it affect the entail architecture design.</p>
+<p>Consistency problem is the same as a race condition in the operating system. If we access a variable via different threads, we might get different values at different times.</p>
+<pre><code>A----set x = 1
+B----set x = 2
+C----get x = ?
+C----get x = ?
+</code></pre>
+<p>Thread A&amp;B set x concurrently, C might get different values at different times.</p>
+<p>The race condition gets complicated when it occurred in distributed systems.</p>
+<p>Suppose A and B are two different nodes, we may set x in A or B. And C gets the value via A or B. The ideal solution is no matter how C gets x via A or B, it always gets the same value. How to implement it?</p>
+<pre><code>A----set x = 1
+B----set x = 2
+
+C----get x = ?  in A
+C----get x = ?  in B
+</code></pre>
+<p>If x is concurrently set in two different nodes, we must handle these two problems:</p>
+<ol>
+<li>how to guarantee the order of writing in different nodes?</li>
+<li>how to prevent the C read x via A or B return the different values?</li>
+</ol>
+<p>First of all, there is no such solution that can handle the order of writing perfectly. When we set x in different nodes at different times, we cannot sync the order. Because the order is based on time, there is no such way to sync time precisely between two nodes. The network communication itself has imprecise latency. When we want data stored safely. We don't have other choices, we must write a copy in different ways(such as datacenter, rack, node, disk). The replica strategy is the root of the consistent problem. If data has been written in different nodes, we cannot avoid the inconsistent problem(question 2). As you know with the 'imprecise latency', we don't have the precise mechanism to sync two nodes. If we want to perform the consistent problem, we should reduce the writing in one node and then sync the replica to the other nodes. That's why GFS designed chunkserver as primary and secondaries.</p>
+<h2>GFS consistency guarantees</h2>
+<p>The primary receives the data first and then sends it to other secondaries. This mechanism makes the consistency problem in GFS became a single node concurrency problem. The entail Architecture served this simple consistency model. For performing the consistency problem, GFS guaranteed some consistency mutations.</p>
+<p><img src="/images/gfs-table1.png" alt="consistency guarantees" /></p>
+<p><strong>Consistent</strong>: all clients will always see the same data.<br />
+<strong>Defined</strong>:  A region is defined after a file data mutation if it is consistent and clients will see what the mutation writes in its entirety(implication consistent)<br />
+<strong>Undefined</strong>: client didn't know which mutation has written, but the data is consistent.<br />
+<strong>Inconsistent</strong>: data is broken, which cannot be useful.</p>
+<p>GFS has two kinds of concurrent writing: <strong>write</strong> and <strong>record append</strong>. They have different guarantees. The Record append is simple. If two clients append a record currently, the order is defined. It will be written one by one.</p>
+<pre><code>x=1
+    x=2
+        x=3
+            x=4
+</code></pre>
+<p>Record append is the simplest way to ensure the data has been written consistently. When one client writes a chunk, the chunk will be locked, the other client's writing would be arranged the next chunk. GFS keeps every appending chunk written <strong>at least once atomically</strong>. When multiple clients write a chunk concurrently, <strong>at least once atomically</strong> keeps the record append as multiple-producer/single-consumer.</p>
+<p>We can see the steps when C wants to do a &quot;record append&quot;?  (from MIT6.824)</p>
+<ol>
+<li>C asks M about file's last chunk</li>
+<li>if M sees chunk has no primary (or lease expired):
+2a. if no chunkservers w/ latest version #, error
+2b. pick primary P and secondaries from those w/ latest version #
+2c. increment version #, write to log on disk
+2d. tell P and secondaries who they are, and new version #
+2e. replicas write new version # to disk</li>
+<li>M tells C the primary and secondaries</li>
+<li>C sends data to all (write in cache), waits</li>
+<li>C tells P to append</li>
+<li>P checks that lease hasn't expired, and chunk has space</li>
+<li>P picks an offset (at end of chunk)</li>
+<li>P writes chunk file (a Linux file)</li>
+<li>P tells each secondary the offset, tells to append to chunk file</li>
+<li>P waits for all secondaries to reply, or timeout
+secondary can reply &quot;error&quot; e.g. out of disk space</li>
+<li>P tells C &quot;ok&quot; or &quot;error&quot;</li>
+<li>C retries from start if error</li>
+</ol>
+<p><img src="./images/gfs-figure2.png" alt="figure2" /></p>
+<p>The above steps send data to Primary and then send to Secondaries. It first cached data in memory and then write to disk, the writing has been separated into two steps:</p>
+<ol>
+<li>data cached in LRU mechanism.</li>
+<li>receive the disk write request, then start to write on disk.</li>
+</ol>
+<p>Primary has the lease that determined the data order for other secondaries.  This writing mechanism also reduces disk I/O pressure.</p>
+<p><strong>How about the normal write?</strong><br />
+It's the same as the record append. The primary chunkserver and two secondaries must write in the same order. When two concurrent clients write data, the order of writing will not guarantee, which is called 'undefined' in GFS. But it will have been written consistently on different nodes. (undefined but consistent).</p>
+<p>If one of three chunks has written failed, how to handle it?<br />
+Rewrite the three replicas to another chunk. The old three chunks will be reclaimed by garbage collection scanner.</p>
+<p>What are the steps when client C wants to read a file? (from MIT6.824)</p>
+<ol>
+<li>C sends filename and offset to master M (if not cached)</li>
+<li>M finds chunk handle for that offset</li>
+<li>M replies with list of chunkservers
+only those with latest version</li>
+<li>C caches handle + chunkserver list</li>
+<li>C sends request to nearest chunkserver
+chunk handle, offset</li>
+<li>chunk server reads from chunk file on disk, returns</li>
+</ol>
+<h2>How lease works in GFS</h2>
+<p>Lease means two nodes make a promise in a period of time. If I give you a lease, I would promise the data would not be changed in the given time. GFS uses lease to maintain an inconsistent mutation order across replicas, if a master grant a lease to a primary chunkserver, even the network fails, master and primary still wait until the lease expires.</p>
+<h2>high availability</h2>
+<p>Each chunk(three replicas) is stored on multiple chunkservers. The chunk version number can be used to check the stale chunk fast. When a chunk was stale or broken, the master would copy from another replica to replace it. Both chunkserver and master are designed for resuming fast. When a chunkserver crashed, it can be restarted or start a new chunkserver. Chunkserver will report its chunk information after connecting to master. Master can detect the stale chunks with the version number. A new empty chunkserver will be filled with chunks that are copied from other replicas.</p>
+<p>When a master has crashed, it can be resumed instantly. Master can recover by loading the latest checkpoint from the local disk and replaying only the limited number of log records after that. If a master can not restart again, it will switch to a shadow master for read-only. Switch a new master is fast via DNS. GFS doesn't depend on master so heavily. Client cache the metadata for a lease time, and primary didn't communicate with master so often. Even a master has crashed, the client and chunkserver can still work in a short time. It gives time to master for resuming. That's why GFS can apply the single master in production environment.</p>
+<h2>Garbage collection</h2>
+<p>When master needs to delete a file, it will be renamed to a hidden file name. This hidden file can be alive for a period of time, until then the file can be read or recovered.  Master will scan regularly to remove the file and metadata permanently. This delay removing has the advantages of eager deletion:</p>
+<ol>
+<li>it can serve the failed operation.</li>
+<li>it can be running in the background, the high consuming activities will be running in free time.</li>
+<li>given chance for accidental deletion.</li>
+</ol>
+<p>The only disadvantage is the storage space will not reclaim immediately.</p>
+<h2>Extra questions</h2>
+<p>For understanding GFS well, I copied some questions from <a href="https://pdos.csail.mit.edu/6.824/notes/l-gfs.txt">MIT6.824 lecture</a> and tried to answer them.</p>
+<p><strong>Why big chunks?</strong><br />
+Google has many big files that need to store, splitting files into big chunks can reduce I/O pressure and the size of metadata.</p>
+<p><strong>Why a log? and checkpoint?</strong><br />
+The single Master has to save the metadata safely, binlog is a simple way to save the metadata safely. Use checkpoint can restore the crashed master instantly.</p>
+<p><strong>How does the master know what chunkservers have a given chunk?</strong><br />
+Chunkserver will report its chunk information to master, when it started and send the heartbeat package to master.</p>
+<p><strong>What if an appending client fails at an awkward moment? Is there an awkward moment?</strong><br />
+It doesn't need to much care, just append it again.</p>
+<pre><code>c1  c2  c3
+a   a   a  
+b   b   b
+c   c   x  //broken written
+d   d   d
+c   c   c  //append again
+</code></pre>
+<p><strong>What if the appending client has cached a stale (wrong) primary?</strong><br />
+It should wait a lease time to expire the stale primary or request master again.</p>
+<p><strong>What if the reading client has cached a stale secondary list?</strong><br />
+The stale secondary will return stale chunks, but the client can detect it.</p>
+<p><strong>Could a master crash+reboot cause it to forget about the file?  Or forget what chunkservers hold the relevant chunk?</strong><br />
+When a master restart, it will restore the state from binlog, and the connected chunkserver will report their chunk information.</p>
+<p><strong>Two clients do record append at exactly the same time. Will they overwrite each others' records?</strong><br />
+No, They will not. Because the record append has <strong>at least once atomic</strong> mechanism.</p>
+<p><strong>Suppose one secondary never hears the append command from the primary. What if reading client reads from that secondary?</strong><br />
+The client would never read from this secondary, because no data has been written successfully.</p>
+<p><strong>What if the primary crashes before sending append to all secondaries? Could a secondary that <em>didn't</em> see the append be chosen as the new primary?</strong><br />
+Yes.  According the appending process, the data write into memory first then written to disk. If primary crashed, the data will be removed from memory.</p>
+<p><strong>Chunkserver S4 with an old stale copy of chunk is offline. Primary and all live secondaries crash. S4 comes back to life (before primary and secondaries).  Will master choose S4 (with stale chunk) as primary?  Better to have primary with stale data, or no replicas at all?</strong><br />
+Yes, S4 would be primary. But its stale data will be scanned by the master. After the old primary is restarted, the stale chunk can be rewritten from other replicas.</p>
+<p><strong>What should a primary do if a secondary always fails writes? e.g. dead, or out of disk space, or disk has broken. Should the primary drop secondary from set of secondaries?  And then return success to client appends?  Or should the primary keep sending ops, and having them fail, and thus fail every client write request?</strong><br />
+The primary would keep sending ops, and clients would choose another set to write. If a new server or disk has been chosen in the set, it will trigger the re-replica for rebalancing chunks.</p>
+<p><strong>What if primary S1 is alive and serving client requests, but network between master and S1 fails?  &quot;network partition&quot; Will the master pick a new primary?  Will there now be two primaries?  So that the append goes to one primary, and the read to the other?  Thus breaking the consistency guarantee?   &quot;split brain&quot;</strong>    <br />
+No. It doesn't break the consistency guarantee. The primary must serve on the lease time. After this time, a new primary would have been chosen.</p>
+<p><strong>If there's a partitioned primary serving client appends, and its lease expires, and the master picks a new primary, will the new primary have the latest data as updated by partitioned primary?</strong><br />
+Yes, it has the latest data which was updated by the old primary. Because the lease can guarantee data consistency.</p>
+<p><strong>What if the master fails altogether. Will the replacement know everything the dead master knew? E.g. each chunk's version number? primary? lease expiry time?</strong><br />
+The replacement should restore the information that the dead master knew, and the lease should still wait for the exact time for expiring.</p>
+<p><strong>Who/what decides the master is dead, and must be replaced?  Could the master replicas ping the master, take over if no response?</strong><br />
+The monitor decides the master is dead or not. It takes over the dead master, restart the master or switch to a shadow-master(read-only).</p>
+<p><strong>What happens if the entire building suffers a power failure?  And then power is restored, and all servers reboot.</strong><br />
+The master will restore its metadata, reconnect to chunkservers and reconstruct the entail system.</p>
+<p><strong>Is there <em>any</em> circumstance in which GFS will break the guarantee?</strong>   <em>answered by teacher</em><br />
+All master replicas permanently lose state (permanent disk failure). Could be worse: result will be &quot;no answer&quot;, not &quot;incorrect data&quot;. &quot;fail-stop&quot;<br />
+All chunkservers holding the chunk permanently lose disk content.<br />
+again, fail-stop; not the worse possible outcome<br />
+CPU, RAM, network, or disk yields an incorrect value.<br />
+checksum catches some cases, but not all<br />
+Time is not properly synchronized, so leases don't work out.<br />
+So multiple primaries, maybe write goes to one, read to the other.</p>
+<p><strong>What application-visible anomalous behavior does GFS allow?
+Will all clients see the same file content?
+Could one client see a record that another client doesn't see at all?
+Will a client see the same content if it reads a file twice?
+Will all clients see successfully appended records in the same order?</strong><br />
+GFS is a weakly consistent system, writing may have inconsistent data. If clients have read the inconsistent data, the library code would help them to check the inconsistent data. According to the GFS consistency model, all clients should see the same content at different times. The inconsistent data should never return to the applications.</p>
+<p><strong>Will these anomalies cause trouble for applications? How about Map Reduce?</strong><br />
+Inconsistent data is worse and completely unuseful and causes troubles for applications.</p>
+<h2>See also</h2>
+<p><a href="https://static.googleusercontent.com/media/research.google.com/en//archive/gfs-sosp2003.pdf">Google File System</a><br />
+<a href="https://pdos.csail.mit.edu/6.824/notes/l-gfs.txt">MIT6.824 lecture</a><br />
+<a href="https://www.youtube.com/watch?v=EpIgvowZr00">6.824 video</a></p>
+
+    </article>
+
+    
+<div class="comments">
+    <hr class="hr-middle-text" data-content="COMMENTS">
+    <script src="https://utteranc.es/client.js" repo="leyafo/leyafo.github.io" issue-term="title" label="Commnets" theme="github-light" crossorigin="anonymous" async >
+    </script>
+</div>
+
+<script>
+    document.querySelectorAll("pre").forEach(function (i) {
+        i.removeAttribute("style")
+    })
+</script>
+</body>
+</html>
