@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Raft Works</title>
+    
+<style>
+        body {
+            color: #000000;
+            line-height: 1.6em;
+            padding: 1em;
+            box-sizing: border-box;
+            margin: auto;
+            max-width: 72em;
+            background: #fefefe;
+            font-family: Fira Code,Monaco,Consolas,Ubuntu Mono,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,monospace,sans-serif;
+        }
+        blockquote {
+            background: #f9f9f9;
+            border-left: 10px solid #ccc;
+            margin: 1.5em 10px;
+            padding: 0.5em 10px;
+            quotes: "\201C""\201D""\2018""\2019";
+        }
+        blockquote:before {
+            color: #ccc;
+            content: open-quote;
+            font-size: 4em;
+            line-height: 0.1em;
+            margin-right: 0.25em;
+            vertical-align: -0.4em;
+        }
+        blockquote p {
+            display: inline;
+        }
+        em{
+            color: grey;
+        }
+
+        pre{
+            background-color: #eed;
+        }
+        code{
+            background-color: #eed;
+        }
+        nav {
+            margin-bottom: 20px;
+        }
+        small{
+            font-size: smaller;
+        }
+        a {
+            color: #007bff;
+        }
+
+        a:hover,
+        a:focus {
+            color: #0056b3;
+        }
+
+        a:visited{
+            color: grey;
+        }
+
+        article {
+            padding-bottom: 1em;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        body {
+            background-color: #fff;
+            color: #212529;
+        }
+
+        .comments{
+            text-align: center;
+            margin-top: 20px;
+            padding: 5px 10px;
+            font-size: .8rem;
+            text-transform: uppercase;
+            text-decoration: none;
+            letter-spacing: .1em;
+            z-index: 1;
+        }
+
+        .utterances{
+            max-width: 100%;
+        }
+        .hr-middle-text{
+            line-height: 1em;
+            position: relative;
+            outline: 0;
+            border: 0;
+            color: black;
+            text-align: center;
+            height: 1.5em;
+            opacity: .5;
+        }
+        .hr-middle-text:before {
+            content: '';
+            background: linear-gradient(to right, transparent, black, transparent);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+        }
+        .hr-middle-text:after{
+            content: attr(data-content);
+            position: relative;
+            display: inline-block;
+            color: black;
+            padding: 0 .5em;
+            line-height: 1.5em;
+            background-color: #fcfcfa;
+        }
+
+        /* _nav style */
+        .navbar-item::before {
+            content: "[ ";
+        }
+        .navbar-item::after {
+            content: " ]"
+        }
+        @media screen and (min-width: 300px) and (max-width: 700px) {
+            .navbar {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .navbar-item {
+                flex: 1;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+            }
+            
+            .nav-btn {
+                flex: 1;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                text-align: center;
+            }
+        }
+        /* _nav style end */
+
+        /* index style */
+        .posts-item {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        @media screen and (min-width: 300px) and (max-width: 700px) {
+            .posts-item {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-around;
+                margin-bottom: 10px;
+            }
+            .posts-item > a {
+                display: inline-block;
+                width: 70%;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+            .posts-item > small {
+                flex: 1;
+                text-align: right;
+            }
+            article{
+                letter-spacing: -0.003em;
+                line-height: 28px;
+                font-size: 18px;
+                word-wrap: break-word;
+            }
+        }
+        /* index style end */
+</style>
+
+    
+<!-- Google Analytics -->
+
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+
+    ga('create', 'UA-188913654-2', 'auto');
+    ga('send', 'pageview');
+</script>
+
+<!-- End Google Analytics -->
+
+
+</head>
+<body>
+    
+<header>
+    <nav class="navbar">
+        <span class="navbar-item"><a class="nav-btn" href="/">Home</a></span>
+        <span class="navbar-item"><a class="nav-btn" href="/el/">English Learning</a></span>
+        <span class="navbar-item"><a class="nav-btn" href="/ct/">Chinese Thinking</a></span>
+    </nav>
+</header>
+
+    <article>
+        <h1>How Raft Works</h1>
+<p>Raft is a simple consensus algorithm that is designed by these principles:</p>
+<ul>
+<li>Dividing a problem into separate pieces that could be solved easily.</li>
+<li>Majority acceptance to avoid inconsistency.</li>
+<li>Simple logic controls safety.</li>
+</ul>
+<p>The most valuable thing in Raft is not only the algorithm itself, but the method of dividing problems. In this article, I will try to be an imposter to imitate this technology.</p>
+<p>In a distributed system, the simplest way for keeping data consistent is to use a strong leader and duplicate every writing operation to other servers. The operation can be ordered by time as log, and appending each log entry forward. The leader has permission for the order of appending, the followers copy the same order of log entry in its own. For further simplicity, after the log entries have been committed by majority servers, it is never overwrote. We just need to consider two problems:<br />
+Who can become the leader?<br />
+When the leader crashed, how to handle inconsistent states?</p>
+<p>Raft election is like the real election, it elected a leader through the majority of acceptance and defined three roles for each server:<br />
+<strong>Follower</strong><br />
+<strong>Candidate</strong><br />
+<strong>Leader</strong><br />
+Each role are exclusion, the transference is arranged for serving election well:</p>
+<ul>
+<li>Every server initialized to Follower.</li>
+<li>Follower can be transferred into Candidate.</li>
+<li>Candidate can be elected Leader, or translate into Follower when election fails.</li>
+<li>Leader can only become Follower when it crashes.</li>
+</ul>
+<p>When a follower receives no communication with leader over a period of time, the follower becomes a candidate and starts an election to request the voter. If the candidate gets the majority of voters, it will become the new leader. If one election term has elected two leaders, reopen a new election again. For preventing this situation, the re-election timeout has been set randomly.</p>
+<p>The data writing is separated into two phrases. The one is sync the log entry, the other is the state written. When the leader receives a request from a client, it first sends the Appendentries to followers. After most majority servers have received the entries, the leader then notifies followers to apply the log entry. And then the majority of servers have applied the log entry and produced the same result, which means the log has been committed safely. Finally, the leader responded to the client for telling the writing operation has been committed successfully.</p>
+<p>Majority acceptance is the key in Raft system. The 2PC also has the same majority acceptance:</p>
+<ol>
+<li>Ensuring the majority of servers has received the log entries.</li>
+<li>Ensuring the majority of servers has committed the state written.</li>
+</ol>
+<p>If a leader crashes, a new election will start. In this timing, a follower become a candidate has a key restriction:</p>
+<p>It must has the same committed log entries as the crashed leader. Raft uses the voting process to prevent a candidate from winning an election unless its log contains all committed entries.</p>
+<p>If a follower crashes, duplicating the leader's log for keeping consistent.</p>
+<p>A follower may receive the appendentries RPC from crashed leader and then vote for another candidate. This situation is a trouble, Raft use logic proved this situation does not happen, because it has two contradictions:<br />
+The candidate's log is shorter than follower.<br />
+The candidate's log is longer than follower.<br />
+These two situations nerver exist. A follower can be transferred to candidate based on its committed log must equal as leaders, and it never be shorter or longer than leader's.</p>
+<p>Raft use these restrictions to avoid accidents:
+The leader determined the order of appending.<br />
+Log entry just has the appending operation only.<br />
+The committed log cannot be overwrote.<br />
+Election timeout is randomized, to prevent two leaders winning the election.<br />
+Follower -&gt; Candidate -&gt; Leader -&gt; Follower. These transfers let the leader election become easy.<br />
+Majarity acceptance(win election, commit log, become a candidate)<br />
+Follower's log can be forced to duplicate from leader when conflict occurred.<br />
+2PC committing and each of them must be accepted by majority of servers.<br />
+A candidate must have the committed log equalled as leader's.</p>
+<h2>See Also</h2>
+<p><a href="https://raft.github.io/raft.pdf">In Search of an Understandable Consensus Algorithm</a></p>
+
+    </article>
+
+    
+<div class="comments">
+    <hr class="hr-middle-text" data-content="COMMENTS">
+    <script src="https://utteranc.es/client.js" repo="leyafo/leyafo.github.io" issue-term="title" label="Commnets" theme="github-light" crossorigin="anonymous" async >
+    </script>
+</div>
+
+<script>
+    document.querySelectorAll("pre").forEach(function (i) {
+        i.removeAttribute("style")
+    })
+</script>
+</body>
+</html>
