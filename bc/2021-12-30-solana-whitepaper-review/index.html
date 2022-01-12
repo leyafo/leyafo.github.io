@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Understanding the dependence in Makefile</title>
+    <title>Project Review: How Solana works.</title>
     
 <style>
         body {
@@ -218,41 +218,92 @@
 </header>
 
     <article>
-        <h1>Understanding the dependence in Makefile</h1>
-<h2>Introduction</h2>
-<p><code>make</code> is a simple and useful tool which controls the building of your source code. It can be used in any programming language. It's also can be used for reducing the repetitive tasks. For example, if you have multiple shell tasks that listed one by one. You can use <code>make</code> to organize the workflow.</p>
-<p>If you've downloaded an open-source project or joined a new project as a developer. To run the entire project, you have to start building it first. Nearly all open-source projects have a <code>Makefile</code> for organizing code. But the <code>Makefile</code> is not easy to understand. Its official manual is so long and hard to understand. It's difficult to modify a <code>Makefile</code> for you want if you're a newbie. Indeed, you can Google the <code>Makefile</code> tutorial and then copy&amp;paste some codes within your <code>Makefile</code>. Even though you don't know how <code>Makefile</code> works, your code running.</p>
-<p>This post will take you 10 minutes to understand the <code>make</code> core conception. Afterwards, you will create your own <code>Makefile</code> to run some basic tasks and figured out how <code>make</code> works.</p>
-<h2>Core conception</h2>
-<p><strong>Dependence</strong> is the <code>make</code>'s core conception. Understanding the dependence is the most important principle in <code>make</code>. In the <code>Makefile</code> every task depends on other prerequisites, which can be files, tasks, or some other form of rules. If you want to run a task, you must define the target and prerequisites. We call this a dependence. A simple <code>Makefile</code> consists of &quot;dependencies&quot; with the following shape:</p>
-<pre style="background-color:#fff"><span style="color:#900;font-weight:bold">foo</span><span style="color:#000;font-weight:bold">:</span> bar
-</pre><p>The above <code>Makefile</code> do nothing because the <code>bar</code> target is undefined. Target should be depend on a defined prerequisite or be defined how it works. The following target defined to run <code>echo</code> command.</p>
-<pre style="background-color:#fff"><span style="color:#900;font-weight:bold">foo</span><span style="color:#000;font-weight:bold">:</span>
-    <span style="color:#0086b3">echo</span> <span style="color:#d14">&#34;hello world&#34;</span>  <span style="color:#998;font-style:italic">#noticed: you must use &#39;tab&#39; to start this line.</span>
-</pre><h2>A realistic example</h2>
-<p>Next, we will give you a realistic example. Suppose we have a simple C project, which contains the following files:</p>
-<pre style="background-color:#fff">.
-├── http.c
-├── http.h
-├── main.c
-├── socket.c
-├── socket.h
-</pre><p>In our project, we have the following dependent relationships:<br />
-<code>http.c</code> include <code>http.h</code> and <code>socket.h</code><br />
-<code>socket.c</code> include <code>socket.h</code><br />
-<code>main.c</code> include <code>socket.h</code> and <code>http.h</code>.</p>
-<p>To build an executing file with <code>gcc</code>, we must compile the source code for the object and then linked them to an executing file. Here are our rules:</p>
-<pre style="background-color:#fff"><span style="color:#900;font-weight:bold">http.o</span><span style="color:#000;font-weight:bold">:</span> http.c http.h socket.h
-    gcc -c http.c
-<span style="color:#900;font-weight:bold">socket.o</span><span style="color:#000;font-weight:bold">:</span> socket.h
-    gcc -c socket.c
-<span style="color:#900;font-weight:bold">main.o</span><span style="color:#000;font-weight:bold">:</span> main.c http.h socket.h
-    gcc -c main.c
-</pre><p>Link all object files to an execute file:</p>
-<pre><code>exe: http.o socket.o main.o
-    gcc -o exe http.o socket.o main.o
+        <h1>Project Review: How Solana works.</h1>
+<p>Solana is a high performance and high throughput BlockChain network. It uses
+PoH for generating blocks and PoS for voting confirmation. Solana has two types
+of nodes: leader and validator. The leader processes all transactions and
+broadcasts them to the entire network. Validators voting block confirmation via
+PoS mechanism, the verifications is faster than generate and can be running on
+parallelly.
+<img src="/images/solana_architechture.png" alt="architechture" /></p>
+<p>Solana invented PoH(proof of history) for generating a time slot. Each slot has
+one block, the previous block hash was used for the next block-generating
+input. For understanding PoH well, you can treat it as a VDF(verifiable
+delay function). Like the PoW(proof of work) time-consuming feature, it still
+uses Sha256 for the computing cycle. Solana named each sha256 calling as a tick,
+a block must be ticked for 400ms. The PoH algorithm Pseudocode is like:</p>
+<pre><code>function poh_generate()
+    hash = prev_block_hash
+    loop ticks
+        hash = sha256(hash) //one tick
+    return hash
+end
 </code></pre>
-<p>Now, typing <code>make exe</code> to build your own project.</p>
+<p>The entire network has a primary leader, the leader has been running PoH
+algorithm for its scheduled term. During the PoH algorithm running, each
+transaction will be inserted into the generating block, the order of
+transaction is determined by the queue order. Because a block can represent a
+unit of time, Solana utilized it for time synchronization and data consistency.</p>
+<p>Every block is filled in a slot, even there is no transactions, the PoH still
+generate an empty block. The replatioship of PoH and transactions are like:</p>
+<pre><code>function poh_generate()
+    hash = prev_block_hash
+    loop ticks
+        tx = obtain_transaction_from(queue)
+        if tx != nil
+            hash = sha256(hash, tx)
+        else
+            hash = sha256(hash)
+        end
+    end
+    return hash
+end
+</code></pre>
+<p>Unlike the other BlockChain network without obvious structure, the Solana
+network is a tree structure. Solana transmits blocks over the GOSSIP protocol.
+Each block will be split into shreds with additional loss erasure codes. The
+order of sending packages doesn't need to be determined. Because the network is
+a top-down structure, each node just transmits packages to neighbors and lower-
+level nodes. The lower-level nodes don't need to send packages back to upper-
+level nodes.
+<img src="/images/solana_network_structure.png" alt="network structure" /></p>
+<h2>how does Solana process transactions?</h2>
+<p>Solana has two types of nodes: Leaders and Validators. The Leader serves as
+primary and secondary, a primary Leader is running for each elected epoch, a
+secondary Leader receives backup blocks from primary. When the primary Leader
+has crashed, the secondary leader is scheduled for primary Leader. The
+primary Leader receives all transactions and merged them into the PoH slot, and
+then transmits them to all validators for voting the confirmed state.</p>
+<p>When a user has created a transaction through a Client(wallet), It first sends
+the data to a node(validator) through HTTP. Next, the node send the transaction
+through UDP to Leader. After the Leader received the transaction, the Leader's
+TPU(Transaction Processing Unit) module processes the transaction and generates
+a block. The next stage is to broadcast the block to all validators. After a
+block has been verified by two third of validators, the final stage is to store
+the block on the BlockChain.
+<img src="/images/solana_transaction_journey.png" alt="transaction journey" /></p>
+<p>Solana represented each slot as a period of time, when a transaction has been
+banked(decreasing/increasing balance), it will be sent into the PoH queue and
+merged into the block.
+<img src="/images/solana_transaction_processing.png" alt="transaction processing" /></p>
+<h2>Why Solana is fast and high throughput?</h2>
+<ol>
+<li>The single leader can determine the time order and sync the ordered block fast.</li>
+<li>The network is tree architecture, package transmitting is up to down, it doesn't need to send back.</li>
+<li>PoH is fast, the leader only take 400ms to generate a block, other validators can verify a block immedately.</li>
+<li>Block transmitting are cut for packages with erasure codes, it can tolerant some degrees of loss packages.<a href="https://medium.com/solana-labs/turbine-solanas-block-propagation-protocol-solves-the-scalability-trilemma-2ddba46a51db">Turbo Engine</a></li>
+</ol>
+<p>PoS can guranteen data consensus if the most of nodes are honest. According to
+the Byzantine protocol, one third of dishonest nodes will stop the network, two
+third of dishonest nodes will control the network. Solana is a centralised
+network. If a leader has attacked, the entire network needs time to resume.</p>
+<p>See Also:<br />
+<a href="https://jito-labs.medium.com/solana-validator-101-transaction-processing-90bcdc271143">Solana Validator 101: Transaction Processing</a> (Recommending)<br />
+<a href="https://docs.google.com/document/d/18z-wrVRQgcaOcm77pDQ98Ha1N6Zgy5um-aw4ftmFkCs/edit#">Retrying Transactions</a><br />
+<a href="https://www.shinobi-systems.com/primer.html">Shinobi Systems'
+Solana Proof of Stake + Proof of History Primer</a><br />
+<a href="https://solana.com/solana-whitepaper.pdf">white paper</a><br />
+<a href="https://medium.com/solana-labs/7-innovations-that-make-solana-the-first-web-scale-blockchain-ddc50b1defda">8 Innovations that Make Solana the First Web-Scale Blockchain</a></p>
 
     </article>
 
