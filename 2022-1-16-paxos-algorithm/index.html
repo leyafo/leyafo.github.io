@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Understanding the dependence in Makefile</title>
+    <title>Paxos algorithm</title>
     
 <style>
         body {
@@ -218,41 +218,37 @@
 </header>
 
     <article>
-        <h1>Understanding the dependence in Makefile</h1>
-<h2>Introduction</h2>
-<p><code>make</code> is a simple and useful tool which controls the building of your source code. It can be used in any programming language. It's also can be used for reducing the repetitive tasks. For example, if you have multiple shell tasks that listed one by one. You can use <code>make</code> to organize the workflow.</p>
-<p>If you've downloaded an open-source project or joined a new project as a developer. To run the entire project, you have to start building it first. Nearly all open-source projects have a <code>Makefile</code> for organizing code. But the <code>Makefile</code> is not easy to understand. Its official manual is so long and hard to understand. It's difficult to modify a <code>Makefile</code> for you want if you're a newbie. Indeed, you can Google the <code>Makefile</code> tutorial and then copy&amp;paste some codes within your <code>Makefile</code>. Even though you don't know how <code>Makefile</code> works, your code running.</p>
-<p>This post will take you 10 minutes to understand the <code>make</code> core conception. Afterwards, you will create your own <code>Makefile</code> to run some basic tasks and figured out how <code>make</code> works.</p>
-<h2>Core conception</h2>
-<p><strong>Dependence</strong> is the <code>make</code>'s core conception. Understanding the dependence is the most important principle in <code>make</code>. In the <code>Makefile</code> every task depends on other prerequisites, which can be files, tasks, or some other form of rules. If you want to run a task, you must define the target and prerequisites. We call this a dependence. A simple <code>Makefile</code> consists of &quot;dependencies&quot; with the following shape:</p>
-<pre style="background-color:#fff"><span style="color:#900;font-weight:bold">foo</span><span style="color:#000;font-weight:bold">:</span> bar
-</pre><p>The above <code>Makefile</code> do nothing because the <code>bar</code> target is undefined. Target should be depend on a defined prerequisite or be defined how it works. The following target defined to run <code>echo</code> command.</p>
-<pre style="background-color:#fff"><span style="color:#900;font-weight:bold">foo</span><span style="color:#000;font-weight:bold">:</span>
-    <span style="color:#0086b3">echo</span> <span style="color:#d14">&#34;hello world&#34;</span>  <span style="color:#998;font-style:italic">#noticed: you must use &#39;tab&#39; to start this line.</span>
-</pre><h2>A realistic example</h2>
-<p>Next, we will give you a realistic example. Suppose we have a simple C project, which contains the following files:</p>
-<pre style="background-color:#fff">.
-├── http.c
-├── http.h
-├── main.c
-├── socket.c
-├── socket.h
-</pre><p>In our project, we have the following dependent relationships:<br />
-<code>http.c</code> include <code>http.h</code> and <code>socket.h</code><br />
-<code>socket.c</code> include <code>socket.h</code><br />
-<code>main.c</code> include <code>socket.h</code> and <code>http.h</code>.</p>
-<p>To build an executing file with <code>gcc</code>, we must compile the source code for the object and then linked them to an executing file. Here are our rules:</p>
-<pre style="background-color:#fff"><span style="color:#900;font-weight:bold">http.o</span><span style="color:#000;font-weight:bold">:</span> http.c http.h socket.h
-    gcc -c http.c
-<span style="color:#900;font-weight:bold">socket.o</span><span style="color:#000;font-weight:bold">:</span> socket.h
-    gcc -c socket.c
-<span style="color:#900;font-weight:bold">main.o</span><span style="color:#000;font-weight:bold">:</span> main.c http.h socket.h
-    gcc -c main.c
-</pre><p>Link all object files to an execute file:</p>
-<pre><code>exe: http.o socket.o main.o
-    gcc -o exe http.o socket.o main.o
+        <h1>Paxos algorithm</h1>
+<p>Paxos is the predecessor of the Raft algorithm. Both algorithms have the same consensus mechanism: Approved by a majority of nodes. Paxos is more difficult than Raft, because Paxos is running in a peer-to-peer network without Leader. For understanding Paxos well, I strongly recommend you to understand the Raft algorithm first.</p>
+<p>Raft node has three actors: Candidate, Leader, Follower. The leader performs all requests and sorts the operation log. The follower receives the log and votes the final consensus. The Candidate is only set on leader election. For learning more Raft details, you can read my previous <a href="/2021-11-25-how-raft-works/">article</a>.</p>
+<p>Paxos node has three actors: Suggester, Voter, Learner. The Suggester receives a request and creates it as a proposal. The Voter grants permission to the proposal and votes the final consensus state in the next stage. The Learner saves the final state permanently.</p>
+<p>Paxos algorithm has three committing phases:</p>
+<ol>
+<li>suggest a proposal.</li>
+<li>reject or grant the proposal.</li>
+<li>vote for consensus.</li>
+</ol>
+<p>The Suggester makes a proposal ID and sends it to Voter. Each proposal ID represents the node's identity and two IDs can be compared. If two Suggesters had created a different proposal simultaneously, the proposal ID would be:<br />
+Node A creates a proposal and the ID is: [1, A]<br />
+Node B creates a proposal and the ID is: [1, B]</p>
+<p>These two IDs can be compared: <code>[1,A] &lt; [1,B]</code>. In a peer-to-peer network with Paxos running, there is no single leader who can handle all requests and sort them. The comparable ID is used in which who can be performed first.</p>
+<p>When a voter has granted permission to a proposal, e.g. [1, B], the later proposals which are lower than [1, B] will be rejected. The Suggester will know the rejection and reassign a higher proposal ID to send the Voter and obtain permission again.</p>
+<p>The next phase is voting the final state. Because of the peer-to-peer network, each node may hold a different proposal. They must vote for the unique proposal that granted by majority of nodes. Then the final consensus state will be sent to Learner, and the Learner save it permanently.</p>
+<p>There has a trap that we must resolve. Suppose Voter A and B are granting two proposals. They might like this:</p>
+<pre><code>A obtains permission for [1,A]
+B obtains permission for [2,B]
+A suggests [1,A] and is denied
+A obtains permission for [3,A]
+B suggests [2,B] and is denied
+B obtains permission for [3,B]
+A suggests [3,A] and is denied
+
+… repeat infinitely …
 </code></pre>
-<p>Now, typing <code>make exe</code> to build your own project.</p>
+<p>This will enter an infinite loop. To resolve this problem, we can use a timeout retransmission algorithm like TCP.</p>
+<p>The Paxos paper didn't mention the details about error handling. If a node crashed, how to continue the consensus reaching? The leaderless peer-to-peer network adds more difficulties to development. Some Paxos variants improve the error handling by adding a leader with an election algorithm(Raft is an excellent example). When the leader handles all reqeusts, we can ensure the order of all requests. The remaing processing is to synchronize and vote the sequence of operations. and then commit the final consensus state.</p>
+<p>See Also:<br />
+<a href="https://understandingpaxos.wordpress.com/">Understanding Paxos</a></p>
 
     </article>
 
