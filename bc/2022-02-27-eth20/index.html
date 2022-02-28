@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethereum 2.0 基本架构理解</title>
+    
+<style>
+        body {
+            color: #000000;
+            line-height: 1.6em;
+            padding: 1em;
+            box-sizing: border-box;
+            margin: auto;
+            max-width: 72em;
+            background: #fefefe;
+            font-family: Fira Code,Monaco,Consolas,Ubuntu Mono,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,monospace,sans-serif;
+        }
+        blockquote {
+            background: #f9f9f9;
+            border-left: 10px solid #ccc;
+            margin: 1.5em 10px;
+            padding: 0.5em 10px;
+            quotes: "\201C""\201D""\2018""\2019";
+        }
+        blockquote:before {
+            color: #ccc;
+            content: open-quote;
+            font-size: 4em;
+            line-height: 0.1em;
+            margin-right: 0.25em;
+            vertical-align: -0.4em;
+        }
+        blockquote p {
+            display: inline;
+        }
+        em{
+            color: grey;
+        }
+
+        pre{
+            background-color: #eed;
+        }
+        code{
+            background-color: #eed;
+        }
+        nav {
+            margin-bottom: 20px;
+        }
+        small{
+            font-size: smaller;
+        }
+        a {
+            color: #007bff;
+        }
+
+        a:hover,
+        a:focus {
+            color: #0056b3;
+        }
+
+        a:visited{
+            color: grey;
+        }
+
+        article {
+            padding-bottom: 1em;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        body {
+            background-color: #fff;
+            color: #212529;
+        }
+
+        .comments{
+            text-align: center;
+            margin-top: 20px;
+            padding: 5px 10px;
+            font-size: .8rem;
+            text-transform: uppercase;
+            text-decoration: none;
+            letter-spacing: .1em;
+            z-index: 1;
+        }
+
+        .utterances{
+            max-width: 100%;
+        }
+        .hr-middle-text{
+            line-height: 1em;
+            position: relative;
+            outline: 0;
+            border: 0;
+            color: black;
+            text-align: center;
+            height: 1.5em;
+            opacity: .5;
+        }
+        .hr-middle-text:before {
+            content: '';
+            background: linear-gradient(to right, transparent, black, transparent);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+        }
+        .hr-middle-text:after{
+            content: attr(data-content);
+            position: relative;
+            display: inline-block;
+            color: black;
+            padding: 0 .5em;
+            line-height: 1.5em;
+            background-color: #fcfcfa;
+        }
+
+        /* _nav style */
+        .navbar-item::before {
+            content: "[ ";
+        }
+        .navbar-item::after {
+            content: " ]"
+        }
+        @media screen and (min-width: 300px) and (max-width: 700px) {
+            .navbar {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .navbar-item {
+                flex: 1;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+            }
+            
+            .nav-btn {
+                flex: 1;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                text-align: center;
+            }
+        }
+        /* _nav style end */
+
+        /* index style */
+        .posts-item {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        @media screen and (min-width: 300px) and (max-width: 700px) {
+            .posts-item {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-around;
+                margin-bottom: 10px;
+            }
+            .posts-item > a {
+                display: inline-block;
+                width: 70%;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+            .posts-item > small {
+                flex: 1;
+                text-align: right;
+            }
+            article{
+                letter-spacing: -0.003em;
+                line-height: 28px;
+                font-size: 18px;
+                word-wrap: break-word;
+            }
+        }
+        /* index style end */
+</style>
+
+    
+<!-- Google Analytics -->
+
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+
+    ga('create', 'UA-188913654-2', 'auto');
+    ga('send', 'pageview');
+</script>
+
+<!-- End Google Analytics -->
+
+
+</head>
+<body>
+    
+<header>
+    <nav class="navbar">
+        <span class="navbar-item"><a class="nav-btn" href="/">Home</a></span>
+        <span class="navbar-item"><a class="nav-btn" href="/bc/">Blockchain</a></span>
+        <span class="navbar-item"><a class="nav-btn" href="/el/">English Learning</a></span>
+        <span class="navbar-item"><a class="nav-btn" href="/ct/">Chinese Thinking</a></span>
+        <span class="navbar-item"><a class="nav-btn" href="/other/1990-01-01-aboutme">About Me</a></span>
+    </nav>
+</header>
+
+    <article>
+        <h1>Ethereum 2.0 基本架构理解</h1>
+<p>Ethereum （以下简称 eth）2.0 从 2018 年提出改进到现在已经 4 年了。现有的 eth 1.0 是基于 pow 共识的链。pow 共识主要存在以下问题：<br />
+浪费能源。<br />
+性能低，每秒只能处理十几笔交易。 <br />
+数据完全集中存储在一个节点。<br />
+算力集中问题，芯片巨头理论上有 51% 算力攻击能力。</p>
+<p>eth 2.0 最核心的改动是把 pow 换为 pos，和分片链。eth 2.0 最主要的目标有：</p>
+<ol>
+<li>数据的读写分片，解决 block 数据读写在一个节点的问题。</li>
+<li>通过 pos 算法提高 TPS</li>
+<li>防止过度中心化</li>
+<li>平民化，任何民用的机器（树霉派都行）只要质押 32 个 ETH 都能成为 validator 节点</li>
+</ol>
+<p>以下是 eth2.0 基本架构
+<img src="/images/eth20architecture.png" alt="architecture" /></p>
+<p>上图解释：
+beacon chain 是个单独的链，它协调所有的 sharding chain。注意上面图里面的 shard 1～shard 100。它表示一个 beacon chain 的 block 负责管理 1～100 的 shard block。</p>
+<p>eth1.0 到 2.0 以 phase 的形式进行迭代。具体的时间节点从 2018 年开始。（很明显，已经 delay 很久了）<br />
+Phase 0： 构建 beacon chain 网络。   <br />
+Phase 1： 构建分片网络，让数据读写分片。  <br />
+Phase 2： EVM 可支持分片网络。<br />
+<img src="/images/eth20phrases.png" alt="architecture" /></p>
+<p>以下是各项升级涉及到的一些技术细节，你可以到<a href="https://docs.google.com/presentation/d/1G5UZdEL71XAkU5B2v-TC3lmGaRIu2P6QSeF8m3wg6MU/edit#slide=id.g3bc8c5dc4c_0_478">这里</a>深入了解里面的具体技术。<br />
+<img src="/images/eth20upgradedetails.png" alt="architecture" /></p>
+<h2>beacon chain 网络</h2>
+<p>beacon chain 网络是整个 eth2.0 非常关键的一环，它负责 validator 的注册和质押，以及随机的分配 validator 到一个 committee 进行 pos 投票。为了保证区块的随机性和防止做假预测， eth 2.0 引入了 RANDAO（随机数生成器）random+DAO。它的简要原理如下：   <br />
+设想一堆人坐在一个房间，每个人任意给一个数字，最后给出数字的那个人把其他人给出的数字加总，然后以此做为随机数 seed。为了防止最后一个人给出他自己可以预测的数字进行做假，他需要做一轮 VDF（Verifiable Delay Functions） 运算得出一个最终的随机数。</p>
+<p>beacon chain 也是一个 block chain 系统，它需要 validator 通过 pos 共识算法给每一个 block 进行投票。每 12 秒会有一个时间同步 slot， 每个 slot 里面会产生一个 block。32 个 slot 组成一个 epoch。这里 slot 和 epoch 的作用先按下不表，下文再做介绍。先说下投票的过程。</p>
+<p><img src="/images/eth20slotsepoch.png" alt="eth20slotsepoch" /></p>
+<p>在每轮 epoch 里，validator 将会被随机分配到一个 committee 进行投票。每个 slot 会随机选一个 proposer 做为 block producer（出块者）。 其他的 validator 会投票（POS）验证成这个块是否合法。如果超过三分之二同意就通过，高于三分之一的反对票则无法达成共识。（拜占庭共识）。一个 validator 有可能同时兼具 proposer 和 validator 角色，但这种情况比较罕见。</p>
+<p>为防止共谋发生，每轮 epoch 中 validator 只会被随机的分配到一个 committee 里面。每个 committee 不会让他们连续投相邻两个区块的票。eth2.0 在数学上保证超过三分之一 validator 共谋的概率是万亿分之一。</p>
+<p>从以上我们可以看出 slot 的作用是给 validator 之间的分布式环境做同步用的，还有就是每个 slot 的分割投票减少 validator 的共谋，每轮 epoch 后 validator 和 committee 会重新进行洗牌投票。</p>
+<p>现在的 beacon chain 只运行了 pos 的投票验证，还未见到任何和 sharding block 有关的数据<a href="https://beaconscan.com/slot/3239293">详情见 beaconscan</a>。也未见到如何把 beacon chain 和 sharding chain 联合起来的方案（欢迎留言补充）。不过社区已经有不少关于 sharding chain 的讨论，我们可以初探一下。</p>
+<h2>sharding chain</h2>
+<p>eth2.0 把 shred（分片） 分为 64 个。每个 shred 只负责它自己内部的数据读写，涉及到跨链的读写操作需要 beacon chain 进行协调。这里sharding chain 有个关键的问题需要解决，就是执行交易和合约时需要全局的数据，如何与其他节点高效的进行交互？社区讨论的有两种方案，同步和异步：</p>
+<ol>
+<li>
+<p>同步<br />
+同步的改两个 shred 的 block。两边必须进行状态同步通信。</p>
+</li>
+<li>
+<p>异步<br />
+假设有一笔跨 shred 的交易需要从 shred A 里的 账户a 里减 10 块钱，然后到 shred B 里面的 账户 b 里加 10 块钱。
+shred A 先创建好一个 receipt（扣掉 a 的钱，目标账户地址，目标 shred，金额）。 shred B 拿到这个 receipt 后会先执行验证，验证成功后往账户 b 里面加 10 块钱。这个 receipt 必须要可验证，还要防止 double spending，需要给这个 receipt 赋一个唯一的自增长 ID 存在 shred A 中。shred B 只要去追踪源 shred A 里面的这个 ID 就能知道这笔钱有没有被花掉。<br />
+这里需要注意的是有一个中间状态，就是 sharding A 把钱扣掉了，然后创建 receipt。sharding B 再把创建好的 receipt 状态同步到它自己的 shred 里。</p>
+</li>
+</ol>
+
+    </article>
+
+    
+<div class="comments">
+    <hr class="hr-middle-text" data-content="COMMENTS">
+    <script src="https://utteranc.es/client.js" repo="leyafo/leyafo.github.io" issue-term="title" label="Commnets" theme="github-light" crossorigin="anonymous" async >
+    </script>
+</div>
+
+<script>
+    document.querySelectorAll("pre").forEach(function (i) {
+        i.removeAttribute("style")
+    })
+</script>
+</body>
+</html>
