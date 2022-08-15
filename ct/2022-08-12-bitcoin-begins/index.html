@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin 前传 - cypherpunks 的折腾</title>
+    
+<style>
+        body {
+            color: #000000;
+            line-height: 1.6em;
+            padding: 1em;
+            box-sizing: border-box;
+            margin: auto;
+            max-width: 72em;
+            background: #fefefe;
+            font-family: Fira Code,Monaco,Consolas,Ubuntu Mono,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,monospace,sans-serif;
+        }
+        blockquote {
+            background: #f9f9f9;
+            border-left: 10px solid #ccc;
+            margin: 1.5em 10px;
+            padding: 0.5em 10px;
+            quotes: "\201C""\201D""\2018""\2019";
+        }
+        blockquote:before {
+            color: #ccc;
+            content: open-quote;
+            font-size: 4em;
+            line-height: 0.1em;
+            margin-right: 0.25em;
+            vertical-align: -0.4em;
+        }
+        blockquote p {
+            display: inline;
+        }
+        em{
+            color: grey;
+        }
+
+        pre{
+            background-color: #eed;
+        }
+        code{
+            background-color: #eed;
+        }
+        nav {
+            margin-bottom: 20px;
+        }
+        small{
+            font-size: smaller;
+        }
+        a {
+            color: #007bff;
+        }
+
+        a:hover,
+        a:focus {
+            color: #0056b3;
+        }
+
+        a:visited{
+            color: grey;
+        }
+
+        article {
+            padding-bottom: 1em;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        body {
+            background-color: #fff;
+            color: #212529;
+        }
+
+        .comments{
+            text-align: center;
+            margin-top: 20px;
+            padding: 5px 10px;
+            font-size: .8rem;
+            text-transform: uppercase;
+            text-decoration: none;
+            letter-spacing: .1em;
+            z-index: 1;
+        }
+
+        .utterances{
+            max-width: 100%;
+        }
+        .hr-middle-text{
+            line-height: 1em;
+            position: relative;
+            outline: 0;
+            border: 0;
+            color: black;
+            text-align: center;
+            height: 1.5em;
+            opacity: .5;
+        }
+        .hr-middle-text:before {
+            content: '';
+            background: linear-gradient(to right, transparent, black, transparent);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+        }
+        .hr-middle-text:after{
+            content: attr(data-content);
+            position: relative;
+            display: inline-block;
+            color: black;
+            padding: 0 .5em;
+            line-height: 1.5em;
+            background-color: #fcfcfa;
+        }
+
+        /* _nav style */
+        .navbar-item::before {
+            content: "[ ";
+        }
+        .navbar-item::after {
+            content: " ]"
+        }
+        @media screen and (min-width: 300px) and (max-width: 700px) {
+            .navbar {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .navbar-item {
+                flex: 1;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+            }
+            
+            .nav-btn {
+                flex: 1;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                text-align: center;
+            }
+        }
+        /* _nav style end */
+
+        /* index style */
+        .posts-item {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        @media screen and (min-width: 300px) and (max-width: 700px) {
+            .posts-item {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-around;
+                margin-bottom: 10px;
+            }
+            .posts-item > a {
+                display: inline-block;
+                width: 70%;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+            .posts-item > small {
+                flex: 1;
+                text-align: right;
+            }
+            article{
+                letter-spacing: -0.003em;
+                line-height: 28px;
+                font-size: 18px;
+                word-wrap: break-word;
+            }
+        }
+        /* index style end */
+</style>
+
+    
+<!-- Google Analytics -->
+
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+
+    ga('create', 'UA-188913654-2', 'auto');
+    ga('send', 'pageview');
+</script>
+
+<!-- End Google Analytics -->
+
+
+</head>
+<body>
+    
+<header>
+    <nav class="navbar">
+        <span class="navbar-item"><a class="nav-btn" href="/">Home</a></span>
+        <span class="navbar-item"><a class="nav-btn" href="/bc/">Blockchain</a></span>
+        <span class="navbar-item"><a class="nav-btn" href="/el/">English Learning</a></span>
+        <span class="navbar-item"><a class="nav-btn" href="/ct/">Chinese Thinking</a></span>
+        <span class="navbar-item"><a class="nav-btn" href="/other/1990-01-01-aboutme">About Me</a></span>
+    </nav>
+</header>
+
+    <article>
+        <h1>Bitcoin 前传 - cypherpunks 的折腾</h1>
+<p>Bitcoin 并不是完全凭空创新诞生出来的，在它之前有好几个不为大众所知的同类产品。 BitCoin 诞生前互联网的发展走了一段隐蔽的旁枝，普通用户感知度不高，在很久后的今天影响力巨大。这段路主要是密码学爱好者 cypherpunks 的故事。 cypherpunk 这个词分为两部分，cypher 表示密码学爱好者，punk 表示叛逆者。在90年代，密码学社区诞生，它是由一群密码学爱好者经常讨论 cryptography， mathematics, politics, and philosophy （密码，数学，政治，哲学）这几个话题而形成的。 他们把自己称为： cypherpunks（密码和朋克两个词组成）。这个群体主要由黑客和密码学爱好者组成。他们一开始的愿景就非常理想主义： 希望借助科技的力量实现一个更加公平的社会（或者说借助科技实现乌托邦）。</p>
+<p>这帮技术老司机一开始就很清楚互联网的力量，并且非常有预见性的看到一个可怕现实：如果互联网科技一旦由大型政府机构控制，它将为大型机构的监控和审查服务。在 facebook 和方校长路过牛家村之前他们就预见到了这一现实。这帮朋克们懂数学，会编程，懂密码学，还让他们遇到了还在萌芽且比较宽松的互联网，提前预知未来的他们自然会想办法做点什么阻止预言中那可怕的现实。</p>
+<p>在 1970 年代，密码学还是 mit 一小帮黑客们的智力玩具，以及美国做为军事略武器禁止出口的技术。RSA 和 PGP 的发明人 Diffie-Hellman 一开始就认为密码学可以保护隐私，实现自主权。在 ssl 和 https 被网景（netscape）大规模应用前，发生了著名的密码学禁止出口官司。那场官司对互联网的发展影响巨大，最终以美国政府败诉，cypherpunks 获胜而结束。由此密码学这个之前被禁止公开使用的技术进入了大众互联网领域，以及后来的 SSL 和 HTTPS 开始被网景大规模普及。cypherpunks 并没有满足于此，他们知道要实现完全的公民隐私，需要更关键的东西才行，这个东西就是自主的经济系统，或者更进一步说就是拥有自主的货币系统。</p>
+<p>cypherpunks 要制造自己的货币是可以理解的，现实中 fiat currency（法币）并不是非常完美的东西。就拿美元来说，政府是可以控制发行量的，以及政府税收只能用美元结算来控制美元的流通。在 cypherpunks 看来，政府的货币天然的就不是一个自由的东西。政府随意印钞相当于让所有人手里的货币贬值。互联网本身是无国界的，但互联网要做到完全自由，必须要有不受任何机构或者第三方控制的货币。尤其是在多次经济危机后，cypherpunks 对政府控制的货币越来越失望。完全虚拟化的数字货币这个想法当时想到的人其实不少，但货币完全虚拟化之后带来了一个非常困难的问题：double spending.</p>
+<p>double spending 简单说来就是一笔钱花两次，相当于现实社会中用假币去买东西。纸币要造假并不容易，而且验证也不难。但去中心化的数字货币伪造交易非常容易，要解决 double spending 问题就非常困难。假设 alice 手上有 10 块钱，她给 bob 转了 10 块，然后可以轻易伪造另一个 10 块的交易给 john。这时如果是有一个中心化的银行，只要对 alice 的账户第一次扣款减 10 块就行，第二次 alice 再想转账就会发现余额不足。没有中心化的银行，这个问题看起来几乎无解。cypherpunk 社区在数字化货币这块做了很多尝试，最终在 2008 年诞生出来能完美解决  double spending 的 BitCoin。</p>
+<p>说到数字货币先驱，就不得不提 David Chaum（大卫乔姆）在 1982 年提出来的基于完全隐私的 eCash 货币。它依托于银行做为第三方去认证交易的合法性，但交易双方的信息完全是匿名的，银行无法追踪。它的交易流程主要如下：</p>
+<ol>
+<li>银行发行数字硬币，每一枚硬币都要特定的序号和银行的数字签名。</li>
+<li>当商户收到数字硬币时，它会发送给银行验证数字硬币是否有效。</li>
+<li>银行确保每一枚硬币没有被花费，以及归属是合法的。 <br />
+以上过程银行好像看起来能知道交易双方的信息，但 eCash 最核心技术是 David Chaum 发明的 blind signature（盲签）。在验证货币时，银行只能确定每一枚硬币是否有效，但不能确定每一枚硬币的流通过程。（盲签理解起来有点绕，我花了两天时间也没完全看懂）</li>
+</ol>
+<p>eCash 我们放在今天来看，它不可追踪这一点依然比现在的 paypal 一类的支付 App 要更先进。 David Chaum 在 1990 以 eCash 做为基础创立了 DigiCash 公司，但这家公司在 1998 年破产了。它被更方便，隐私更少的 paypal 取代。DigiCash 虽然需要依托于银行以中心化的方式运行，但它给后来的数字货币指明了一个很重要的方向：利用密码技术保护隐私反追踪。</p>
+<p>cypherpunks 社区后来还做了很多其他的尝试。1996 年 .com 浪潮 中 e-gold 诞生了，它比 paypal 还要早两年。与 DigiCash 不同的是它是金本位货币，并且注册限制门槛非常少，几乎无需和隐私关联。因此它一诞生就受到了黑客的各类网络犯罪专业人士的欢迎。很快就成为法院的常客被判为联合犯罪帮凶，在 2008 年时被美国政府彻底禁止。e-gold 让 cypherpunks 发现政府肯定是不会让其他不受控制的货币在市面流通。</p>
+<p>e-gold 给 cypherpunks 社区上了重要的一课，就是一个货币要想不被政府控制和打压就需要完全去中心化，不需要依托于现实世界里的资产抵押来运行。在 1998 年 Wei Dai (就是今天以太坊上的 Dai）提出了 b-money， 以及 2005 年  Nick Szabo 提出了 BitGold。它们非常接近后来的 BitCoin 形态，主要特征如下：</p>
+<ol>
+<li>以加密技术为核心。</li>
+<li>以 proof-of-work （挖矿）方式铸造新币。</li>
+<li>b-money 和 BitGold 以信任的时间服务器来确定交易顺序，BitCoin 以最长交易链来确定交易顺序。</li>
+<li>b-money 和 BitGold 共识由投票决定，Bitcoin 以 51 的共识决定。</li>
+</ol>
+<p>以上我们可以看到这两个数字货币已经很接近后来的 BitCoin， 共识算法和今天的 PoS 也非常类似，也难怪中本聪会在论文里面引用。这两个货币之所以没有被大众所知是因为他们只存在于纸面的论文，从来没有实现并落地。在 1998 要落地这一整套系统，有个很关键的技术没有流行： gossip 协议（一种基于 P2P 的 bit torrent 技术，讲人话就是看片用的那玩意儿）。</p>
+<p>后面的事情我们也看到了，BitCoin 几乎完美避开了所有之前数字货币先烈的坑：</p>
+<ol>
+<li>不依托现实世界的资产做为抵押。</li>
+<li>基于密码学保证安全和隐私。</li>
+<li>去中心化运行。</li>
+<li>创始人匿名至今。</li>
+<li>前期工作完成后，把所有东西全丢给社区。（低调上线，低调流行，低调跑路）。</li>
+</ol>
+<p>参考资料：<br />
+<a href="https://nakamoto.com/the-cypherpunks/">https://nakamoto.com/the-cypherpunks/</a></p>
+
+    </article>
+
+    
+<div class="comments">
+    <hr class="hr-middle-text" data-content="COMMENTS">
+    <script src="https://utteranc.es/client.js" repo="leyafo/leyafo.github.io" issue-term="title" label="Commnets" theme="github-light" crossorigin="anonymous" async >
+    </script>
+</div>
+
+<script>
+    document.querySelectorAll("pre").forEach(function (i) {
+        i.removeAttribute("style")
+    })
+</script>
+</body>
+</html>
