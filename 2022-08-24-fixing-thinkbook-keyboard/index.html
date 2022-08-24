@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编译内核修复 Thinkbook 14+ 6800h 键盘问题</title>
+    
+<style>
+        body {
+            color: #000000;
+            line-height: 1.6em;
+            padding: 1em;
+            box-sizing: border-box;
+            margin: auto;
+            max-width: 72em;
+            background: #fefefe;
+            font-family: Fira Code,Monaco,Consolas,Ubuntu Mono,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,monospace,sans-serif;
+        }
+        blockquote {
+            background: #f9f9f9;
+            border-left: 10px solid #ccc;
+            margin: 1.5em 10px;
+            padding: 0.5em 10px;
+            quotes: "\201C""\201D""\2018""\2019";
+        }
+        blockquote:before {
+            color: #ccc;
+            content: open-quote;
+            font-size: 4em;
+            line-height: 0.1em;
+            margin-right: 0.25em;
+            vertical-align: -0.4em;
+        }
+        blockquote p {
+            display: inline;
+        }
+        em{
+            color: grey;
+        }
+
+        pre{
+            background-color: #eed;
+        }
+        code{
+            background-color: #eed;
+        }
+        nav {
+            margin-bottom: 20px;
+        }
+        small{
+            font-size: smaller;
+        }
+        a {
+            color: #007bff;
+        }
+
+        a:hover,
+        a:focus {
+            color: #0056b3;
+        }
+
+        a:visited{
+            color: grey;
+        }
+
+        article {
+            padding-bottom: 1em;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        body {
+            background-color: #fff;
+            color: #212529;
+        }
+
+        .comments{
+            text-align: center;
+            margin-top: 20px;
+            padding: 5px 10px;
+            font-size: .8rem;
+            text-transform: uppercase;
+            text-decoration: none;
+            letter-spacing: .1em;
+            z-index: 1;
+        }
+
+        .utterances{
+            max-width: 100%;
+        }
+        .hr-middle-text{
+            line-height: 1em;
+            position: relative;
+            outline: 0;
+            border: 0;
+            color: black;
+            text-align: center;
+            height: 1.5em;
+            opacity: .5;
+        }
+        .hr-middle-text:before {
+            content: '';
+            background: linear-gradient(to right, transparent, black, transparent);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+        }
+        .hr-middle-text:after{
+            content: attr(data-content);
+            position: relative;
+            display: inline-block;
+            color: black;
+            padding: 0 .5em;
+            line-height: 1.5em;
+            background-color: #fcfcfa;
+        }
+
+        /* _nav style */
+        .navbar-item::before {
+            content: "[ ";
+        }
+        .navbar-item::after {
+            content: " ]"
+        }
+        @media screen and (min-width: 300px) and (max-width: 700px) {
+            .navbar {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .navbar-item {
+                flex: 1;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+            }
+            
+            .nav-btn {
+                flex: 1;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                text-align: center;
+            }
+        }
+        /* _nav style end */
+
+        /* index style */
+        .posts-item {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        @media screen and (min-width: 300px) and (max-width: 700px) {
+            .posts-item {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-around;
+                margin-bottom: 10px;
+            }
+            .posts-item > a {
+                display: inline-block;
+                width: 70%;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+            .posts-item > small {
+                flex: 1;
+                text-align: right;
+            }
+            article{
+                letter-spacing: -0.003em;
+                line-height: 28px;
+                font-size: 18px;
+                word-wrap: break-word;
+            }
+        }
+        /* index style end */
+</style>
+
+    
+<!-- Google Analytics -->
+
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+
+    ga('create', 'UA-188913654-2', 'auto');
+    ga('send', 'pageview');
+</script>
+
+<!-- End Google Analytics -->
+
+
+</head>
+<body>
+    
+<header>
+    <nav class="navbar">
+        <span class="navbar-item"><a class="nav-btn" href="/">Home</a></span>
+        <span class="navbar-item"><a class="nav-btn" href="/bc/">Blockchain</a></span>
+        <span class="navbar-item"><a class="nav-btn" href="/el/">English Learning</a></span>
+        <span class="navbar-item"><a class="nav-btn" href="/ct/">Chinese Thinking</a></span>
+        <span class="navbar-item"><a class="nav-btn" href="/other/1990-01-01-aboutme">About Me</a></span>
+    </nav>
+</header>
+
+    <article>
+        <h1>编译内核修复 Thinkbook 14+ 6800h 键盘问题</h1>
+<p>前段时间经受不住 6800h 的核显性能诱惑买了这个笔记本。当时已经知道这个机器装上 Linux 后键盘没有反应，网上有大面积的人反应过<a href="https://www.google.com/search?q=6800h++linux++%E9%94%AE%E7%9B%98">这个问题</a>。
+我的想法很简单：这么明显的 bug 联想不可能不修，即使不修社区也会给出相应的方案，所以给它装 Linux 问题应该不是太大。但两个月过去了，联想没有给出相应的解决方案，社区倒是有了 patch，但摆在眼前的问题是打补丁并重新编译 Linux 内核。</p>
+<p>一开始我也不想这么折腾，觉得编译内核是个非常重量级的操作，给已经装好的操作系统更换内核也很危险。但键盘问题目前看来短时间内（两个月？半年？）会难以解决。所以只能自己动手编译内核并替换掉原有的内核。以下是我折腾的过程，希望能给有同样机器的你一些帮助：</p>
+<ol>
+<li>
+<p>首先外接一个键盘安装好操作系统，我用的是 Manjaro 发行版。</p>
+</li>
+<li>
+<p>下载内核<a href="https://patchwork.kernel.org/project/linux-acpi/patch/20220712020058.90374-1-gch981213@gmail.com/">补丁</a>（点击里面的 diff 可直接下载）。</p>
+</li>
+<li>
+<p>下载与你当前发行版比较接近的内核版本（我下载的是 <a href="https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.15.62.tar.xz">5.15.62</a>）， <code>uname -a</code> 可以查看你的内核版本。为防止二次翻车，请勿下载离你当前内核版本较远的版本，比如 2022 年 8 月刚刚发布的 6.0。<br />
+3-1. 这里为了安全建议你校验下 PGP 签名。 详细的步骤在<a href="https://www.kernel.org/signature.html">这里</a>，如果你懒或嫌麻烦可以不校验，官网直接下载的一般问题不大。</p>
+</li>
+<li>
+<p>接下来进入到编译内核的环节，不要慌，建议先洗个澡等脑袋在清醒一点的时候来操作。（搞坏了也不用担心，反正是新电脑新系统，大不了重新安装。）<br />
+4-1. 我用的是 manjaro，编译内核并重新安装用的是这里的<a href="https://forum.manjaro.org/t/howto-build-your-very-first-custom-kernel/47683">教程</a>。你如果用其他的发行版建议搜索相关的内核编译教程。
+每个 Linux 发行版都会告诉他们的用户如何编译并安装内核。</p>
+</li>
+<li>
+<p>打开终端，解压内核，并替换补丁。</p>
+</li>
+</ol>
+<pre style="background-color:#fff">  tar xvf linux-5.15.62.tar.xz
+  <span style="color:#0086b3">cd</span> linx-5.15.62
+  patch drivers/acpi/resource.c  <span style="color:#000;font-weight:bold">[</span>你的补丁<span style="color:#000;font-weight:bold">]</span> 
+</pre><p>这个 patch 把键盘卡住的问题解决了，接下来要做的是把内核重新编译并安装。</p>
+<ol start="6">
+<li>编译并安装内核。大约需要等至少 20 分钟以上。</li>
+</ol>
+<pre style="background-color:#fff">  zcat /proc/config.gz &gt;&gt; .config <span style="color:#998;font-style:italic">#把内核编译选项调成和你当前的系统一致。</span>
+  make -j16 <span style="color:#998;font-style:italic"># 16 核火力全开编译</span>
+  sudo make modules_install  <span style="color:#998;font-style:italic"># 安装内核模块</span>
+  sudo make install  <span style="color:#998;font-style:italic"># 安装编译好的内核选项。</span>
+</pre><p>以上步骤是一步接一步的，请勿跳过。在编译时如果遇到 <code>command not found</code> 时，去搜索引擎搜一下并安装相关的工具就好。比如 manjaro 的 make 可以通过 <code>sudo pacman -S make</code> 安装。
+我特意跳过了 <code>make menuconfig</code> 为的就是防止误操作修改编译选项导致系统出问题。   <br />
+你在 make install 的时候有可能会遇到和我一样的问题： <code>Cannot find LILO</code>。 这个东西是老的 bootloader，现在都是用 grub 了，直接注释掉 <code>arch/x86/boot/install.sh</code> 里面的 LILO 相关代码即可（在脚本最后面）。</p>
+<pre style="background-color:#fff"><span style="color:#998;font-style:italic"># if [ -x /sbin/lilo ]; then</span>
+<span style="color:#998;font-style:italic">#        /sbin/lilo</span>
+<span style="color:#998;font-style:italic"># elif [ -x /etc/lilo/install ]; then</span>
+<span style="color:#998;font-style:italic">#        /etc/lilo/install</span>
+<span style="color:#998;font-style:italic"># else</span>
+<span style="color:#998;font-style:italic">#        sync</span>
+<span style="color:#998;font-style:italic">#        echo &#34;Cannot find LILO.&#34;</span>
+<span style="color:#998;font-style:italic"># fi</span>
+
+</pre><ol start="7">
+<li>至此内核已经编译完成，并安装到了指定目录。接下来我们进入配置环节，把新编译的内核加载起来。还是按照这个<a href="https://forum.manjaro.org/t/howto-build-your-very-first-custom-kernel/47683">教程</a>走，从第 9 步开始。
+我的版本是 5.15.62，你也可以按照你的发行版本号来命名即可。</li>
+</ol>
+<pre style="background-color:#fff">  sudo cp /boot/vmlinuz /boot/vmlinuz-5.15.62
+</pre><p>然后在 <code>/etc/mkinitcpio.d/</code> 目录里拷贝出一个新的 <code>.preset</code> 文件，并修改如下：</p>
+<pre style="background-color:#fff">  <span style="color:#008080">ALL_config</span><span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;/etc/mkinitcpio.conf&#34;</span>
+  <span style="color:#008080">ALL_kver</span><span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;/boot/vmlinuz-[kernel-version]-[arch]&#34;</span>  <span style="color:#998;font-style:italic">#1</span>
+   
+  <span style="color:#008080">PRESETS</span><span style="color:#000;font-weight:bold">=(</span><span style="color:#d14">&#39;default&#39;</span> <span style="color:#d14">&#39;fallback&#39;</span><span style="color:#000;font-weight:bold">)</span>
+  
+  <span style="color:#998;font-style:italic">#default_config=&#34;/etc/mkinitcpio.conf&#34;</span>
+  <span style="color:#008080">default_image</span><span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;/boot/initramfs-[kernel-version]-[arch].img&#34;</span> <span style="color:#998;font-style:italic">#2</span>
+  <span style="color:#998;font-style:italic">#default_options=&#34;&#34;</span>
+  
+  <span style="color:#998;font-style:italic">#fallback_config=&#34;/etc/mkinitcpio.conf&#34;</span>
+  <span style="color:#008080">fallback_image</span><span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;/boot/initramfs-[kernel-version]-[arch]-fallback.img&#34;</span> <span style="color:#998;font-style:italic">#3</span>
+  <span style="color:#008080">fallback_options</span><span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;-S autodetect&#34;</span>
+</pre><p>把 <code>#1 #2 #3</code> 这几行的 [kernel-version]-[arch] 替换成你的内核版本号即可（也就是 5.15.62 ）。 <br />
+然后我们要加载这个 <code>.preset</code> 文件：</p>
+<pre style="background-color:#fff">sudo mkinitcpio -p /etc/mkinitcpio.d/linux<span style="color:#000;font-weight:bold">[</span>kernel-version<span style="color:#000;font-weight:bold">]</span>
+</pre><ol start="8">
+<li>更新 grub</li>
+</ol>
+<pre><code>  sudo update-grub
+</code></pre>
+<ol start="9">
+<li>
+<p>重启。在 grub 的高级选项里可以选你新编入的内核。如果你想让 grub 默认运行你编译的内核，把 /boot 目录下里面第 7 步涉及到的文件搬走，只保留你编译内核文件，重新运行 <code>sudo update-grub</code> 即可。</p>
+</li>
+<li>
+<p>折腾到此，重启运行 <code>uname -a</code> 你应该能看到你新编译的内核。你的键盘也能正常使用了。</p>
+</li>
+</ol>
+<p>自己编译内核并配置运行的感觉真的很好。这意味着你的电脑完全由你控制，以后各种 linux 上的驱动等底层问题都能通过自己找 patch 后修改代码（稍硬核）去解决。linux 内核编译已经很友好了，代码质量非常高几乎见不到编译 warning，几乎不会被编译相关的问题卡住。</p>
+<h2>参考链接：</h2>
+<p><a href="https://patchwork.kernel.org/project/linux-acpi/patch/20220712020058.90374-1-gch981213@gmail.com/">https://patchwork.kernel.org/project/linux-acpi/patch/20220712020058.90374-1-gch981213@gmail.com/</a> 感谢社区，感谢开发人员无私贡献解决方案。赞美。   <br />
+<a href="https://www.bilibili.com/read/mobile?id=18157969&amp;from=articleDetail">https://www.bilibili.com/read/mobile?id=18157969&amp;from=articleDetail</a> 我就是从这里看到后就开始动手开始编译内核的。这位小朋友文章写得稍显罗嗦，读起来很累，但依然有参考价值。<br />
+<a href="https://forum.manjaro.org/t/howto-build-your-very-first-custom-kernel/47683">https://forum.manjaro.org/t/howto-build-your-very-first-custom-kernel/47683</a> 我用的发行版编译内核的新手教程，你可以找你用的发行版相关教程。</p>
+<p>另外编译内核肯定会遇到不少问题，网上几乎都能找到相关解答的。如果你遇到解决不了的问题，可以评论区留言，我看看是否能够帮你一把。</p>
+
+    </article>
+
+    
+<div class="comments">
+    <hr class="hr-middle-text" data-content="COMMENTS">
+    <script src="https://utteranc.es/client.js" repo="leyafo/leyafo.github.io" issue-term="title" label="Commnets" theme="github-light" crossorigin="anonymous" async >
+    </script>
+</div>
+
+<script>
+    document.querySelectorAll("pre").forEach(function (i) {
+        i.removeAttribute("style")
+    })
+</script>
+</body>
+</html>
